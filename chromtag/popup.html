@@ -1,0 +1,30 @@
+<!doctype html>
+<html>
+<head>
+	<title>ChromTag</title>
+<link rel="stylesheet" href="popup.css" />
+<link rel="stylesheet" href="nanoscroller.css" />
+</head>
+<body>
+	<ul id="folders"></ul>
+	
+	<ul id="tags"></ul>
+	
+	<div id="wrapper" class="nano">
+		<ul id="bookmarks" class="content"></ul>
+	</div>
+	
+	<div id="toolbar">
+		<ul>
+			<li><a href="#" data-action="show-all">All bookmarks</a></li>
+			<li><a href="#" data-action="show-folders">Show folders</a></li>
+			<li><a href="#" data-action="hide-folders">Hide folders</a></li>
+			<li class="close"><a href="#" onclick="window.close();" data-action="close">&times;</a></li>
+		</ul>
+	</div>
+	<script src="jquery.js"></script>
+	<script src="jquery.nanoscroller.min.js"></script>
+	<script src="popup.js"></script>
+</body>
+</html>
+
