@@ -16,12 +16,47 @@
 	
 	<div id="toolbar">
 		<ul>
+			<li><input type="text" id="search" placeholder="Search&hellip;" /></li>
 			<li><a href="#" data-action="show-all">All bookmarks</a></li>
 			<li><a href="#" data-action="show-folders">Show folders</a></li>
 			<li><a href="#" data-action="hide-folders">Hide folders</a></li>
 			<li class="close"><a href="#" onclick="window.close();" data-action="close">&times;</a></li>
 		</ul>
 	</div>
+	
+	<div id="editor">
+		<input type="hidden" name="id" id="id" value="" />
+		<input type="hidden" name="move" id="move" value="" />
+		<div class="control">
+			<label for="title">Title</label>
+			<textarea name="title" id="title" /></textarea>
+		</div>
+
+		<div class="control">
+			<label for="title">Add tag</label>
+			<ul id="addTag">
+				
+			</ul>
+		</div>
+
+		<div class="control">
+			<label for="url">URL</label>
+			<input type="text" name="url" id="url" />
+		</div>
+
+		<div class="control">
+			<label for="folder">Folder</label>
+			<select name="folder" id="folder"></select>
+		</div>
+		
+		<div class="control" style="padding-bottom:6px;">
+			<button id="save">Save</button>
+			<button id="cancel">Cancel</button>
+			<button id="delete">Delete</button>
+		</div>
+	</div>
+	
+	<div id="over"></div>
 	<script src="jquery.js"></script>
 	<script src="jquery.nanoscroller.min.js"></script>
 	<script src="popup.js"></script>
