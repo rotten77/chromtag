@@ -9,7 +9,7 @@ h1{font-size:138.5%}h2{font-size:123.1%}h3{font-size:108%}h1,h2,h3{margin:1em 0}
  * ChromTag
  */
 body {
-	width: 400px;
+	width: 420px;
 	overflow: hidden;
 	font-size:10px;
 	font-family: verdana;
@@ -24,9 +24,6 @@ ul {
 	width:100%;
 	clear:both;
 	height:300px;
-	/*overflow-y: auto;*/
-	/*overflow-x: hidden;*/
-
 }
 .clearfix {
 	display:block;
@@ -52,7 +49,7 @@ ul {
 	margin:0 2px 2px 0;
 	font-weight:bold;
 	text-decoration:none;
-	background:#8a8a8a;
+	background:#aeaeae;
 }
 #folders .label {
 	background: #12aa63;
@@ -73,6 +70,12 @@ ul {
 .bookmark {
 	border-bottom:1px solid #e5e5e5;
 	padding:6px 0;
+	position:relative;
+	overflow:hidden;
+	background:#fff;
+}
+.bookmark:hover {
+background: #fafafa;
 }
 .bookmark .title {
 	float:left;
@@ -97,10 +100,29 @@ ul {
 .bookmark .label {
 	font-size:9px;
 	font-weight: normal;
-	padding:2px 4px;
+	padding:1px 2px;
+	border-radius:2px;
 }
 .bookmark .edit {
-	float:right;
+	position:absolute;
+	bottom:4px;
+	right:12px;
+	text-decoration:none;
+	font-size:24px;
+	width:24px;
+	height:24px;
+	line-height:24px;
+	background:#f5aa45;
+	color:#fff;
+	border-radius: 4px;
+	opacity:0.7;
+	display:none;
+}
+.bookmark .edit:hover {
+	opacity:1.0;
+}
+.bookmark:hover .edit {
+	display:block;
 }
 .bookmark .favicon {
 	float:left;
@@ -119,7 +141,7 @@ a {
 	color:#333;
 }
 a:hover {
-	color:#666;
+	color:#000;
 }
 #toolbar {
 	border-top:1px solid #e5e5e5;
@@ -220,4 +242,16 @@ a:hover {
 #addTag li {
 	float:left;
 	margin: 0 4px 4px 0;
+}
+/*v 1.4;*/
+#wrapper {
+	overflow-y: auto;
+	overflow-x: hidden;
+}
+.bookmark {
+	padding-right:6px;
+}
+.bookmark .url {
+	max-width:90%;
+	overflow: hidden;
 }

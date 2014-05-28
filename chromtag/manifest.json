@@ -8,7 +8,7 @@
 		"48": "icon48.png",
 		"128": "icon128.png"
 		},
-	"version": "1.3",
+	"version": "1.4",
 	"browser_action": {
 		"default_icon": "icon.png",
 		"default_popup": "popup.html"
@@ -16,6 +16,7 @@
 	"permissions": [
 		"bookmarks",
 		"chrome://favicon/"
-	]
+	],
+	"content_security_policy": "script-src 'self' https://ajax.googleapis.com; object-src 'self'"
 }
 

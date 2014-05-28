@@ -48,21 +48,35 @@ App.getFolders = function(bookmark) {
  * Tags
  */
 App.tagSlug = function(tag) {
+	// v 1.3
+	// var find = '\u00E1\u010D\u010F\u00E9\u011B\u00ED\u0148\u00F3\u0159\u0161\u0165\u00FA\u016F\u00FD\u017E';
+	// var repl = 'acdeeinorstuuyz';
+	// return tag.toLowerCase().replace(new RegExp('[' + find + ']', 'g'), function (str) { return repl[find.indexOf(str)]; }).replace(/[^a-z0-9_]+/g, '-').replace(/^-|-\$/g, '').substr(0, tag.length);
+
+	// v 1.4
 	var find = '\u00E1\u010D\u010F\u00E9\u011B\u00ED\u0148\u00F3\u0159\u0161\u0165\u00FA\u016F\u00FD\u017E';
 	var repl = 'acdeeinorstuuyz';
-	return tag.toLowerCase().replace(new RegExp('[' + find + ']', 'g'), function (str) { return repl[find.indexOf(str)]; }).replace(/[^a-z0-9_]+/g, '-').replace(/^-|-\$/g, '').substr(0, tag.length);
+	return tag.toLowerCase().replace(new RegExp('[' + find + ']', 'g'), function (str) { return repl[find.indexOf(str)]; });
 }
 App.removeTag = function(title) {
 	var matchTags = App.matchTags(title);
 	for(var i=0; i < matchTags.length; i++) {
-		title = title.replace(new RegExp("(#"+matchTags[i]+")", 'gi'), '');
+		// v 1.3
+		// title = title.replace(new RegExp("(#"+matchTags[i]+")", 'gi'), '');
+
+		// v 1.4
+		title = title.replace(new RegExp("("+matchTags[i]+")", 'gi'), '');
 	}
 	title.replace(/^\s+|\s+$/g, '');
 	return title;
 }
 App.matchTags = function(title) {
 	var matched = [];
-	var matchTags = title.match(/\S*#(?:\[[^\]]+\]|\S+)/g);
+	// v 1.3
+	// var matchTags = title.match(/\S*#(?:\[[^\]]+\]|\S+)/g);
+
+	// v 1.4
+	var matchTags = title.toLowerCase().match(/#([^\s]*)/g);
 
 	if(matchTags!=null) {
 		for(var i=0; i < matchTags.length; i++) {
@@ -87,11 +101,11 @@ App.processTag = function(node) {
 			if($('#tags a[data-tag="'+matchTags[i]+'"]').size()==0) {
 
 				// tags
-				var tagElement = '<li><a href="#" class="label hashtag" data-tag="'+matchTags[i]+'">'+matchTags[i]+'</a></li>';
+				var tagElement = '<li><a href="#" class="label hashtag" data-tag="'+matchTags[i]+'">'+matchTags[i].replace("#", "")+'</a></li>';
 				var added = false;
 				$('#tags li a').each(function(){
 
-					if($(this).text() > matchTags[i]) {
+					if($(this).text().replace("#", "") > matchTags[i].replace("#", "")) {
 						$(tagElement).insertBefore($(this).parent());
 						added = true;
 						return false;
@@ -100,11 +114,11 @@ App.processTag = function(node) {
 				if(!added) $(tagElement).appendTo($('#tags'));
 
 				// editor
-				var tagElement = '<li><a href="#" class="hashtag add-tag" data-tag="'+matchTags[i]+'">'+matchTags[i]+'</a></li>';
+				var tagElement = '<li><a href="#" class="hashtag add-tag" data-tag="'+matchTags[i]+'">'+matchTags[i].replace("#", "")+'</a></li>';
 				var added = false;
 				$('#addTag li a').each(function(){
 
-					if($(this).text() > matchTags[i]) {
+					if($(this).text().replace("#", "") > matchTags[i].replace("#", "")) {
 						$(tagElement).insertBefore($(this).parent());
 						added = true;
 						return false;
@@ -157,12 +171,12 @@ App.getTags = function(bookmark) {
 			}
 
 			for(i=0; i < nodeTags.length; i++) {
-				bookmarkHtml+= '	<span class="label hashtag">'+nodeTags[i]+'</span>';
+				bookmarkHtml+= '	<span class="label hashtag">'+nodeTags[i].replace("#", "")+'</span>';
 			}
 
 			bookmarkHtml+= '	</span>';
 
-			bookmarkHtml+= '	<a href="#" class="edit" data-id="'+node.id+'">Edit</a>';
+			bookmarkHtml+= '	<a href="#" class="edit" data-id="'+node.id+'">&#9998;</a>';
 			bookmarkHtml+= '	<span class="clearfix">&nbsp;</span>';
 
 			bookmarkHtml+= '</li>';
@@ -210,7 +224,7 @@ App.getSearch = function() {
  */
 $(function(){
 	App.init();
-	$(".nano").nanoScroller();
+	// $(".nano").nanoScroller();
 	$(document.body).on('click', 'a.label', function(){
 
 		if($(this).data("id")) {
@@ -281,7 +295,7 @@ $(function(){
 
 	$(document.body).on('click', '#addTag li a', function(){
 		console.log($(this).data("tag"));
-		$('#title').val($('#title').val()+" #"+$(this).data("tag"));
+		$('#title').val($('#title').val()+" "+$(this).data("tag"));
 	});
 	
 
