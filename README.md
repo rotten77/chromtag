@@ -11,4 +11,5 @@ Must-have Chrome extension for tagging your bookmarks!
 ## Used libraries
 
 * jQuery: http://jquery.com/
+* NanoScroller: http://jamesflorentino.github.io/nanoScrollerJS/
 * Yahoo! (YUI 3) Reset CSS: http://www.cssreset.com/scripts/yahoo-css-reset-yui-3/

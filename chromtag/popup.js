@@ -224,7 +224,7 @@ App.getSearch = function() {
  */
 $(function(){
 	App.init();
-	// $(".nano").nanoScroller();
+	$(".nano").nanoScroller();
 	$(document.body).on('click', 'a.label', function(){
 
 		if($(this).data("id")) {

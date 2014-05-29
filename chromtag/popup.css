@@ -9,7 +9,7 @@ h1{font-size:138.5%}h2{font-size:123.1%}h3{font-size:108%}h1,h2,h3{margin:1em 0}
  * ChromTag
  */
 body {
-	width: 420px;
+	width: 400px;
 	overflow: hidden;
 	font-size:10px;
 	font-family: verdana;
@@ -74,9 +74,9 @@ ul {
 	overflow:hidden;
 	background:#fff;
 }
-.bookmark:hover {
+/*.bookmark:hover {
 background: #fafafa;
-}
+}*/
 .bookmark .title {
 	float:left;
 	display:block;
@@ -106,17 +106,18 @@ background: #fafafa;
 .bookmark .edit {
 	position:absolute;
 	bottom:4px;
-	right:12px;
+	right:0;
 	text-decoration:none;
-	font-size:24px;
-	width:24px;
-	height:24px;
-	line-height:24px;
+	font-size:18px;
+	width:20px;
+	height:20px;
+	line-height:20px;
 	background:#f5aa45;
 	color:#fff;
 	border-radius: 4px;
-	opacity:0.7;
+	opacity:0.6;
 	display:none;
+	text-align:center;
 }
 .bookmark .edit:hover {
 	opacity:1.0;
