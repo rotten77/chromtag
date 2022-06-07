@@ -3,10 +3,12 @@ Chromtag
 
 Must-have Chrome extension for tagging your bookmarks!
 
-<iframe width="560" height="315" src="//www.youtube.com/embed/XGYbqjbHFK4?rel=0" frameborder="0" allowfullscreen></iframe>
-
 * Get more info at: http://chromtag.rotten77.cz/
 * Chrome Web Store: https://chrome.google.com/webstore/detail/chromtag-tag-your-bookmar/epeiimpoigheahfbmmhadnfgimaacipk
+
+## How to use
+
+Just add #hashtag to your bookmark title
 
 ## Used libraries
 

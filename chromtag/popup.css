@@ -94,7 +94,6 @@ background: #fafafa;
 }
 .bookmark .labels, .bookmark .url {
 	float:left;
-	margin-left:20px;
 	clear:both;
 }
 .bookmark .label {
@@ -125,19 +124,7 @@ background: #fafafa;
 .bookmark:hover .edit {
 	display:block;
 }
-.bookmark .favicon {
-	float:left;
-	width:16px;
-	height:16px;
-	margin-right:4px;
-	/*position:relative;*/
-	/*top:2px;*/
-}
-.bookmark .favicon img {
-	max-width:16px;
-	max-height:16px;
-	border:0;
-}
+
 a {
 	color:#333;
 }

@@ -48,12 +48,6 @@ App.getFolders = function(bookmark) {
  * Tags
  */
 App.tagSlug = function(tag) {
-	// v 1.3
-	// var find = '\u00E1\u010D\u010F\u00E9\u011B\u00ED\u0148\u00F3\u0159\u0161\u0165\u00FA\u016F\u00FD\u017E';
-	// var repl = 'acdeeinorstuuyz';
-	// return tag.toLowerCase().replace(new RegExp('[' + find + ']', 'g'), function (str) { return repl[find.indexOf(str)]; }).replace(/[^a-z0-9_]+/g, '-').replace(/^-|-\$/g, '').substr(0, tag.length);
-
-	// v 1.4
 	var find = '\u00E1\u010D\u010F\u00E9\u011B\u00ED\u0148\u00F3\u0159\u0161\u0165\u00FA\u016F\u00FD\u017E';
 	var repl = 'acdeeinorstuuyz';
 	return tag.toLowerCase().replace(new RegExp('[' + find + ']', 'g'), function (str) { return repl[find.indexOf(str)]; });
@@ -61,10 +55,6 @@ App.tagSlug = function(tag) {
 App.removeTag = function(title) {
 	var matchTags = App.matchTags(title);
 	for(var i=0; i < matchTags.length; i++) {
-		// v 1.3
-		// title = title.replace(new RegExp("(#"+matchTags[i]+")", 'gi'), '');
-
-		// v 1.4
 		title = title.replace(new RegExp("("+matchTags[i]+")", 'gi'), '');
 	}
 	title.replace(/^\s+|\s+$/g, '');
@@ -72,10 +62,6 @@ App.removeTag = function(title) {
 }
 App.matchTags = function(title) {
 	var matched = [];
-	// v 1.3
-	// var matchTags = title.match(/\S*#(?:\[[^\]]+\]|\S+)/g);
-
-	// v 1.4
 	var matchTags = title.toLowerCase().match(/#([^\s]*)/g);
 
 	if(matchTags!=null) {
@@ -160,8 +146,8 @@ App.getTags = function(bookmark) {
 			nodeSearch+="-"+App.tagSlug(nodeFolder);
 		}
 		var bookmarkHtml = '<li class="bookmark">';
-			// bookmarkHtml+= '	';
-			bookmarkHtml+= '	<a href="'+node.url+'" class="title" target="_blank" data-search="'+nodeSearch+'" data-title="'+node.title+'" data-parent="'+node.parentId+'" data-id="'+node.id+'"><span class="favicon"><img src="chrome://favicon/'+node.url+'" /></span>'+App.removeTag(node.title)+'</a>';
+
+			bookmarkHtml+= '	<a href="'+node.url+'" class="title" target="_blank" data-search="'+nodeSearch+'" data-title="'+node.title+'" data-parent="'+node.parentId+'" data-id="'+node.id+'">'+App.removeTag(node.title)+'</a>';
 			bookmarkHtml+= '	<span class="url">'+node.url+'</span>';
 			bookmarkHtml+= '	<span class="labels">';
 
@@ -273,6 +259,7 @@ $(function(){
 	});
 	$('#save').click(function(){
 		var folder = $('#folder option:selected').val();
+		console.log(folder);
 		if(folder!=$('#move').val()) {
 			chrome.bookmarks.move(
 				$('#id').val(),

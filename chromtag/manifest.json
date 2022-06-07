@@ -1,5 +1,5 @@
 {
-	"manifest_version": 2,
+	"manifest_version": 3,
 	"name": "ChromTag - tag your bookmarks",
 	"short_name": "ChromTag",
 	"description": "Tag your bookmarks with #hashtag!",
@@ -8,14 +8,13 @@
 		"48": "icon48.png",
 		"128": "icon128.png"
 		},
-	"version": "1.4",
-	"browser_action": {
+	"version": "1.5",
+	"action": {
 		"default_icon": "icon.png",
-		"default_popup": "popup.html"
+		"default_popup": "popup.html",
+		"default_title": "Chromtag"
 	},
 	"permissions": [
-		"bookmarks",
-		"chrome://favicon/"
+		"bookmarks"
 	]
 }
-
