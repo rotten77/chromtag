@@ -260,12 +260,12 @@ $(function(){
 	$('#save').click(function(){
 		var folder = $('#folder option:selected').val();
 		console.log(folder);
+		console.log($('#move').val())
 		if(folder!=$('#move').val()) {
 			chrome.bookmarks.move(
 				$('#id').val(),
 				{
-					parentId: folder,
-					index: $('#folder option:selected').data("index")
+					parentId: folder
 				}
 			);
 		}
