@@ -207,10 +207,13 @@ a:hover {
 	width:90%;
 	padding:4px;
 }
+#editor .control input#new-tag {
+	width:33%;
+}
 #editor .control textarea {
 	min-height: 40px;
 }
-#editor input, #editor select, #editor select option, #editor button, #editor textarea {
+#editor input, #editor select, #editor select option, #editor button, #editor textarea, #editor .control input#new-tag {
 	font-family: verdana;
 	font-size:11px;
 }
@@ -230,6 +233,12 @@ a:hover {
 #addTag li {
 	float:left;
 	margin: 0 4px 4px 0;
+}
+#addTag li a.selected {
+	font-weight: bold;
+}
+#new-tag-form {
+	clear:both;
 }
 /*v 1.4;*/
 #wrapper {

@@ -16,7 +16,7 @@
 	
 	<div id="toolbar">
 		<ul>
-			<li><input type="text" id="search" placeholder="Search&hellip;" /></li>
+			<li><input type="text" id="search" placeholder="Search&hellip;" autocomplete="off" /></li>
 			<li><a href="#" data-action="show-all">All bookmarks</a></li>
 			<li><a href="#" data-action="show-folders">Show folders</a></li>
 			<li><a href="#" data-action="hide-folders">Hide folders</a></li>
@@ -34,9 +34,11 @@
 
 		<div class="control">
 			<label for="title">Add tag</label>
+			
 			<ul id="addTag">
 				
 			</ul>
+			<form id="new-tag-form"><input type="text" name="new-tag" id="new-tag" placeholder="Add a new tag" autocomplete="off" /></form>
 		</div>
 
 		<div class="control">

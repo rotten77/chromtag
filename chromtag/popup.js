@@ -238,6 +238,13 @@ $(function(){
 		App.init();
 		closeEditor();
 	}
+	function editorSelectTags() {
+		$('#addTag li a').removeClass("selected");
+		matchTags = App.matchTags($('#title').val());
+		for(var  i=0; i<matchTags.length; i++) {
+			$('#addTag li a[data-tag="'+matchTags[i]+'"]').addClass('selected');
+		}
+	}
 	closeEditor();
 	$('#over').click(function(){ closeEditor(); });
 	$('#cancel').click(function(){ closeEditor(); });
@@ -252,6 +259,7 @@ $(function(){
 		$('#move').val(bookmark.data("parent"));
 		$('#folder option').removeAttr("selected");
 		$('#folder option[value="'+bookmark.data("parent")+'"]').attr("selected", true);
+		editorSelectTags();
 		return false;
 	});
 	$('#delete').click(function(){
@@ -279,10 +287,42 @@ $(function(){
 			editorCallback
 			);
 	});
-
 	$(document.body).on('click', '#addTag li a', function(){
-		console.log($(this).data("tag"));
-		$('#title').val($('#title').val()+" "+$(this).data("tag"));
+		title = $('#title').val();
+		tag = $(this).data("tag");
+		tagExists = false;
+
+		var re = new RegExp(tag);
+		console.log(title);
+		console.log(re);
+		console.log(re.test(title));
+		if(re.test(title)) {
+			title = title.replace(tag, "");
+			$('#addTag li a[data-tag="'+tag+'"]').removeClass('selected');
+			tagExists = true;
+		}
+		title = title.replace(/(\s{2,})/, " ");
+		title = title.trim()
+		if(!tagExists) {
+			title += " "+ tag
+			$('#addTag li a[data-tag="'+tag+'"]').addClass('selected');
+		}
+		$('#title').val(title);
+	});
+	$(document.body).on('submit', '#new-tag-form', function(){
+		newTag = $('#new-tag').val();
+		newTag = App.tagSlug(newTag)
+		newTag = newTag.replace(/(\s{2,})/, " ");
+		newTag = newTag.trim();
+		newTag = newTag.replace(" ", "-");
+		console.log(newTag);
+
+		var tagElement = '<li><a href="#" class="hashtag add-tag" data-tag="#'+newTag+'">'+newTag+'</a></li>';
+		$(tagElement).appendTo($('#addTag'));
+		$('a[data-tag="#'+newTag+'"]').click();
+		$('#new-tag').val('');
+
+		return false;
 	});
 	
 
