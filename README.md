@@ -1,11 +1,11 @@
 Chromtag
 ========
 
-With ChromTag, you can quickly find the bookmark you need. 
+With Chromtag, you can quickly find the bookmark you need. 
 
 You can just add a #hashtag to your bookmark title or edit it directly in the extension.
 
-You don't have to worry about your data loss or privacy because ChromTag uses the browser's native bookmarks.
+You don't have to worry about your data loss or privacy because Chromtag uses the browser's native bookmarks.
 
 ----
 
@@ -13,19 +13,19 @@ You don't have to worry about your data loss or privacy because ChromTag uses th
 
 ----
 
-![ChromTag](./img/bookmarks-chromtag-filtering.png)
+![Chromtag](./img/bookmarks-chromtag-filtering.png)
 
 ## Features
 
 | Add #hashtag | Tags and folders filtering | Search  |
 |---|---|---|
-|  [![name](./img/bookmarks-chromtag_t.png)](./img/bookmarks-chromtag.png)  |  [![name](./img/bookmarks-chromtag-filtering_t.png)](./img/bookmarks-chromtag-filtering.png) |  [![name](./img/bookmarks-chromtag-search_t.png)](./img/bookmarks-chromtag-search.png) |
+|  [![Chromtag](./img/bookmarks-chromtag_t.png)](./img/bookmarks-chromtag.png)  |  [![Filtering](./img/bookmarks-chromtag-filtering_t.png)](./img/bookmarks-chromtag-filtering.png) |  [![Search](./img/bookmarks-chromtag-search_t.png)](./img/bookmarks-chromtag-search.png) |
 
 
-## Why ChromTag?
+## Why Chromtag?
 
-* In Chrome, you can organize your bookmarks only with folders. With ChromTag you can also add tags and quick search your bookmarks.
-* Unlike the others, ChromTag uses the browser's native bookmarks. So you don't have to worry about your data loss or privacy.
+* In Chrome, you can organize your bookmarks only with folders. With Chromtag you can also add tags and quick search your bookmarks.
+* Unlike the others, Chromtag uses the browser's native bookmarks. So you don't have to worry about your data loss or privacy.
 
 
 ## Used libraries
