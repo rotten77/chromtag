@@ -17,7 +17,7 @@ You don't have to worry about your data loss or privacy because ChromTag uses th
 
 ## Features
 
-| Add #hashtag | Tag and folders filtering | Search  |
+| Add #hashtag | Tags and folders filtering | Search  |
 |---|---|---|
 |  [![name](./img/bookmarks-chromtag_t.png)](./img/bookmarks-chromtag.png)  |  [![name](./img/bookmarks-chromtag-filtering_t.png)](./img/bookmarks-chromtag-filtering.png) |  [![name](./img/bookmarks-chromtag-search_t.png)](./img/bookmarks-chromtag-search.png) |
 
