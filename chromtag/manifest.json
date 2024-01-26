@@ -8,13 +8,14 @@
 		"48": "icon48.png",
 		"128": "icon128.png"
 		},
-	"version": "1.7",
+	"version": "1.8",
 	"action": {
 		"default_icon": "icon.png",
 		"default_popup": "popup.html",
 		"default_title": "Chromtag"
 	},
 	"permissions": [
-		"bookmarks"
+		"bookmarks",
+		"tabs"
 	]
 }

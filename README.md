@@ -36,6 +36,9 @@ You don't have to worry about your data loss or privacy because Chromtag uses th
 
 ## Version history
 
+* 1.8 (2024-01-25)
+  * Increased font and window sizes
+  * Added a button for creating a new bookmark
 * 1.7 (2022-06-22)
   * Tag list added to editor
 * 1.6 (2022-06-09)

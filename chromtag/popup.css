@@ -9,10 +9,10 @@ h1{font-size:138.5%}h2{font-size:123.1%}h3{font-size:108%}h1,h2,h3{margin:1em 0}
  * ChromTag
  */
 body {
-	width: 400px;
+	width: 500px;
 	overflow: hidden;
-	font-size:10px;
-	font-family: verdana;
+	font-size:12px;
+	font-family: system-ui, sans-serif;;
 }
 ul {
 	list-style-type: none;
@@ -23,7 +23,7 @@ ul {
 #wrapper {
 	width:100%;
 	clear:both;
-	height:300px;
+	height:380px;
 }
 .clearfix {
 	display:block;
@@ -81,8 +81,11 @@ background: #fafafa;
 	float:left;
 	display:block;
 	font-weight: bold;
-	font-size: 12px;
+	font-size: 14px;
 	padding-bottom:4px;
+}
+.bookmark .title:hover {
+	color:#4185fa;
 }
 .bookmark .url {
 	display: block;
@@ -144,16 +147,17 @@ a:hover {
 	height:20px;
 	border-right: 1px solid #e5e5e5;
 }
-#toolbar ul li a, #toolbar ul li a:hover {
+#toolbar ul li a {
 	display: block;
 	color:#000;
 	height:20px;
 	line-height:20px;
-	background-repeat: no-repeat;
-	background-position: 4px 4px;
 	padding:0 6px;
 	text-decoration:none;
 	opacity:0.5;
+}
+#toolbar ul li a:hover {
+	background:#ddd;
 }
 #toolbar ul li.close {
 	float:right;

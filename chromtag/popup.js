@@ -185,7 +185,7 @@ App.getBookmarks = function(bookmark) {
  * Search
  */
 App.getSearch = function() {
-	var  keywords = new Array();
+	var keywords = new Array();
 	var search = App.tagSlug($('#search').val());
 	if(search!="") keywords.push(search);
 
@@ -231,6 +231,20 @@ $(function(){
 	/**
 	 * Editor
 	 */
+	function showEditor(id) {
+		$('#over, #editor').show();
+		console.log(id)
+		chrome.bookmarks.get(id.toString(), function(bookmarks){
+			console.log(bookmarks[0])
+			$('#title').val(bookmarks[0].title);
+			$('#url').val(bookmarks[0].url);
+			$('#id').val(id);
+			$('#move').val(bookmarks[0].parentId);
+			$('#folder option').removeAttr("selected");
+			$('#folder option[value="'+bookmarks[0].parentId+'"]').attr("selected", true);
+			editorSelectTags();
+		});
+	}
 	function closeEditor() {
 		$('#over, #editor').hide();
 	}
@@ -250,16 +264,8 @@ $(function(){
 	$('#cancel').click(function(){ closeEditor(); });
 
 	$(document.body).on('click', 'a.edit', function(){
-		$('#over, #editor').show();
 		var id = $(this).data("id");
-		var bookmark = $('.bookmark a[data-id="'+id+'"]');
-		$('#title').val(bookmark.data("title"));
-		$('#url').val(bookmark.attr("href"));
-		$('#id').val(id);
-		$('#move').val(bookmark.data("parent"));
-		$('#folder option').removeAttr("selected");
-		$('#folder option[value="'+bookmark.data("parent")+'"]').attr("selected", true);
-		editorSelectTags();
+		showEditor(id)
 		return false;
 	});
 	$('#delete').click(function(){
@@ -293,9 +299,9 @@ $(function(){
 		tagExists = false;
 
 		var re = new RegExp(tag);
-		console.log(title);
-		console.log(re);
-		console.log(re.test(title));
+		// console.log(title);
+		// console.log(re);
+		// console.log(re.test(title));
 		if(re.test(title)) {
 			title = title.replace(tag, "");
 			$('#addTag li a[data-tag="'+tag+'"]').removeClass('selected');
@@ -364,4 +370,16 @@ $(function(){
 		return false;
 	});
 
+	$('a[data-action="add-bookmark"]').click(function(){
+		chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
+			var currentTab = tabs[0];
+			chrome.bookmarks.create({
+			  title: currentTab.title,
+			  url: currentTab.url
+			}, function(newBookmark) {
+				showEditor(newBookmark.id);
+			});
+		  });
+		return false;
+	});
 });
