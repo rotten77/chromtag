@@ -20,7 +20,7 @@ Updated: 2026-11-12
 - Behavior probes reproduced callback-order, tag-regex, generated-selector, Unicode-normalization, and literal-rendering defects. Arabic, Chinese, and emoji samples matched; no blanket script failure was reproduced.
 - The focused 100/1,000-bookmark diagnostic and behavior assertions passed. A forced-timeout check correctly recorded a timeout, skipped remaining runs at that size, ran probes, and exited nonzero.
 - No Angular workspace, application dependencies, application test runner, or modernized extension exists. Application build/run/test commands remain planned.
-- T-01 runner, documentation, and memory updates are uncommitted.
+- T-01 runner, documentation, and memory updates are committed in `3fd5f06` (Complete T-01 legacy baseline and matching decisions). User verification remains pending.
 
 ## Remaining work and decisions
 
