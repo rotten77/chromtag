@@ -27,6 +27,7 @@ The compact popup uses a 13 px base font and a 540 × 580 px layout. The `Search
 Release scope:
 
 - **2.0 (implemented):** Angular popup, one transient bookmark model per refresh, virtualized rows, safe rendering, and Unicode search across titles, folders, and URLs.
+- **Planned 2.0 follow-up:** Loading and bookmark/hashtag-processing progress, with counts when reliable and evidence-based guidance for large libraries.
 - **2.1:** Search and tag/folder filters retained during the browser session.
 - **2.2:** Persistent typography, popup dimensions, combined folder/tag cloud height, and independent Material palette choices for light/dark foreground, tags, and folders. Backgrounds stay white/light and `#212121`/dark.
 - **2.3:** Persistent bookmark tab-target and popup-close preferences.

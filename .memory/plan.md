@@ -63,6 +63,14 @@ These are the 8 supplied current-app stories, revised for the supplied moderniza
 
 Statuses describe the new implementation. Behavior in the ignored 1.8 reference does not mark a modernization story complete.
 
+## E-20 follow-up — Bookmark loading and processing feedback
+
+| ID | Task | Goal | Status | Criteria |
+|---|---|---|---|---|
+| T-13 | Show bookmark processing progress | Show loading and hashtag-processing progress in the popup, with an honest count when available and evidence-based guidance for large libraries. | Not started | T-13 |
+
+Schedule after version 2.0 user verification. The existing generic loading message is not counted as completion. Decide how to keep progress visible during model processing before implementation; do not claim a supported bookmark limit from synthetic tests.
+
 ## E-21 — Version 2.1 session filters
 
 | ID | Story | User goal | Status | Criteria |
@@ -103,4 +111,4 @@ T-10 uses the materials from T-09. Jan performs the final overall verification. 
 
 ## Next step
 
-Jan verifies the version 2.0 candidate in Chrome 157+ using `dist/chromtag/browser/` and [the usage guide](../docs/usage.md). E-20 implementation is complete; T-02 through T-07 and US-01 through US-08 remain ready for explicit user verification. E-21 requires the user's next instruction.
+Jan verifies the version 2.0 candidate in Chrome 157+ using `dist/chromtag/browser/` and [the usage guide](../docs/usage.md). T-02 through T-07 and US-01 through US-08 remain ready for explicit user verification. T-13 is planned after that verification; E-21 requires the user's next instruction.

@@ -25,6 +25,10 @@ Search matches respect grapheme boundaries. A query cannot match only part of an
 
 Angular standalone components and TypeScript replace the old UI libraries. One Chrome bookmark snapshot supplies the transient model per load/refresh. Model filtering and a virtualized list with overscan address large collections, including 10,000+ synthetic bookmarks.
 
+## Planned version 2.0 follow-up — Loading progress
+
+The popup will show when it is reading and processing bookmarks, including hashtags. When a reliable total is available, it will show processed/total counts. Large-library guidance must reflect the 10,001-supported-bookmark synthetic test without promising a maximum or timing guarantee. Progress count scope and any message threshold remain open. This is not implemented in the version 2.0 candidate; see T-13 criteria.
+
 ## Version 2.1 — Session filters
 
 The query and selected tags/folder survive popup closure during the browser session through `chrome.storage.session`. Reset clears active and saved filters. Ending the browser session clears saved filters. See US-09 criteria.

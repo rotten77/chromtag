@@ -251,6 +251,18 @@ Regression tests are explicit supplied requirements. `npm test` runs manifest, A
 
 The supplied plan names `legacy/`; no tracked directory with that name exists now. Preserve the ignored `.local/legacy/` archive during implementation and final testing. T-11 handles obsolete legacy and work files after final testing.
 
+## Planned version 2.0 follow-up acceptance criteria
+
+### T-13 — Show bookmark processing progress
+
+- **T-13-AC1:** On popup open and each refresh, indicate when Chrome's bookmark tree is loading and when Chromtag is processing the snapshot, including hashtags. Clear the indicator on completion or failure; retain existing error reporting.
+- **T-13-AC2:** When a reliable total is available, show processed and total bookmark counts (for example, `45/1235`). Do not show a fabricated percentage or denominator while the tree read is pending. Define whether the count covers all tree bookmark nodes or only supported bookmarks before implementation, and keep the numerator/denominator consistent.
+- **T-13-AC3:** Keep the indicator responsive during processing of large libraries, without repeated tree reads, persistent bookmark/index data, or unbounded row rendering. Ensure the progress is perceivable without flooding assistive-technology announcements.
+- **T-13-AC4:** For large collections, provide reassuring guidance based only on measured evidence. It may cite the 10,001-supported-bookmark synthetic Chrome test, but must not imply a guaranteed maximum, real-profile result, or universal processing time. Decide whether to show guidance at a count threshold and select that threshold before implementation.
+- **T-13-AC5:** Regression-test loading, determinate progress when available, completion/failure, large-library messaging, and snapshot/performance boundaries; verify in stable Chrome.
+
+The current popup shows a generic `Loading bookmarks…` message. It does not report model-processing progress. Decide how to yield rendering time to the popup during processing before implementing a live count; synchronous processing cannot display intermediate updates.
+
 ## Later release acceptance criteria
 
 ### US-09 — Restore popup filters (version 2.1)
@@ -335,6 +347,7 @@ These steps apply after the relevant implementation and tooling exist.
 ## Open decisions and evidence gaps
 
 - Real-profile performance and timing targets. T-01 records the legacy synthetic baseline; T-04/T-05 use 10,001 supported browser records and deep unit fixtures. Tests check at most 24 live rows in exercised layouts; this is not a timing guarantee.
+- T-13 progress count scope, rendering/yield strategy, and any large-library message threshold. The 10,001-bookmark synthetic test is evidence, not a support guarantee.
 - Version 2.2 editable-color defaults, supported bounds (including cloud height), and precise Material Design palette choices. Light/dark backgrounds are fixed at `#FFFFFF`/`#212121`. Version 2.0 starts with a 13 px base font and a 540 × 580 px popup; T-05 checks compact layout and overflow.
 - The v2.3 popup-close default and verified lifecycle limits.
 
