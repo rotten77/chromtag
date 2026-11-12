@@ -18,7 +18,10 @@ export interface Bookmark {
   folderName: string;
   folderOrder: number;
   tags: Tag[];
+  searchFields: SearchField[];
 }
+export interface SearchField { text: string; boundaries?: Set<number> }
+export interface Filters { query: string; tags: ReadonlySet<string>; folderId: string | null }
 export interface Model {
   bookmarks: Bookmark[];
   folders: Folder[];
@@ -27,6 +30,29 @@ export interface Model {
 }
 
 export const normalize = (value: string): string => value.normalize('NFC').toLowerCase().normalize('NFC');
+const segmenter = new Intl.Segmenter('und', { granularity: 'grapheme' });
+
+export function phraseMatches(field: SearchField, query: string): boolean {
+  let start = field.text.indexOf(query);
+  if (start < 0) return false;
+  // Segment only fields containing a candidate. Cache boundaries in popup memory.
+  field.boundaries ??= new Set([field.text.length, ...Array.from(segmenter.segment(field.text), part => part.index)]);
+  while (start >= 0) {
+    if (field.boundaries.has(start) && field.boundaries.has(start + query.length)) return true;
+    start = field.text.indexOf(query, start + 1);
+  }
+  return false;
+}
+
+export function filterBookmarks(model: Model, filters: Filters): Bookmark[] {
+  const query = normalize(filters.query.trim());
+  const folder = filters.folderId ? model.folderById.get(filters.folderId) : undefined;
+  return model.bookmarks.filter(bookmark => {
+    if (filters.folderId && (!folder || bookmark.folderOrder < folder.order || bookmark.folderOrder >= folder.end)) return false;
+    for (const key of filters.tags) if (!bookmark.tags.some(tag => tag.key === key)) return false;
+    return !query || bookmark.searchFields.some(field => phraseMatches(field, query));
+  });
+}
 
 export function codePointOrder(a: string, b: string): number {
   const left = Array.from(a, c => c.codePointAt(0)!);
@@ -69,7 +95,7 @@ export function buildModel(tree: chrome.bookmarks.BookmarkTreeNode[]): Model {
       for (const span of spans) if (!tags.has(span.key)) tags.set(span.key, { key: span.key, label: span.label });
       bookmarks.push({ id: node.id, title: node.title, displayTitle: withoutTags(node.title, spans), url: node.url,
         parentId: parent?.id, folderName: parent?.title ?? '', folderOrder: parent?.order ?? -1,
-        tags: [...uniqueTags.values()] });
+        tags: [...uniqueTags.values()], searchFields: [node.title, parent?.title ?? '', node.url].map(text => ({ text: normalize(text) })) });
     } else {
       // Chrome's invisible tree root is not a destination or cloud entry.
       const folder = node.id === '0' ? undefined : {

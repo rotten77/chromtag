@@ -33,6 +33,24 @@ try {
   const tab = await opened;
   await tab.waitForURL('https://example.invalid/test');
   await tab.close();
+  await page.evaluate(async () => {
+    for (let batch = 0; batch < 40; batch++) {
+      await Promise.all(Array.from({ length: 250 }, (_, index) => {
+        const number = batch * 250 + index;
+        return chrome.bookmarks.create({ title: `Scale bookmark ${number} #scale`, url: `https://example.invalid/scale/${number}` });
+      }));
+    }
+  });
+  const started = performance.now();
+  await page.reload();
+  await page.getByRole('button', { name: 'Scale bookmark 0', exact: true }).waitFor();
+  const elapsed = performance.now() - started;
+  const liveRows = await page.locator('article.bookmark').count();
+  assert(liveRows > 0 && liveRows <= 24, `10,001 records must have bounded live rows, saw ${liveRows}`);
+  await page.locator('cdk-virtual-scroll-viewport').evaluate(element => { element.scrollTop = element.scrollHeight; element.dispatchEvent(new Event('scroll')); });
+  await page.getByRole('button', { name: 'Scale bookmark 9999', exact: true }).waitFor();
+  assert(await page.locator('article.bookmark').count() <= 24);
+  console.log(`10,001 native synthetic bookmarks: startup ${elapsed.toFixed(1)} ms, ${liveRows} live rows; last row reached.`);
   assert.deepEqual(errors, [], 'No runtime or CSP errors');
   console.log('PASS: loadable extension, native bookmark snapshot, literal rendering, new-tab navigation, no runtime/CSP errors.');
 } finally {
