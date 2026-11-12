@@ -6,14 +6,6 @@ interface FilterChoice { key: string; id: string; label: string; kind: 'folder' 
 @Component({
   selector: 'app-filter-cloud', changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <div #cloud id="filter-cloud" class="cloud filter-cloud" role="group" aria-label="Bookmark filters" [attr.aria-busy]="!pageReady()">
-      @for (choice of remaining(); track choice.key; let index = $index) {
-        <button #choiceButton type="button" [class.folder]="choice.kind === 'folder'" [class.tag]="choice.kind === 'tag'"
-          [class.active]="isSelected(choice)" [attr.aria-pressed]="isSelected(choice)" [title]="choice.label"
-          [inert]="index >= visibleCount()" [attr.aria-hidden]="index >= visibleCount() ? true : null"
-          [style.visibility]="index >= visibleCount() ? 'hidden' : null" (click)="select(choice)">{{ choice.label }}</button>
-      }
-    </div>
     @if (hasMore() || history().length) {
       <nav class="cloud-paging" aria-label="Filter pages">
         <button type="button" (click)="first()" [disabled]="!history().length">First filters</button>
@@ -22,8 +14,16 @@ interface FilterChoice { key: string; id: string; label: string; kind: 'folder' 
         <button type="button" (click)="next()" [disabled]="!hasMore() || !pageReady()">More filters</button>
       </nav>
     }
+    <div #cloud id="filter-cloud" class="cloud filter-cloud" role="group" aria-label="Bookmark filters" [attr.aria-busy]="!pageReady()">
+      @for (choice of remaining(); track choice.key; let index = $index) {
+        <button #choiceButton type="button" [class.folder]="choice.kind === 'folder'" [class.tag]="choice.kind === 'tag'"
+          [class.active]="isSelected(choice)" [attr.aria-pressed]="isSelected(choice)" [title]="choice.label"
+          [inert]="index >= visibleCount()" [attr.aria-hidden]="index >= visibleCount() ? true : null"
+          [style.visibility]="index >= visibleCount() ? 'hidden' : null" (click)="select(choice)">{{ choice.label }}</button>
+      }
+    </div>
   `,
-  styles: `:host { display: block; flex-shrink: 0; min-width: 0; } .filter-cloud { max-height: 7rem; overflow: hidden; } .filter-cloud > button { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; } .cloud-paging { display: flex; align-items: center; gap: .3rem; padding: 0 .65rem .4rem; font-size: .85em; } .cloud-paging button { padding: .15em .35em; } .cloud-paging span { margin-left: auto; white-space: nowrap; }`,
+  styles: `:host { display: flex; flex-direction: column; flex-shrink: 0; min-width: 0; max-height: min(16rem, calc(100% - 20rem)); } .filter-cloud { min-height: 0; max-height: 14rem; overflow: hidden; align-content: flex-start; } .filter-cloud > button { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; } .cloud-paging { display: flex; align-items: center; gap: .3rem; padding: .4rem .65rem 0; font-size: .85em; flex-shrink: 0; } .cloud-paging button { padding: .15em .35em; } .cloud-paging span { margin-left: auto; white-space: nowrap; }`,
 })
 export class FilterCloud implements AfterViewInit, OnDestroy {
   readonly folders = input.required<Folder[]>();

@@ -43,6 +43,7 @@ async function checkFixedLayout(page) {
   const viewport = page.locator('cdk-virtual-scroll-viewport');
   await viewport.evaluate(element => { element.scrollTop = 0; element.dispatchEvent(new Event('scroll')); });
   const before = await fixedBounds();
+  assert(await viewport.isVisible(), 'Bookmark list remains visible at this popup size');
   await viewport.hover();
   await page.mouse.wheel(0, 900);
   await page.waitForFunction(() => document.querySelector('cdk-virtual-scroll-viewport').scrollTop > 0);
@@ -62,12 +63,23 @@ async function checkBookmarkWidth(page) {
     const edit = row.querySelector('.edit');
     const title = row.querySelector('.title');
     const url = row.querySelector('.url');
+    const labels = row.querySelector('.labels');
     const fontRatio = parseFloat(getComputedStyle(url).fontSize) / parseFloat(getComputedStyle(title).fontSize);
+    const labelRatio = parseFloat(getComputedStyle(labels).fontSize) / parseFloat(getComputedStyle(title).fontSize);
+    const badges = [...labels.querySelectorAll('.tag, .folder')].map(badge => ({
+      kind: badge.className, fontSize: parseFloat(getComputedStyle(badge).fontSize), background: getComputedStyle(badge).backgroundColor,
+    }));
     const bounds = node => ({ left: node.getBoundingClientRect().left, right: node.getBoundingClientRect().right });
-    return { fontRatio, width: element.clientWidth, scrollWidth: element.scrollWidth, viewport: bounds(element), row: bounds(row), edit: bounds(edit), title: bounds(title), titleTruncated: title.scrollWidth > title.clientWidth, urlTruncated: url.scrollWidth > url.clientWidth };
+    return { fontRatio, labelRatio, badges, urlFontSize: parseFloat(getComputedStyle(url).fontSize), width: element.clientWidth, scrollWidth: element.scrollWidth, viewport: bounds(element), row: bounds(row), edit: bounds(edit), title: bounds(title), titleTruncated: title.scrollWidth > title.clientWidth, urlTruncated: url.scrollWidth > url.clientWidth };
   });
   assert.equal(layout.scrollWidth, layout.width, 'Long bookmarks must not widen the viewport');
   assert(Math.abs(layout.fontRatio - .8) < .001, 'URL text stays at 80% of the title size');
+  assert(Math.abs(layout.labelRatio - .8) < .001, 'Row labels stay at 80% of the title size');
+  assert(layout.badges.some(badge => badge.kind === 'folder') && layout.badges.some(badge => badge.kind === 'tag'), 'Check both folder and tag row badges');
+  for (const badge of layout.badges) {
+    assert(Math.abs(badge.fontSize - layout.urlFontSize) < .001, `${badge.kind} badge matches the URL font size`);
+    assert.equal(badge.background, 'rgb(158, 158, 158)', `${badge.kind} badge uses #9E9E9E`);
+  }
   assert(Math.abs(layout.row.right - layout.row.left - layout.width) <= 1, 'Article fills all available viewport width');
   assert(layout.edit.left >= layout.row.left && layout.edit.right <= layout.viewport.left + layout.width + 1, 'Edit stays inside the visible row');
   assert(layout.title.right <= layout.edit.left, 'Truncated text does not overlap Edit');
@@ -242,6 +254,12 @@ try {
   assert.equal(fullCloud.sections, 0);
   assert.equal(fullCloud.overflow, 'hidden');
   assert(fullCloud.scrollHeight > fullCloud.height, 'Excess cloud labels collapse without a scrollbar');
+  const pagingPosition = await page.evaluate(() => {
+    const nav = document.querySelector('app-filter-cloud .cloud-paging').getBoundingClientRect();
+    const cloud = document.querySelector('.filter-cloud').getBoundingClientRect();
+    return { navBottom: nav.bottom, cloudTop: cloud.top };
+  });
+  assert(pagingPosition.navBottom <= pagingPosition.cloudTop + 1, 'Paging controls stay above the filter choices');
   const reached = new Set();
   do {
     for (const label of await page.locator('.filter-cloud button:not([inert])').allTextContents()) reached.add(label);
@@ -253,6 +271,15 @@ try {
   assert.equal(reached.size, 246, 'All 116 folders and 130 tags remain reachable');
   await filterPage(page, 'Previous filters');
   await filterPage(page, 'First filters');
+  const firstPage = await page.evaluate(() => {
+    const cloud = document.querySelector('.filter-cloud');
+    const shown = [...cloud.querySelectorAll('button:not([inert])')];
+    const last = shown.at(-1)?.getBoundingClientRect();
+    const bounds = cloud.getBoundingClientRect();
+    return { lastBottom: last?.bottom, cloudBottom: bounds.bottom, cloudHeight: bounds.height, listHeight: document.querySelector('cdk-virtual-scroll-viewport').getBoundingClientRect().height };
+  });
+  assert(firstPage.cloudBottom - firstPage.lastBottom < 40, 'First filter page leaves no large blank area below the choices');
+  assert(firstPage.listHeight > 0, 'Bookmark list stays visible below the filter cloud');
   await checkFixedLayout(page);
   await screenshot(page, 'crowded');
   await page.locator('cdk-virtual-scroll-viewport').evaluate(element => { element.scrollTop = element.scrollHeight; element.dispatchEvent(new Event('scroll')); });

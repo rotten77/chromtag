@@ -8,7 +8,7 @@ Updated: 2026-11-12
 - Jan authorized implementing the entire E-20 sequentially, with per-task commits/logs. User verification remains pending. E-21 and later releases are outside this batch.
 - Angular 22 / TypeScript 6 / native Chrome APIs target Chrome 157+. Loadable output: dist/chromtag/browser/. No legacy runtime libraries or persisted bookmark/index data.
 - Completed E-20 as version 2.0 release candidate: manifest 2.0 / package and lockfile 2.0.0, machine-assisted development under human guidance documented in CHANGELOG, no replaced legacy runtime dependencies, and generated dependency notices included inside the loadable extension root. Final production build, 54 Angular tests, 8 manifest tests, stable Chrome native integration with 10,001 supported bookmarks, 164 documentation links / 75 mappings, package checks, and static checks passed. User verification and representative-profile testing remain pending; nothing was published.
-- Latest passing HTML report: .local/test-results/2026-11-12T18-46-31.494Z-30328.html. Failed reports are retained too.
+- Latest passing HTML report: .local/test-results/2026-11-12T19-54-26.711Z-42968.html. Failed reports are retained too.
 - Stable Chrome 157.0.8103.51 integration uses a fresh temporary profile with synthetic bookmarks, never the user's profile. A representative real profile is unavailable.
 
 - T-05 review changes are ready for verification: label-free Search... field, 1 wrapping folder/tag cloud without internal scrolling, full-width CSS-truncated bookmark rows with Edit revealed on row hover or visible keyboard focus, folder green #4CAF50 and tag blue #448AFF. The main popup is now 540 x 580 px with selected #F44336 and hover #212121. The cloud stays fixed; excess labels collapse behind First/Previous/More filters, as Jan selected. Only the bookmark-list area scrolls.
@@ -16,7 +16,7 @@ Updated: 2026-11-12
 
 - Latest title/Edit refinement is ready for verification: underline titles, use the tag blue on title hover, hide Edit at rest, and reveal it on article hover or visible keyboard focus. Reserved button space prevents layout shift. Native tests verify Tab/Enter editing and mouse hover.
 
-- URL typography follow-up is ready for verification: URL text is 80% of the title size through a shared relative font-size property. Chrome verified the ratio at 13 px and 16 px base fonts; existing truncation/hover/scroll/editor checks pass.
+- Latest T-05 follow-ups are ready for verification: URL text and row folder/tag badges use 80% of the title size; both row badge types use #9E9E9E, while cloud colors remain green/blue. Cloud pagination sits above the labels; the first page has no large blank area, and the 14rem cloud yields space to the list at narrow/larger-font sizes. Static checks, 54 Angular tests, 8 manifest tests, production/package checks, and stable Chrome integration pass. The earlier narrow-layout blocker is resolved; user verification remains pending.
 
 ## E-20 progress
 

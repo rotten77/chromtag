@@ -15,7 +15,8 @@ main { overflow: auto; min-height: 0; }
 .title { border: 0; padding: 0; text-align: start; background: transparent; color: inherit; font-size: var(--title-font-size); font-weight: 650; text-decoration: underline; text-underline-offset: .12em; }
 button.title:hover { color: var(--tag-color); filter: none; }
 .url { color: var(--muted); font-size: calc(var(--title-font-size) * .8); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; margin: .15rem 0 .3rem; }
-.labels { display: flex; flex-wrap: wrap; gap: .2rem; }
+.labels { display: flex; flex-wrap: wrap; gap: .2rem; font-size: calc(var(--title-font-size) * .8); }
+.labels .tag, .labels .folder { background: #9E9E9E; }
 .tag, .folder { border: 0; border-radius: .25rem; color: white; padding: .1rem .3rem; overflow-wrap: anywhere; }
 .tag { background: var(--tag-color); }
 .folder { background: var(--folder-color); }

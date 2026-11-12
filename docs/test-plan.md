@@ -29,7 +29,7 @@ Expected: green folders and blue tags form 1 wrapping cloud. The first tag follo
 5. Select **Hide folders**.
 6. Select **Show folders**.
 
-Expected: the cloud stays fixed and collapses excess labels without a scrollbar. Every label remains reachable through pagination. Selected filters stay active when their page changes. Hiding folders keeps tags available. Criterion: T-05-AC6.
+Expected: pagination controls appear above the cloud. The cloud stays fixed with a 14rem height limit (182 px at the default 13 px font), constrained further at narrow/larger-font sizes to keep the bookmark list visible. The first page has no large empty area below its visible labels. Excess labels collapse without a scrollbar and remain reachable through pagination. Selected filters stay active when their page changes. Hiding folders keeps tags available. Criterion: T-05-AC6.
 
 ## UI-04 — Long bookmark content
 
@@ -40,7 +40,7 @@ Expected: the cloud stays fixed and collapses excess labels without a scrollbar.
 5. Check the full title and URL in the editor.
 6. Select **Cancel**.
 
-Expected: the article fills the available list width. CSS truncates long text. URL text is 80% of the title size. Hover reveals **Edit** without text overlap, layout shift, or horizontal list scrolling. Criterion: T-05-AC7.
+Expected: the article fills the available list width. CSS truncates long text. URL and row folder/tag badge text are 80% of the title size. Hover reveals **Edit** without text overlap, layout shift, or horizontal list scrolling. Criteria: T-05-AC2/AC7.
 
 Automated Chrome checks repeat this case at 540 × 580 px with a 13 px font and 380 × 500 px with a 16 px font. These CSS checks do not add appearance settings to version 2.0.
 
@@ -48,11 +48,11 @@ Automated Chrome checks repeat this case at 540 × 580 px with a 13 px font and 
 
 1. Open the popup with no active filters.
 2. Check the folder and tag colors.
-3. Check the labels on bookmark rows.
+3. Check the backgrounds and text sizes of folder and tag badges on bookmark rows.
 4. Select a folder or tag, then move the pointer away.
 5. Hover over default and selected cloud labels.
 
-Expected: default folder green is `#4CAF50`; default tag blue is `#448AFF`. Selected labels use `#F44336`. Hover uses `#212121`; leaving hover restores the selected/default color. Criterion: T-05-AC8.
+Expected: filter-cloud folders are `#4CAF50` and tags are `#448AFF`. Both bookmark-row badge backgrounds are `#9E9E9E`, with text matching the URL size (80% of the title size). Selected cloud labels use `#F44336`. Hover uses `#212121`; leaving hover restores the selected/default color. Criteria: T-05-AC2/AC8.
 
 ## UI-06 — List-only scrolling
 
