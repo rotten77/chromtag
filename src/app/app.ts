@@ -25,6 +25,7 @@ import { filterBookmarks, Filters } from './model';
     <app-bookmark-list [rows]="filtered()" (open)="store.open($event)" />
     <p class="result-count" role="status">{{ filtered().length }} of {{ store.model().bookmarks.length }} bookmarks</p>
     @if (!store.loading() && !filtered().length) { <p>{{ store.model().bookmarks.length ? 'No matching bookmarks.' : 'No bookmarks yet.' }}</p> }
+    <footer><button type="button" (click)="resetFilters()">Reset filter</button></footer>
   `,
 })
 export class App implements OnDestroy {
@@ -57,6 +58,12 @@ export class App implements OnDestroy {
   toggleFolder(id: string): void {
     this.flushQuery();
     this.filters.update(filters => ({ ...filters, folderId: filters.folderId === id ? null : id }));
+    this.list()?.resetScroll();
+  }
+  resetFilters(): void {
+    clearTimeout(this.queryTimer);
+    this.queryInput.set('');
+    this.filters.set({ query: '', tags: new Set(), folderId: null });
     this.list()?.resetScroll();
   }
   ngOnDestroy(): void { clearTimeout(this.queryTimer); }

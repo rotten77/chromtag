@@ -12,6 +12,8 @@ Select a green folder to include its descendants. Select the active folder again
 
 Search matches a literal phrase in the full title, immediate folder name, or URL after a short delay. Matching ignores case and preserves accents.
 
+Select **Reset filter** to clear search, tags, and folder together.
+
 The planned releases are:
 
 - **2.0:** Angular popup, one transient bookmark model per refresh, virtualized rows, safe rendering, and Unicode search across titles, folders, and URLs.

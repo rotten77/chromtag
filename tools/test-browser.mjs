@@ -68,8 +68,14 @@ try {
   await page.getByText('No matching bookmarks.', { exact: true }).waitFor();
   await search.fill('example.invalid/scale/9999');
   await page.getByText('1 of 10001 bookmarks', { exact: true }).waitFor();
-  await search.fill('');
+  await search.fill('<b>Saved');
+  await page.getByText('1 of 10001 bookmarks', { exact: true }).waitFor();
+  await page.getByRole('button', { name: '#C++', exact: true }).click();
+  await page.getByRole('button', { name: '<Folder> café', exact: true }).click();
+  await page.getByRole('button', { name: 'Reset filter', exact: true }).click();
   await page.getByText('10001 of 10001 bookmarks', { exact: true }).waitFor();
+  assert.equal(await search.inputValue(), '');
+  assert.equal(await page.locator('.cloud [aria-pressed="true"]').count(), 0);
   console.log(`10,001 native synthetic bookmarks: startup ${elapsed.toFixed(1)} ms, ${liveRows} live rows; last row reached.`);
   assert.deepEqual(errors, [], 'No runtime or CSP errors');
   console.log('PASS: loadable extension, native bookmark snapshot, literal rendering, new-tab navigation, no runtime/CSP errors.');

@@ -7,8 +7,8 @@ Updated: 2026-11-12
 - Branch: modernizing-chromtag. T-00/T-01 are user-verified; T-02 verification remains pending (8c5cc5b).
 - Jan authorized implementing the entire E-20 sequentially, with per-task commits/logs. User verification remains pending. E-21 and later releases are outside this batch.
 - Angular 22 / TypeScript 6 / native Chrome APIs target Chrome 157+. Loadable output: dist/chromtag/browser/. No legacy runtime libraries or persisted bookmark/index data.
-- Implemented 150 ms debounced literal phrase search across full title, immediate folder name, and URL with approved Unicode/grapheme semantics. Tag/folder changes immediately flush the visible query; filter changes make no tree reads. Passed 26 Angular tests and stable Chrome 10,001-record search (214.4 ms including debounce).
-- Latest passing HTML report: .local/test-results/2026-11-12T17-43-46.970Z-33136.html. Failed reports are retained too.
+- Implemented one-action Reset filter for query, selected tags, and folder; it also cancels pending debounce and restores the virtualized full collection. Passed 27 Angular tests, 8 manifest tests, and a native Chrome combined-filter/reset scenario.
+- Latest passing HTML report: .local/test-results/2026-11-12T17-44-27.765Z-36248.html. Failed reports are retained too.
 - Stable Chrome 157.0.8103.51 integration uses a fresh temporary profile with synthetic bookmarks, never the user's profile. A representative real profile is unavailable.
 
 ## E-20 progress
@@ -27,14 +27,14 @@ Updated: 2026-11-12
 | US-02 | See and filter by tags | Find bookmarks by title hashtags. | Ready for verification | US-02 |
 | US-03 | Filter by bookmark folder | Narrow the collection by folder. | Ready for verification | US-03 |
 | US-04 | Search bookmarks | Find bookmarks across titles, folders, and URLs. | Ready for verification | US-04 |
-| US-05 | Reset filters | Return to the full supported collection with 1 action. | Not started | US-05 |
+| US-05 | Reset filters | Return to the full supported collection with 1 action. | Ready for verification | US-05 |
 | US-06 | Add the current page | Save the active tab and edit the new bookmark. | Not started | US-06 |
 | US-07 | Edit or delete a bookmark | Maintain details, tags, and folder placement. | Not started | US-07 |
 | US-08 | Show or hide folders | Adjust the folder cloud during the popup session. | Not started | US-08 |
 
 ## Next step
 
-Continue US-05 Reset filter.
+Continue US-08 popup-only folder visibility, then the editor and add-page stories.
 
 ## Later work
 

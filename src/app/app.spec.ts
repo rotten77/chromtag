@@ -85,3 +85,21 @@ it('debounces phrase search, flushes on tag changes, and never rereads the tree 
     expect(getTree).toHaveBeenCalledTimes(1);
   } finally { vi.useRealTimers(); }
 });
+
+it('resets every filter, visible input, and pending debounce in one action', async () => {
+  TestBed.configureTestingModule({ providers: [{ provide: CHROME, useValue: {
+    bookmarks: { getTree: vi.fn().mockResolvedValue([{ id: '1', title: 'Saved #x', url: 'https://a.example' }]) }, tabs: {},
+  } }] });
+  const fixture = TestBed.createComponent(App);
+  await fixture.whenStable();
+  const app = fixture.componentInstance;
+  vi.useFakeTimers();
+  try {
+    app.toggleTag('x'); app.toggleFolder('missing'); app.onQuery('no results');
+    app.resetFilters();
+    vi.advanceTimersByTime(200);
+    expect(app.filters()).toEqual({ query: '', tags: new Set(), folderId: null });
+    expect(app.queryInput()).toBe('');
+    expect(app.filtered()).toHaveLength(1);
+  } finally { vi.useRealTimers(); }
+});
