@@ -8,6 +8,7 @@ Chromtag is a Chrome bookmark browser/editor. Hashtags in native bookmark titles
 - AI agents follow `AGENTS.md`, maintain documentation, and implement at most 1 story before user verification.
 - Finished tasks that pass applicable tests and checks trigger automatic session closing, log/status updates, and a commit under the standing authorization in `AGENTS.md`. User verification remains separate.
 - After E-23 implementation, Jan owns the instruction cleanup and final manual verification of all features. An agent prepares a simple manual test case and report template for that verification and extended use; see T-08 through T-10 in the plan.
+- After final testing, T-11 removes obsolete legacy/work files and refreshes documentation/screenshots so the working repository represents the current version. T-12 then archives the completed plan and updates references.
 
 ## Sources of truth
 
@@ -46,5 +47,5 @@ Do not duplicate target acceptance criteria in the plan or user documentation. S
 - Run standalone manifest checks with `node tools/validate-manifest.mjs --source` and `node --test tools/validate-manifest.test.mjs`. Built validation requires T-03 output.
 - The standalone legacy diagnostic lives in `tools/legacy-baseline.mjs`. Its dependencies and raw measurements remain under ignored `.local/`; it does not create application tooling.
 - Private/local references stay in ignored `.local/`. Shared documentation and memory remain tracked.
-- Preserve the ignored archive. Removing replaced runtime code does not authorize deleting private reference files.
+- Preserve the ignored archive during implementation and final testing. T-11 handles obsolete legacy/work files after testing; its cleanup does not include unrelated private files.
 - Every target feature/criterion requires repository regression coverage under the supplied requirements.

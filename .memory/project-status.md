@@ -9,7 +9,7 @@ Updated: 2026-11-12
 - Modernization requirements and the roadmap are committed in `eac5420` (Document Chromtag modernization requirements and roadmap).
 - Legacy source/assets remain in ignored `.local/legacy/`; popup source is under `.local/legacy/chromtag/`. T-02 stages manifest source and copies of the icons in `public/`.
 - The supplied 1.8 baseline, analysis, modernization plan, and versions 2.0–2.3 requirements are organized into shared documentation.
-- The plan defines 11 supplied feature/release stories, 8 supporting tasks, and 3 post-implementation tasks. The technical specification holds matching criteria and open decisions.
+- The plan defines 11 supplied feature/release stories, 8 supporting tasks, and 5 post-implementation tasks. The technical specification holds matching criteria and open decisions.
 - Historical README/screenshots are preserved under `docs/`.
 - T-00 is **Verified** by the user on 2026-11-12 and committed in `e600c02` (Complete T-00 repository preparation).
 - T-00 checks passed: ignore rules, shared-file trackability, 29 relative documentation links, preservation of all 10 historical images and README text, and `git diff --check`.
@@ -26,6 +26,7 @@ Updated: 2026-11-12
 - T-02 and its closing notes are committed in `8c5cc5b` (Complete T-02 manifest and API audit). T-02 verification is pending; T-03 has not started.
 - The user changed the agent workflow: finished tasks that pass applicable tests/checks now end the session, update log/status, and create a commit automatically. `AGENTS.md` records the standing authorization; user verification remains separate.
 - The user added follow-up tasks after E-23: T-08 for Jan to remove automatic logging/commit instructions, T-09 for an agent to prepare a simple manual test case and test-report template, and T-10 for Jan's final manual verification of all features during extended use. These tasks are **Not started**.
+- T-11 follows final testing: remove obsolete legacy/work files, review current-version user documentation, and refresh screenshots. T-12 then archives the completed plan and updates references. Both tasks are **Not started**; no cleanup or archival has occurred.
 
 ## Remaining work and decisions
 

@@ -241,7 +241,7 @@ Regression tests are explicit supplied requirements. Standalone manifest-validat
 - **T-07-AC2:** Add a v2.0 changelog entry describing machine-assisted development and human guidance.
 - **T-07-AC3:** Remove replaced legacy runtime code after the Angular build works end to end and no references remain.
 
-The supplied plan names `legacy/`; no tracked directory with that name exists now. Preserve the ignored `.local/legacy/` archive. Clarify any request to delete that archive before destructive action.
+The supplied plan names `legacy/`; no tracked directory with that name exists now. Preserve the ignored `.local/legacy/` archive during implementation and final testing. T-11 handles obsolete legacy and work files after final testing.
 
 ## Later release acceptance criteria
 
@@ -296,6 +296,18 @@ These tasks follow completion of the implementation epics E-00 through E-23.
 
 - **T-10-AC1:** Jan manually tests all implemented features as the final overall verification, using the materials from T-09.
 - **T-10-AC2:** Jan uses the extension for a period he chooses and records discovered issues in the prepared test report.
+
+### T-11 — Clean the repository for the current version
+
+- **T-11-AC1:** After Jan completes final manual verification under T-10, identify and remove obsolete legacy files and temporary work artifacts. Retain the current version's source, required assets, build/test tooling, and supporting documentation.
+- **T-11-AC2:** Review user documentation for the actual implemented version. Remove obsolete instructions and references, and keep setup, usage, and commands accurate.
+- **T-11-AC3:** Replace outdated screenshots with screenshots of the final version. Update image references and remove unused superseded images.
+- **T-11-AC4:** After cleanup, the current version's required build, test, and package checks pass, and documentation links resolve.
+
+### T-12 — Archive the completed plan
+
+- **T-12-AC1:** After final testing and repository cleanup are complete, archive the modernization plan with its recorded completion and verification states.
+- **T-12-AC2:** Update README, repository instructions, and current memory references so the archived plan remains findable and session startup does not depend on a missing active-plan file.
 
 ## Verification procedure
 
