@@ -6,7 +6,7 @@ Chromtag is a Chrome bookmark browser/editor. Hashtags in native bookmark titles
 
 - Jan Zatloukal — developer; provides requirements and verifies implemented stories.
 - AI agents follow `AGENTS.md`, maintain documentation, and implement at most 1 story before user verification.
-- Current-session exception: Jan authorized the whole E-20 implementation with sequential task commits and logs. Keep verification pending; do not extend this authorization into E-21.
+- The completed E-20 batch used Jan's explicit whole-epic authorization with sequential task commits/logs. Verification remains pending. The exception does not extend into E-21; future work follows the normal stopping rule unless Jan directs otherwise.
 - Finished tasks that pass applicable tests and checks trigger automatic session closing, log/status updates, and a commit under the standing authorization in `AGENTS.md`. User verification remains separate.
 - After E-23 implementation, Jan owns the instruction cleanup and final manual verification of all features. An agent prepares a simple manual test case and report template for that verification and extended use; see T-08 through T-10 in the plan.
 - After final testing, T-11 removes obsolete legacy/work files and refreshes documentation/screenshots so the working repository represents the current version. T-12 then archives the completed plan and updates references.
@@ -44,9 +44,9 @@ Do not duplicate target acceptance criteria in the plan or user documentation. S
 - Implementation branch: user-created `modernizing-chromtag`. Verify its presence before implementation; request user creation if absent.
 - Application code: `src/`; manifest source and preserved static icons: `public/`.
 - Loadable output: `dist/chromtag/browser/`. Do not load source as an unpacked extension.
-- Build, test, and static commands are defined in package.json. `ng serve` is not the extension runtime.
+- Build, test, and static commands are defined in package.json. Production finalization copies generated dependency notices into the loadable extension root. `ng serve` is not the extension runtime.
 - Run standalone manifest checks with `node tools/validate-manifest.mjs --source` and `node --test tools/validate-manifest.test.mjs`. Built validation checks the real Angular output.
-- Angular 22 / TypeScript 6 target Chrome 157+. `npm test` retains timestamped HTML reports in ignored `.local/test-results/`. Show the folder cloud initially; visibility remains popup-only.
+- Version 2.0 uses Angular 22 / TypeScript 6 targeting Chrome 157+. `npm test` retains timestamped HTML reports in ignored `.local/test-results/`. Show the folder cloud initially; visibility remains popup-only.
 - The standalone legacy diagnostic lives in `tools/legacy-baseline.mjs`. Its dependencies and raw measurements remain under ignored `.local/`; it does not create application tooling.
 - Private/local references stay in ignored `.local/`. Shared documentation and memory remain tracked.
 - Preserve the ignored archive during implementation and final testing. T-11 handles obsolete legacy/work files after testing; its cleanup does not include unrelated private files.

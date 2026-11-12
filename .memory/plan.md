@@ -10,7 +10,7 @@ Statuses: **Not started**, **In progress**, **Ready for verification**, **Verifi
 
 Implement no more than 1 user story at a time. Supporting tasks do not authorize implementing several stories together. Stop when a story is ready for verification. Start another only after user verification and the user's next instruction.
 
-Session exception: the user explicitly authorized implementing all of E-20 sequentially, with a commit and log update for each task. Continue across E-20 task/story boundaries under that instruction, keeping user verification pending. This does not authorize E-21 or later releases.
+Completed E-20 batch exception: the user explicitly authorized sequential implementation of the whole epic with task commits/logs. All E-20 implementation is ready for verification; no unverified item was marked Verified. This exception did not authorize E-21 or later releases.
 
 ## E-00 — Repository preparation
 
@@ -34,7 +34,7 @@ These tasks retain the supplied steps 1–7 and support the feature stories belo
 | T-04 | Fix scale and search | Filter the model, virtualize rows with overscan, and support Unicode safely. | Ready for verification | T-04 |
 | T-05 | Preserve and refine the design | Retain the compact interface and improve typography, scaling, overflow, and focus. | Ready for verification | T-05 |
 | T-06 | Document and verify | Maintain documentation/test coverage; validate the built extension in Chrome. | Ready for verification | T-06 |
-| T-07 | Release version 2.0 | Set version 2.0, document development attribution, and remove replaced runtime code. | Not started | T-07 |
+| T-07 | Release version 2.0 | Set version 2.0, document development attribution, and remove replaced runtime code. | Ready for verification | T-07 |
 
 The user verified T-01 on 2026-11-12. It has a reproducible diagnostic runner and [synthetic measurements](../docs/legacy-measurements.md), including the 10,000-bookmark readiness timeout. The user approved hashtag, Unicode phrase-search, grapheme-boundary, and folder-filter semantics in the technical specification. Real-profile measurements and target timing budgets remain future work.
 
@@ -97,4 +97,4 @@ T-10 uses the materials from T-09. Jan performs the final overall verification. 
 
 ## Next step
 
-Continue the user-authorized E-20 batch with T-04, then the remaining feature stories and supporting tasks. T-02/T-03 user verification remains pending. E-21 is outside this batch.
+Jan verifies the version 2.0 candidate in Chrome 157+ using `dist/chromtag/browser/` and [the usage guide](../docs/usage.md). E-20 implementation is complete; T-02 through T-07 and US-01 through US-08 remain ready for explicit user verification. E-21 requires the user's next instruction.

@@ -4,7 +4,7 @@ Chromtag is a Chrome extension for browsing and editing Chrome bookmarks. Hashta
 
 ## Project state
 
-The version 2.0 features are implemented and await user verification. The standalone Angular popup builds from `src/`; manifest source and preserved icons live in `public/`. The version 1.8 reference remains in ignored `.local/legacy/`.
+The version 2.0 release candidate is implemented and awaits user verification. The standalone Angular popup builds from `src/`; manifest source and preserved icons live in `public/`. The version 1.8 reference remains in ignored `.local/legacy/`.
 
 The current popup supports nested bookmarks and a virtualized list. Select blue tags to filter; multiple selected tags must all match. Select a tag again to clear it.
 
@@ -24,9 +24,9 @@ Each row has an **Edit** button. The editor changes title, URL, tags, and folder
 
 The compact popup uses a 13 px base font and a 540 × 540 px layout. Clouds and the editor scroll when content exceeds the available space. Appearance settings arrive in 2.2.
 
-The planned releases are:
+Release scope:
 
-- **2.0:** Angular popup, one transient bookmark model per refresh, virtualized rows, safe rendering, and Unicode search across titles, folders, and URLs.
+- **2.0 (implemented):** Angular popup, one transient bookmark model per refresh, virtualized rows, safe rendering, and Unicode search across titles, folders, and URLs.
 - **2.1:** Search and tag/folder filters retained during the browser session.
 - **2.2:** Persistent typography, popup dimensions, and independent light/dark palettes.
 - **2.3:** Persistent bookmark tab-target and popup-close preferences.
@@ -62,7 +62,7 @@ Use these commands from the repository root:
 |---|---|---|
 | Initial setup | `npm install` | Install dependencies |
 | Reproducible install | `npm ci` | Install from the committed lockfile |
-| Build | `npm run build` | Run `ng build --configuration production` |
+| Build | `npm run build` | Run the production Angular build and finalize the extension package |
 | Development rebuild | `npm run watch` | Run `ng build --watch --configuration development` |
 | Test | `npm test` | Run manifest, Angular/Vitest, build, and stable Chrome checks; save a timestamped HTML report in `.local/test-results/` |
 | Static checks | `npm run check` | Check TypeScript and the source manifest |
@@ -85,7 +85,7 @@ Stable Google Chrome 157+ must be installed for `npm test`. Browser tests use a 
 
 The [documentation index](docs/README.md) links product requirements and historical references. The [historical README](docs/legacy-readme.md) preserves version history and screenshots.
 
-The [usage guide](docs/usage.md) explains filtering and bookmark changes.
+The [usage guide](docs/usage.md) explains filtering and bookmark changes. The [changelog](docs/CHANGELOG.md) records version 2.0 and its development attribution.
 
 ## AI agent workflow
 

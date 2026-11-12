@@ -9,7 +9,7 @@ The Manifest V3 popup uses native Chrome APIs without a background worker. T-02 
 | Name | ChromTag - tag your bookmarks |
 | Short name | ChromTag |
 | Description | Tag your bookmarks with #hashtag! |
-| Version | Preparation retains 1.8; T-07 sets 2.0 after automated checks |
+| Version | 2.0 release candidate; manual verification pending |
 | Icons | Preserved local PNG files at 16, 48, and 128 px |
 | Action | Local icons, title Chromtag, generated index.html popup |
 | Source | public/manifest.json and public/icon*.png |

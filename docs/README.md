@@ -4,6 +4,7 @@
 |---|---|
 | [Product specification](SPEC.md) | Intended version 2.0–2.3 features and data policy |
 | [Usage guide](usage.md) | Browse, filter, add, edit, delete, and handle errors |
+| [Changelog](CHANGELOG.md) | Version 2.0 changes and development attribution |
 | [Testing and reports](testing.md) | Reproducible checks, timestamped HTML reports, scale evidence and limits |
 | [Criterion mapping](test-coverage.md) | Version 2.0 criteria linked to regression evidence |
 | [Technical specification](../.memory/technical-specification.md) | Architecture, authoritative acceptance criteria, verification, and open decisions |

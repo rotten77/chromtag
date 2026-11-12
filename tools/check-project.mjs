@@ -62,6 +62,7 @@ if (process.argv.includes('--built')) {
   for (const element of dom.window.document.querySelectorAll('*')) {
     assert(![...element.attributes].some(attribute => /^on/iu.test(attribute.name)), 'No inline event handlers');
   }
+  assert.equal(await read('dist/chromtag/browser/3rdpartylicenses.txt'), await read('dist/chromtag/3rdpartylicenses.txt'), 'Ship the generated dependency notices inside the extension root');
   dom.window.close();
 }
 console.log(`PASS: ${links} documentation links, ${mapped.size} criterion mappings, browser/version consistency, source/ignore policy${process.argv.includes('--built') ? ', generated package' : ''}.`);

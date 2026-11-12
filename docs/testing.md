@@ -6,7 +6,7 @@ Use the Node.js versions listed in [README](../README.md). Install stable Google
 
 1. Run `npm ci` to install the locked dependencies.
 2. Run `npm run check` to check TypeScript, documentation, coverage references, and source metadata.
-3. Run `npm run build` to produce the unpacked extension.
+3. Run `npm run build` to produce the unpacked extension with dependency notices.
 4. Run `npm test` to run the complete regression suite.
 
 `npm test` runs these checks:

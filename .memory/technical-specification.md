@@ -92,7 +92,7 @@ Do not use `localStorage`, a separate bookmark store, an account, or a backend. 
 - T-03 selects Angular 22, TypeScript 6, and Chrome 157 as the conservative application floor. The manifest and `.browserslistrc` agree. Node ranges follow Angular's published compatibility table.
 - Use native `chrome.*` Promise APIs. Use `Intl.Segmenter` with grapheme granularity for the approved search-boundary policy; its Chrome 87 floor is below the selected extension API floor.
 - Add no background service worker without a demonstrated need.
-- Keep `manifest.json` and the preserved 16/48/128 px PNG icons in `public/`; copy them into the production output. Keep extension version `1.8` during preparation; T-07 sets `2.0` after applicable verification.
+- Keep `manifest.json` and the preserved 16/48/128 px PNG icons in `public/`; copy them into the production output. T-07 sets extension version `2.0` after automated checks; explicit user verification remains pending.
 - Set `action.default_popup` to built `index.html`. The loadable extension root is `dist/chromtag/browser/`.
 - Bundle local scripts/styles only. Comply with extension Content Security Policy (CSP), without remote code, inline scripts, or `eval`.
 - Declare `script-src 'self'; object-src 'none';` for extension pages. Do not add host permissions, content scripts, or a sandbox.
@@ -109,7 +109,7 @@ T-03 establishes the Angular CLI workspace and Vitest unit/component runner. `np
 |---|---|
 | Initial setup | `npm install` |
 | Reproducible install | `npm ci`, with committed `package-lock.json` |
-| Production build | `npm run build` → `ng build --configuration production` |
+| Production build | `npm run build` → `ng build --configuration production`, then finalize package notices/assets |
 | Development rebuild | `npm run watch` → `ng build --watch --configuration development` |
 | Tests | `npm test` → configured Angular unit-test runner |
 | Runtime | Load `dist/chromtag/browser/` as an unpacked extension in Chrome |

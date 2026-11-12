@@ -1,13 +1,13 @@
 {
   "name": "chromtag",
-  "version": "1.8.0",
+  "version": "2.0.0",
   "private": true,
   "type": "module",
   "engines": {
     "node": "^22.22.3 || ^24.15.0 || ^26.0.0"
   },
   "scripts": {
-    "build": "ng build --configuration production",
+    "build": "ng build --configuration production && node tools/finalize-package.mjs",
     "watch": "ng build --watch --configuration development",
     "test": "node tools/run-tests.mjs",
     "test:unit": "ng test --watch=false",
