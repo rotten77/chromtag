@@ -41,8 +41,8 @@ Updated: 2026-11-12
 
 ## Next step
 
-Jan verified E-20 on 2026-11-12. Await Jan's next instruction before T-13 or E-21; representative-profile testing remains open.
+Jan verified E-20 on 2026-11-12. T-08 workflow cleanup is ready for Jan's verification; T-13 may be started after Jan verifies T-08 and instructs us to start it. Representative-profile testing remains open.
 
 ## Later work
 
-T-13 is now planned, not implemented: show load/processing status, processed/total counts when reliable, and evidence-based guidance for large libraries after version 2.0 verification. Count scope, UI-yield strategy, and any message threshold remain open. E-21/E-22/E-23 and T-08 through T-12 remain not started. Version 2.2 now plans configurable combined cloud height and per-theme Material palette choices for foreground/tags/folders, with fixed white/light and #212121/dark backgrounds. Editable-color defaults, cloud-height bounds, and exact palette choices remain later decisions; version 2.3 popup-close default also remains open. Preserve .local/legacy/ through final testing; T-11 owns obsolete-file cleanup and T-12 plan archival.
+T-13 is now planned, not implemented: show load/processing status, processed/total counts when reliable, and evidence-based guidance for large libraries after version 2.0 verification. Count scope, UI-yield strategy, and any message threshold remain open. Jan moved T-08 forward and asked the agent to perform it, log it, and commit it; T-08 is ready for verification. Automatic session ending, logs, and commits are no longer required; this requested log and commit close T-08. E-21/E-22/E-23 and T-09 through T-12 remain not started. Version 2.2 now plans configurable combined cloud height and per-theme Material palette choices for foreground/tags/folders, with fixed white/light and #212121/dark backgrounds. Editable-color defaults, cloud-height bounds, and exact palette choices remain later decisions; version 2.3 popup-close default also remains open. Preserve .local/legacy/ through final testing; T-11 owns obsolete-file cleanup and T-12 plan archival.

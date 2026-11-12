@@ -7,8 +7,8 @@ Chromtag is a Chrome bookmark browser/editor. Hashtags in native bookmark titles
 - Jan Zatloukal — developer; provides requirements and verifies implemented stories.
 - AI agents follow `AGENTS.md`, maintain documentation, and implement at most 1 story before user verification.
 - The completed E-20 batch used Jan's explicit whole-epic authorization with sequential task commits/logs. Jan explicitly verified E-20 on 2026-11-12. The exception does not extend into E-21; future work follows the normal stopping rule unless Jan directs otherwise.
-- Finished tasks that pass applicable tests and checks trigger automatic session closing, log/status updates, and a commit under the standing authorization in `AGENTS.md`. User verification remains separate.
-- After E-23 implementation, Jan owns the instruction cleanup and final manual verification of all features. An agent prepares a simple manual test case and report template for that verification and extended use; see T-08 through T-10 in the plan.
+- Jan moved T-08 ahead of T-13 on 2026-11-12 and asked the agent to remove automatic session-ending, logging, and commit requirements. Keep status/context current; write dated logs and commit only on request. User verification remains separate.
+- After E-23 implementation, Jan owns final manual verification of all features. An agent prepares a simple manual test case and report template for that verification and extended use; see T-09/T-10 in the plan.
 - After final testing, T-11 removes obsolete legacy/work files and refreshes documentation/screenshots so the working repository represents the current version. T-12 then archives the completed plan and updates references.
 
 ## Sources of truth

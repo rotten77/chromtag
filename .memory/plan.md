@@ -95,13 +95,20 @@ Follow version 2.1. Include default/bounds decisions, version update, documentat
 
 Follow version 2.2. Include lifecycle verification, version update, documentation, and regression tests.
 
+## Workflow update before T-13
+
+| ID | Task | Owner | Goal | Status | Criteria |
+|---|---|---|---|---|---|
+| T-08 | Remove automatic logging and commit instructions | AI agent, at Jan's request | Remove the automatic log and commit requirements from agent guidance. | Ready for verification | T-08 |
+
+Jan moved T-08 forward on 2026-11-12 and requested a final log and commit for this change. Future logs and commits require an explicit request. T-08 still needs Jan's verification.
+
 ## After E-23 — Verification, cleanup, and plan archival
 
 These tasks follow completion of all implementation work in E-00 through E-23. Criteria are in the technical specification under matching IDs.
 
 | ID | Task | Owner | Goal | Status | Criteria |
 |---|---|---|---|---|---|
-| T-08 | Remove automatic logging and commit instructions | Jan Zatloukal | Remove the automatic log and commit requirements from agent guidance. | Not started | T-08 |
 | T-09 | Prepare manual test materials | AI agent | Create a simple manual test case and a reusable test-report file/template for final verification and extended use. | Not started | T-09 |
 | T-10 | Perform final manual verification | Jan Zatloukal | Manually test all implemented features and report issues while using the extension for a user-chosen period. | Not started | T-10 |
 | T-11 | Clean the repository for the current version | AI agent | Remove obsolete legacy/work files, review user documentation, and update screenshots after final testing. | Not started | T-11 |
@@ -111,4 +118,4 @@ T-10 uses the materials from T-09. Jan performs the final overall verification. 
 
 ## Next step
 
-Jan verified E-20 on 2026-11-12. T-13 is planned but not implemented. Await Jan's next instruction before T-13 or E-21.
+Jan verified E-20 on 2026-11-12. T-08 is ready for Jan's verification. T-13 is planned but not implemented; await Jan's next instruction before T-13 or E-21.

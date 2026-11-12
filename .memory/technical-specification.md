@@ -298,14 +298,18 @@ The light/dark backgrounds are fixed. Exact defaults for editable colors and clo
 
 The popup-close default remains undefined.
 
-## Post-implementation task acceptance criteria
-
-These tasks follow completion of the implementation epics E-00 through E-23.
+## Workflow task acceptance criteria
 
 ### T-08 — Remove automatic logging and commit instructions
 
-- **T-08-AC1:** Jan Zatloukal removes the automatic logging and commit requirements from `AGENTS.md` after implementation is complete.
+Jan moved T-08 ahead of T-13 on 2026-11-12 and requested that the agent perform it, log it, and commit it. Future logs and commits require an explicit request.
+
+- **T-08-AC1:** Remove the automatic logging, session-ending, and commit requirements from `AGENTS.md` before T-13. Keep project-status updates and explicit user verification.
 - **T-08-AC2:** Related workflow summaries in README and current project memory match the revised instructions.
+
+## Post-implementation task acceptance criteria
+
+These tasks follow completion of the implementation epics E-00 through E-23.
 
 ### T-09 — Prepare manual test materials
 

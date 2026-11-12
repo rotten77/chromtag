@@ -94,4 +94,4 @@ The [usage guide](docs/usage.md) explains filtering and bookmark changes. The [c
 
 Agents implement no more than 1 story at a time. They report completed work and wait for explicit user verification before another story. Relevant README, `docs/`, and `.memory/` updates accompany changes.
 
-After a task passes applicable tests and checks, agents automatically end the session, update the dated log and project status, and commit the completed work. User verification remains required before another story starts. See `AGENTS.md` for the full workflow.
+Agents update project status as work changes. Dated logs and commits are made on request, not automatically after tests pass. User verification remains required before another story starts. See `AGENTS.md` for the full workflow.
