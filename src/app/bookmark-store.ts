@@ -1,6 +1,7 @@
 import { inject, Injectable, signal } from '@angular/core';
 import { CHROME } from './chrome-api';
 import { buildModel } from './model';
+import { Bookmark } from './model';
 
 export interface BookmarkDraft { id: string; title: string; url: string; parentId: string; originalParentId?: string }
 
@@ -59,6 +60,27 @@ export class BookmarkStore {
     } catch {
       this.error.set('The bookmark could not be deleted. Try again.');
       return false;
+    } finally { this.busy.set(false); }
+  }
+
+  async addCurrentPage(): Promise<Bookmark | undefined> {
+    if (this.busy()) return undefined;
+    this.busy.set(true);
+    this.error.set('');
+    try {
+      const [tab] = await this.api.tabs.query({ active: true, currentWindow: true });
+      if (typeof tab?.title !== 'string' || !tab.title.trim() || typeof tab.url !== 'string' || !tab.url.trim()) {
+        this.error.set('This page cannot be saved because Chrome did not provide its title and URL.');
+        return undefined;
+      }
+      // Omitting parentId deliberately uses Chrome's default destination.
+      const created = await this.api.bookmarks.create({ title: tab.title, url: tab.url });
+      await this.refresh();
+      const bookmark = this.model().bookmarks.find(row => row.id === created.id) ?? buildModel([created]).bookmarks[0];
+      return bookmark ? { ...bookmark, parentId: created.parentId } : undefined;
+    } catch {
+      this.error.set('The current page could not be saved. Chrome may not expose this page under activeTab.');
+      return undefined;
     } finally { this.busy.set(false); }
   }
 }

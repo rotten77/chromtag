@@ -30,7 +30,8 @@ import { BookmarkEditor } from './bookmark-editor';
     <app-bookmark-list [rows]="filtered()" (open)="store.open($event)" (edit)="openEditor($event)" />
     <p class="result-count" role="status">{{ filtered().length }} of {{ store.model().bookmarks.length }} bookmarks</p>
     @if (!store.loading() && !filtered().length) { <p>{{ store.model().bookmarks.length ? 'No matching bookmarks.' : 'No bookmarks yet.' }}</p> }
-    <footer><button type="button" (click)="resetFilters()">Reset filter</button>
+    <footer><button type="button" class="primary" [disabled]="store.busy() || store.loading()" (click)="addCurrentPage()">Add bookmark</button>
+      <button type="button" (click)="resetFilters()">Reset filter</button>
       <button type="button" aria-controls="folder-cloud" [attr.aria-expanded]="foldersVisible()" (click)="foldersVisible.set(!foldersVisible())">{{ foldersVisible() ? 'Hide folders' : 'Show folders' }}</button>
     </footer>
     </div>
@@ -48,6 +49,10 @@ export class App implements OnDestroy {
   private queryTimer?: ReturnType<typeof setTimeout>;
   constructor() { void this.store.refresh(); }
   openEditor(bookmark: Bookmark): void { this.store.error.set(''); this.editing.set(bookmark); }
+  async addCurrentPage(): Promise<void> {
+    const bookmark = await this.store.addCurrentPage();
+    if (bookmark) this.editing.set(bookmark);
+  }
   onQuery(value: string): void {
     this.queryInput.set(value);
     clearTimeout(this.queryTimer);

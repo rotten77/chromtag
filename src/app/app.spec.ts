@@ -121,3 +121,19 @@ it('shows folders initially, keeps visibility in memory, and resets on popup cre
   expect(reopened.componentInstance.foldersVisible()).toBe(true);
   setItem.mockRestore();
 });
+
+it('opens the newly created bookmark editor and cancellation retains the created bookmark', async () => {
+  const created = { id: 'new', title: 'Page', url: 'https://a.example', parentId: '1' };
+  const create = vi.fn().mockResolvedValue(created); const remove = vi.fn();
+  const getTree = vi.fn().mockResolvedValue([]);
+  TestBed.configureTestingModule({ providers: [{ provide: CHROME, useValue: { bookmarks: { create, remove, getTree }, tabs: { query: vi.fn().mockResolvedValue([created]) } } }] });
+  const fixture = TestBed.createComponent(App);
+  await fixture.whenStable();
+  getTree.mockResolvedValue([{ id: '1', title: 'Default', children: [created] }]);
+  await fixture.componentInstance.addCurrentPage();
+  expect(fixture.componentInstance.editing()?.id).toBe('new');
+  fixture.componentInstance.editing.set(null);
+  expect(remove).not.toHaveBeenCalled();
+  expect(fixture.componentInstance.store.model().bookmarks[0].id).toBe('new');
+  expect(getTree).toHaveBeenCalledTimes(2);
+});

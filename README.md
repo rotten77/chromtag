@@ -18,6 +18,8 @@ Folders appear when the popup opens. **Hide folders** and **Show folders** chang
 
 Each row has an **Edit** button. The editor changes title, URL, tags, and folder. **Save** and **Delete** update Chrome bookmarks. **Cancel**, Escape, or the overlay discards unsaved fields.
 
+**Add bookmark** saves the active page in Chrome's default folder and opens the editor. Cancelling that editor keeps the new bookmark. If Chrome withholds required page metadata, Chromtag shows a message and creates no bookmark.
+
 The planned releases are:
 
 - **2.0:** Angular popup, one transient bookmark model per refresh, virtualized rows, safe rendering, and Unicode search across titles, folders, and URLs.

@@ -62,3 +62,35 @@ it('handles partial save and removal failures honestly, preserving actual snapsh
   expect(getTree).toHaveBeenCalledTimes(1);
   expect(store.error()).toContain('could not be saved');
 });
+
+it('adds exposed active-page metadata in the default folder and refreshes exactly once', async () => {
+  const created = { id: 'new', title: 'Page #中文', url: 'https://a.example', parentId: '1' };
+  const create = vi.fn().mockResolvedValue(created);
+  const query = vi.fn().mockResolvedValue([{ title: created.title, url: created.url }]);
+  const getTree = vi.fn().mockResolvedValue([{ id: '1', title: 'Default', children: [created] }]);
+  TestBed.configureTestingModule({ providers: [{ provide: CHROME, useValue: { bookmarks: { getTree, create }, tabs: { query } } }] });
+  const store = TestBed.inject(BookmarkStore);
+  const bookmark = await store.addCurrentPage();
+  expect(query).toHaveBeenCalledWith({ active: true, currentWindow: true });
+  expect(create).toHaveBeenCalledWith({ title: created.title, url: created.url });
+  expect(bookmark).toMatchObject({ id: 'new', parentId: '1', folderName: 'Default' });
+  expect(getTree).toHaveBeenCalledTimes(1);
+});
+
+it.each([[], [{}], [{ title: 'Restricted page' }], [{ url: 'https://a.example' }], [{ title: ' ', url: 'https://a.example' }]].map(tabs => ({ tabs })))('never creates an incomplete bookmark when metadata is unavailable: %j', async ({ tabs }) => {
+  const create = vi.fn(); const getTree = vi.fn();
+  TestBed.configureTestingModule({ providers: [{ provide: CHROME, useValue: { bookmarks: { create, getTree }, tabs: { query: vi.fn().mockResolvedValue(tabs) } } }] });
+  const store = TestBed.inject(BookmarkStore);
+  expect(await store.addCurrentPage()).toBeUndefined();
+  expect(create).not.toHaveBeenCalled(); expect(getTree).not.toHaveBeenCalled();
+  expect(store.error()).toContain('cannot be saved');
+});
+
+it('reports a revoked tab grant without creating or refreshing', async () => {
+  const create = vi.fn(); const getTree = vi.fn();
+  TestBed.configureTestingModule({ providers: [{ provide: CHROME, useValue: { bookmarks: { create, getTree }, tabs: { query: vi.fn().mockRejectedValue(new Error('Grant revoked')) } } }] });
+  const store = TestBed.inject(BookmarkStore);
+  expect(await store.addCurrentPage()).toBeUndefined();
+  expect(create).not.toHaveBeenCalled(); expect(getTree).not.toHaveBeenCalled();
+  expect(store.busy()).toBe(false);
+});

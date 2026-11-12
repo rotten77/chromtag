@@ -7,8 +7,8 @@ Updated: 2026-11-12
 - Branch: modernizing-chromtag. T-00/T-01 are user-verified; T-02 verification remains pending (8c5cc5b).
 - Jan authorized implementing the entire E-20 sequentially, with per-task commits/logs. User verification remains pending. E-21 and later releases are outside this batch.
 - Angular 22 / TypeScript 6 / native Chrome APIs target Chrome 157+. Loadable output: dist/chromtag/browser/. No legacy runtime libraries or persisted bookmark/index data.
-- Implemented the accessible bookmark editor, literal Unicode tag add/toggle, URL/title save, folder move, delete, cancellation, and honest API/partial-save errors. Stable Chrome edited a virtualized last row, verified native details/folder and refreshed tags, cancelled via button/overlay without writes, and deleted with exactly one snapshot per successful mutation. Passed 33 Angular and 8 manifest tests; T-04 editor/scroll integration is now complete.
-- Latest passing HTML report: .local/test-results/2026-11-12T17-49-20.615Z-31244.html. Failed reports are retained too.
+- Implemented active-page bookmarking with activeTab only, required metadata checks, Chrome's default destination, and immediate editor opening. Missing/revoked/restricted metadata never calls create. Stable Chrome proved missing-grant rejection, then actual Extensions.triggerAction granting access, native creation, editor metadata, and Cancel retaining the new bookmark. Passed 41 Angular and 8 manifest tests.
+- Latest passing HTML report: .local/test-results/2026-11-12T17-52-20.492Z-5592.html. Failed reports are retained too.
 - Stable Chrome 157.0.8103.51 integration uses a fresh temporary profile with synthetic bookmarks, never the user's profile. A representative real profile is unavailable.
 
 ## E-20 progress
@@ -28,13 +28,13 @@ Updated: 2026-11-12
 | US-03 | Filter by bookmark folder | Narrow the collection by folder. | Ready for verification | US-03 |
 | US-04 | Search bookmarks | Find bookmarks across titles, folders, and URLs. | Ready for verification | US-04 |
 | US-05 | Reset filters | Return to the full supported collection with 1 action. | Ready for verification | US-05 |
-| US-06 | Add the current page | Save the active tab and edit the new bookmark. | Not started | US-06 |
+| US-06 | Add the current page | Save the active tab and edit the new bookmark. | Ready for verification | US-06 |
 | US-07 | Edit or delete a bookmark | Maintain details, tags, and folder placement. | Ready for verification | US-07 |
 | US-08 | Show or hide folders | Adjust the folder cloud during the popup session. | Ready for verification | US-08 |
 
 ## Next step
 
-Complete US-01 browsing evidence, then US-06 active-page add, T-05 design, T-06 documentation/verification, and T-07 version 2.0.
+Complete US-01 action/browsing evidence, then T-05 design and T-06/T-07 verification/release tasks.
 
 ## Later work
 
