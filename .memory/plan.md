@@ -14,9 +14,9 @@ Implement no more than 1 user story at a time. Supporting tasks do not authorize
 
 | ID | Task | Goal | Status | Criteria |
 |---|---|---|---|---|
-| T-00 | Prepare the repository | Use the modernization branch, preserve documentation/images, and prepare ignore rules. | In progress | T-00 |
+| T-00 | Prepare the repository | Use the modernization branch, preserve documentation/images, and prepare ignore rules. | Ready for verification | T-00 |
 
-The user-created branch exists and workflow setup is committed. Historical documentation/images are preserved under `docs/`. Angular ignore rules remain pending; this documentation update includes no tooling changes.
+The user-created branch exists and workflow setup is committed. Historical documentation/images are preserved under `docs/`, with working relative links. Dependency, build-output, and Angular-cache ignore rules are in place. T-00 awaits user verification.
 
 ## E-20 — Version 2.0 modernization
 
@@ -79,4 +79,4 @@ Follow version 2.2. Include lifecycle verification, version update, documentatio
 
 ## Next step
 
-Review the documents and resolve decisions relevant to the next task. The user selects the implementation story. This documentation update does not select or start implementation.
+Verify T-00. After user verification, the recommended next task is T-01: measure legacy behavior and resolve semantics relevant to the first implementation story. Further work requires the user's next instruction.

@@ -1,2 +1,7 @@
 # Local-only files
 .local/
+
+# Dependencies and generated Angular output
+node_modules/
+dist/
+.angular/

@@ -25,6 +25,8 @@ Version 1.8 already uses Manifest V3 with `bookmarks` and `tabs`. Modernization 
 
 ## Build, run, and test
 
+Git ignores `node_modules/`, `dist/`, and `.angular/`, along with private files in `.local/`.
+
 No build, run, or test commands are available in the current repository. The following workflow is planned for Angular setup:
 
 | Operation | Planned command | Description |
