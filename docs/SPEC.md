@@ -1,0 +1,48 @@
+# Chromtag product specification
+
+Chromtag is a Chrome extension for browsing and editing Chrome bookmarks. Hashtags in bookmark titles provide tags without a separate bookmark database.
+
+This document describes the intended versions 2.0–2.3. The modernization is not implemented yet. The [technical specification](../.memory/technical-specification.md) owns acceptance criteria and unresolved decisions. The [plan](../.memory/plan.md) tracks progress.
+
+## Version 2.0 — Modernized popup
+
+| Feature | Intended behavior | Criteria |
+|---|---|---|
+| Browse | List nested bookmarks with title, URL, folder, tags, and edit control. Open links in new tabs; exclude `javascript:` bookmarks. | US-01 |
+| Tags | Derive a sorted unique cloud from title hashtags. Toggle multiple tags; matches satisfy every selected tag. | US-02 |
+| Folders | Show a sorted flattened cloud. Select at most 1 folder and combine it with tags/search. | US-03 |
+| Search | Search titles, parent folder names, and URLs. Support Unicode case-insensitive matching while preserving diacritic distinctions. | US-04 |
+| Reset | Clear the query and all tag/folder filters. | US-05 |
+| Add | Create a bookmark from the active tab and open its editor. | US-06 |
+| Edit/delete | Edit title/URL, toggle or create tags, move folders, save, delete, or cancel unsaved fields. | US-07 |
+| Folder visibility | Show/hide the folder cloud for the current popup session only. | US-08 |
+
+The popup retains the compact toolbar, colored clouds, bookmark rows, and editor overlay. Typography increases modestly. Long content, keyboard focus, and overflow require verification.
+
+Angular standalone components and TypeScript replace the old UI libraries. One Chrome bookmark snapshot supplies the transient model per load/refresh. Model filtering and a virtualized list with overscan address large collections, including 10,000+ synthetic bookmarks.
+
+## Version 2.1 — Session filters
+
+The query and selected tags/folder survive popup closure during the browser session through `chrome.storage.session`. Reset clears active and saved filters. Ending the browser session clears saved filters. See US-09 criteria.
+
+## Version 2.2 — Appearance preferences
+
+Users configure base font size, popup width/height, and light/dark themes. Each theme has independent background, foreground, tag, and folder colors. `chrome.storage.local` retains appearance/layout preferences across restarts. Exact defaults and supported bounds remain undefined. See US-10 criteria.
+
+## Version 2.3 — Bookmark-click preferences
+
+Users choose the current tab or a new tab, with new tab as the default. A separate yes/no setting controls popup closure where Chrome permits. Both preferences persist across restarts in `chrome.storage.local`. The close default and lifecycle limits require resolution. See US-11 criteria.
+
+## Data and permissions
+
+Bookmarks, folder relationships, and title hashtags remain in Chrome's native tree. Derived models/indexes remain in popup memory. Folder visibility is popup-only in every planned release.
+
+The extension uses no separate bookmark database, backend, account, or `localStorage`. Session/persistent preferences never contain bookmark records or indexes.
+
+Manifest V3 remains in use. The modernization audits metadata, icons, permissions, and compatibility. It retains `bookmarks`, reviews the least-privilege active-tab permission, and adds `storage` for preference releases. The minimum Chrome version follows the selected APIs; no value is set yet. No service worker is required without a demonstrated need.
+
+## Verification and unresolved decisions
+
+The [technical specification](../.memory/technical-specification.md) defines verification, regression-test coverage, and open semantic decisions. Every applicable feature and criterion requires repository tests as implementation proceeds, plus built-extension verification in Chrome.
+
+URL search, diacritic-preserving Unicode matching, and popup-only folder visibility intentionally change the 1.8 baseline. Later releases introduce the explicitly scoped storage exceptions. The [historical baseline](legacy-baseline.md) and [analysis](legacy-analysis.md) remain references, not target acceptance criteria.

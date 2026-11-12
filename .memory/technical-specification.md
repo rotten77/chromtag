@@ -1,9 +1,256 @@
-<!--
-Add project requirements and technical design.
-Describe architecture, components, interfaces, data, constraints, and important
-technical decisions as relevant.
-Define acceptance criteria for epics or user stories, clearly associated with
-their IDs or names.
-Provide enough detail to guide implementation and user verification.
-Do not invent requirements or design decisions.
--->
+# Technical specification
+
+Updated: 2026-11-12
+
+## Scope and authority
+
+Chromtag is a Chrome extension for browsing and editing Chrome bookmarks through a popup. Hashtags in bookmark titles provide tags.
+
+This specification records the supplied requirements for versions 2.0–2.3, not completed implementation. Acceptance criteria live here. The plan tracks matching IDs. `docs/SPEC.md` describes the intended product. Historical 1.8 behavior and analysis remain in `docs/legacy-baseline.md` and `docs/legacy-analysis.md`.
+
+## Existing implementation
+
+The local reference is `.local/legacy/chromtag/`. Version 1.8 already uses Manifest V3, `bookmarks` and `tabs` permissions, and a popup without a background service worker. It uses jQuery, NanoScroller, and YUI CSS. Bookmarks remain in Chrome; folder visibility uses `localStorage`.
+
+Confirmed structural issues include 3 tree reads per refresh, DOM-based folder lookup, filtering after each inserted row, unbounded rendering, limited slug normalization, generated selectors, dynamic tag regexes, and HTML-string interpolation. Deep recursive traversal is an inferred risk. No large-library failure threshold or timing baseline is recorded.
+
+## Architecture and data
+
+- Use a root Angular CLI workspace, standalone Angular components, and TypeScript. Put popup code in `src/app/`.
+- Use native Chrome extension APIs. Render user-controlled text and attributes safely through Angular templates and bindings.
+- Read `chrome.bookmarks.getTree()` once per popup load/refresh. Derive a flat bookmark/folder/tag model and normalized search fields before rendering.
+- Resolve parent folder labels from the model, not the DOM. Sort and deduplicate clouds in memory.
+- Keep bookmarks and derived indexes in transient popup memory. Refresh the model once after a successful mutation.
+- Filter fields directly, without selectors or regexes constructed from raw user data.
+- Bound live rows with virtualization and overscan. Debounce text input; apply tag/folder interactions immediately.
+- Preserve Unicode text without transliteration. Normalize queries and fields consistently; ignore case while preserving diacritic distinctions.
+- Parse hashtags with Unicode-safe boundaries and preserve tag spelling in titles. Exact boundaries and canonical identity remain open decisions.
+- Remove jQuery, NanoScroller, and the legacy CSS reset from the runtime. Delete replaced dependencies only after confirming no references remain.
+- Use CSS custom properties for font size, popup dimensions, and palettes. Preserve the compact visual direction.
+
+### Storage policy
+
+| Data | Version | Location | Lifetime |
+|---|---|---|---|
+| Bookmarks, title hashtags, folder relationships | All | Chrome native bookmark tree | Chrome-managed |
+| Derived model and search index | All | Popup memory | Popup load/refresh |
+| Folder-cloud visibility | 2.0 onward | Popup memory | Popup session |
+| Search query, selected tags/folder | 2.0 | Popup memory | Popup session |
+| Search query, selected tags/folder | 2.1 onward | `chrome.storage.session` | Current browser session |
+| Appearance/layout preferences | 2.2 onward | `chrome.storage.local` | Across popup/browser restarts |
+| Bookmark-click preferences | 2.3 onward | `chrome.storage.local` | Across popup/browser restarts |
+
+Do not use `localStorage`, a separate bookmark store, an account, or a backend. Never persist bookmarks or derived indexes in Chrome storage. Persistent preferences are explicit exceptions to the transient extension-state policy.
+
+### Manifest and packaging
+
+- Retain `manifest_version: 3`; audit metadata, icons, permissions, APIs, and Chrome compatibility.
+- Keep `bookmarks`. Confirm the least-privilege active-tab route before retaining or replacing `tabs`.
+- Add `storage` for versions 2.1–2.3 preferences. Set `minimum_chrome_version` to match selected APIs.
+- Add no background service worker without a demonstrated need.
+- Put `manifest.json` and icons in `public/`; copy them into the production output.
+- Set `action.default_popup` to built `index.html`. The loadable extension root is `dist/chromtag/browser/`.
+- Bundle local scripts/styles only. Comply with extension Content Security Policy (CSP), without remote code, inline scripts, or `eval`.
+
+### Planned tooling
+
+This configuration does not exist yet. Commands become available only after workspace setup.
+
+| Operation | Required command or configuration |
+|---|---|
+| Initial setup | `npm install` |
+| Reproducible install | `npm ci`, with committed `package-lock.json` |
+| Production build | `npm run build` → `ng build --configuration production` |
+| Development rebuild | `npm run watch` → `ng build --watch --configuration development` |
+| Tests | `npm test` → configured Angular unit-test runner |
+| Runtime | Load `dist/chromtag/browser/` as an unpacked extension in Chrome |
+
+`ng serve` is not the extension runtime. Select dependency versions and a test runner during setup; the supplied requirements do not prescribe them.
+
+## Version 2.0 feature acceptance criteria
+
+### US-01 — Browse Chrome bookmarks
+
+- **US-01-AC1:** Opening the extension action opens the popup.
+- **US-01-AC2:** Include supported bookmarks nested at all folder levels.
+- **US-01-AC3:** Rows show title, URL, containing folder when available, parsed tags, and an edit control. Display titles omit parsed hashtags safely.
+- **US-01-AC4:** Selecting a title opens its URL in a new tab. Version 2.3 makes the target configurable.
+- **US-01-AC5:** Exclude `javascript:` bookmarks from the list.
+
+### US-02 — See and filter by tags
+
+- **US-02-AC1:** Parse title hashtags with the agreed Unicode-safe boundaries and identity policy. Preserve original Unicode spelling in titles.
+- **US-02-AC2:** Sort the tag cloud alphabetically; show each discovered tag once under that policy.
+- **US-02-AC3:** Selecting a tag activates its filter; selecting it again clears that filter.
+- **US-02-AC4:** Allow multiple active tags. A match satisfies all selected tags and other filters.
+- **US-02-AC5:** Rows show parsed tags. Punctuation and regex metacharacters do not break parsing, display, or removal.
+
+### US-03 — Filter by bookmark folder
+
+- **US-03-AC1:** A flattened, alphabetically sorted cloud includes nested folders.
+- **US-03-AC2:** At most 1 folder is active. Selecting another replaces it; selecting the active folder clears it.
+- **US-03-AC3:** Folder filtering combines with tags and text search.
+- **US-03-AC4:** Folder labels and search use the same model snapshot, independently of callback order.
+
+### US-04 — Search bookmarks
+
+- **US-04-AC1:** Typing updates results after debouncing. Tag/folder changes take effect immediately.
+- **US-04-AC2:** Search titles, containing folder names, and URLs.
+- **US-04-AC3:** Combine queries with all active tag filters and the active folder filter.
+- **US-04-AC4:** Normalize fields/queries for Unicode case-insensitive matching without transliteration or loss of diacritic distinctions.
+- **US-04-AC5:** Composed/decomposed text follows the agreed normalization policy. Test accented Latin, Turkish casing, Arabic, Chinese, mixed scripts, emoji, and punctuation.
+- **US-04-AC6:** Query metacharacters cannot break matching. Empty/no-match queries produce the corresponding full/empty filtered collection.
+
+### US-05 — Reset filters
+
+- **US-05-AC1:** **Reset filter** clears the query and all selected tags/folders.
+- **US-05-AC2:** All supported bookmarks return to the collection. Virtualization still bounds rendered rows.
+- **US-05-AC3:** From version 2.1, Reset clears saved filters; reopening does not restore cleared filters.
+
+### US-06 — Add the current page
+
+- **US-06-AC1:** **Add bookmark** creates a Chrome bookmark with the active tab's title and URL.
+- **US-06-AC2:** Without a specified destination, use Chrome's default bookmark folder.
+- **US-06-AC3:** Open the editor for the newly created bookmark.
+
+### US-07 — Edit or delete a bookmark
+
+- **US-07-AC1:** A row's edit control opens the editor with current title, URL, and folder.
+- **US-07-AC2:** List discovered tags. Selecting a tag toggles its title hashtag using the agreed policy.
+- **US-07-AC3:** Accept a new tag without losing Unicode spelling; allow destination-folder selection.
+- **US-07-AC4:** **Save** updates title/URL and moves the bookmark when needed. Refresh reflects the completed mutation.
+- **US-07-AC5:** **Delete** removes the bookmark from Chrome's tree.
+- **US-07-AC6:** **Cancel** or selecting the overlay closes the editor without saving unsaved fields. Cancellation does not undo creation before the add editor.
+- **US-07-AC7:** Successful mutations refresh bookmark/folder/tag views using 1 tree read. Chrome Bookmark Manager reflects changes.
+
+### US-08 — Show or hide folders
+
+- **US-08-AC1:** Toolbar controls show or hide the folder cloud.
+- **US-08-AC2:** Keep visibility only in popup memory, never `localStorage` or either Chrome storage area.
+- **US-08-AC3:** Closing the popup discards the visibility choice. The initial visibility default remains undefined.
+
+## Supporting task acceptance criteria
+
+### T-00 — Prepare the repository
+
+- **T-00-AC1:** Use the user-created `modernizing-chromtag` branch. Verify its presence before implementation; request user creation if absent.
+- **T-00-AC2:** Preserve the old README/images under `docs/`, with working relative links.
+- **T-00-AC3:** Ignore `node_modules/`, `dist/`, and `.angular/`. Keep `.local/` ignored.
+
+### T-01 — Define and baseline behavior
+
+- **T-01-AC1:** Preserve the 1.8 baseline; distinguish intentional target changes from historical behavior.
+- **T-01-AC2:** Record a representative large bookmark count and reproduce or characterize the current failure. Do not claim an unmeasured threshold.
+- **T-01-AC3:** Resolve relevant search, hashtag, and folder semantics before affected implementation.
+
+### T-02 — Audit the manifest
+
+- **T-02-AC1:** Audit MV3 metadata, icons, permissions, API compatibility, and minimum Chrome version.
+- **T-02-AC2:** Point the built manifest to local assets and the generated popup. Add no unnecessary service worker.
+- **T-02-AC3:** Validate later-release permissions when introducing their APIs.
+
+### T-03 — Rebuild the popup with Angular
+
+- **T-03-AC1:** Use standalone Angular components/TypeScript with the specified scripts, lockfile, assets, and output path.
+- **T-03-AC2:** The loadable production extension uses native Chrome APIs and safe bindings without legacy UI dependencies.
+- **T-03-AC3:** Each load/refresh reads the tree once and derives a consistent transient model before rendering.
+- **T-03-AC4:** Production bundles satisfy the specified CSP and storage policies.
+
+### T-04 — Fix scale and search
+
+- **T-04-AC1:** Filter the model without per-bookmark filtering, repeated DOM scans, or user-generated selectors.
+- **T-04-AC2:** With 10,000+ synthetic bookmarks, the popup does not freeze, filters respond, and live rows stay bounded by viewport/overscan.
+- **T-04-AC3:** Scrolling and open/edit actions work across virtualized rows. A refresh does not trigger repeated tree reads.
+- **T-04-AC4:** Test large/deep trees, many folders/tags, Unicode, and literal rendering. Distinguish inferred recursion risk from reproduced failures.
+
+The analysis suggests iterative traversal; adoption is not a separate confirmed requirement. Timing limits, overscan size, and debounce duration remain undefined.
+
+### T-05 — Preserve and refine the design
+
+- **T-05-AC1:** Preserve the compact popup, colored clouds, bookmark rows, toolbar, and editor overlay.
+- **T-05-AC2:** Increase typography modestly through an adjustable base-font CSS property. Define layout/palette properties for later settings.
+- **T-05-AC3:** Scale controls, labels, and spacing consistently. Long titles/URLs, many tags, and supported dimensions cause no overlap.
+- **T-05-AC4:** Verify natural dimensions, overflow, keyboard focus, and editor/cloud layout in Chrome.
+
+### T-06 — Document and verify
+
+- **T-06-AC1:** Keep README features, permissions, compatibility, storage, commands, and `docs/SPEC.md` consistent with implemented releases.
+- **T-06-AC2:** Map every applicable target feature/criterion to repository regression tests. Update tests/mapping when criteria change.
+- **T-06-AC3:** Use unit/component tests with mocked Chrome APIs and integration coverage across popup/API boundaries. Include tests in `npm test`.
+- **T-06-AC4:** Run `npm ci`, `npm run build`, `npm test`, manifest validation, and static checks after tooling exists. Required checks pass.
+- **T-06-AC5:** Load the output in supported stable Chrome. Verify applicable stories without runtime errors or CSP violations.
+- **T-06-AC6:** Verify 10,000+ synthetic bookmarks and a representative real profile when available. Record baseline measurements and remaining limits.
+- **T-06-AC7:** Cover literal rendering of markup-significant titles/folders/URLs/tags, all filter combinations, and international-text cases.
+
+Regression tests are explicit supplied requirements. No tests or completed criterion-to-test mapping exist yet.
+
+### T-07 — Release version 2.0
+
+- **T-07-AC1:** Set manifest version `2.0` after applicable verification.
+- **T-07-AC2:** Add a v2.0 changelog entry describing machine-assisted development and human guidance.
+- **T-07-AC3:** Remove replaced legacy runtime code after the Angular build works end to end and no references remain.
+
+The supplied plan names `legacy/`; no tracked directory with that name exists now. Preserve the ignored `.local/legacy/` archive. Clarify any request to delete that archive before destructive action.
+
+## Later release acceptance criteria
+
+### US-09 — Restore popup filters (version 2.1)
+
+- **US-09-AC1:** Save only query, selected tags, and selected folder in `chrome.storage.session` as filters change.
+- **US-09-AC2:** Restore filters when reopening during the browser session. Reconstruct bookmarks from Chrome's tree.
+- **US-09-AC3:** Reset clears active/saved filters. Ending the browser session clears saved filters.
+- **US-09-AC4:** Store no bookmarks/indexes there. Folder visibility remains popup-only.
+- **US-09-AC5:** Add `storage`, set a compatible minimum Chrome version, and set extension version `2.1`.
+- **US-09-AC6:** Document and regression-test restore, updates, Reset, expiry, and storage boundaries.
+
+### US-10 — Configure appearance (version 2.2)
+
+- **US-10-AC1:** Provide base-font and popup width/height controls within supported bounds that respect Chrome popup limits.
+- **US-10-AC2:** Provide light/dark themes with independent background, foreground, tag, and folder colors.
+- **US-10-AC3:** Switching themes applies that palette; editing one does not overwrite the other.
+- **US-10-AC4:** Save appearance/layout in `chrome.storage.local`; restore across popup/browser restarts.
+- **US-10-AC5:** Separate preferences from bookmarks/indexes/session filters. Do not persist folder visibility.
+- **US-10-AC6:** Set version `2.2`. Update README and product documentation.
+- **US-10-AC7:** Regression-test defaults, each setting/palette, switching, persistence, bounds, overflow, and scaling.
+
+Exact defaults, supported bounds, and palette values remain undefined.
+
+### US-11 — Configure bookmark-click behavior (version 2.3)
+
+- **US-11-AC1:** Provide current-tab/new-tab selection, defaulting to a new tab.
+- **US-11-AC2:** Provide a yes/no popup-close setting, subject to Chrome lifecycle constraints.
+- **US-11-AC3:** Save both preferences in `chrome.storage.local`; restore across popup/browser restarts.
+- **US-11-AC4:** Separate preferences from bookmark data and session filters.
+- **US-11-AC5:** Verify/document lifecycle constraints, especially during current-tab navigation.
+- **US-11-AC6:** Set version `2.3`. Update README and product documentation.
+- **US-11-AC7:** Regression-test defaults, both targets, both close choices, their combinations, and persistence.
+
+The popup-close default remains undefined.
+
+## Verification procedure
+
+These steps apply after the relevant implementation and tooling exist.
+
+1. Install locked dependencies with `npm ci`.
+2. Build the production extension with `npm run build`.
+3. Run the regression suite with `npm test`.
+4. Run the configured manifest validation and static checks.
+5. Load `dist/chromtag/browser/` with Chrome's **Load unpacked** action.
+6. Check the popup for runtime errors and CSP violations.
+7. Verify each applicable criterion against its mapped test and manual scenario.
+8. Check bookmark changes in Chrome Bookmark Manager.
+9. Record results for the synthetic collection and any available representative profile.
+10. Check popup reopen and browser restart behavior for the implemented release.
+
+## Open decisions and evidence gaps
+
+- Unicode normalization/case handling, including Turkish casing, with diacritic distinctions preserved.
+- Hashtag boundaries, empty tags, punctuation, embedded `#`, identity, display spelling, sorting, and new-tag whitespace handling.
+- Folder identity/descendant matching. Legacy filtering uses normalized substrings rather than strict folder-ID comparison.
+- Query phrase/token behavior, punctuation semantics, and matching across fields beyond the stated field coverage.
+- Measured performance, timing targets, fixture shape, debounce duration, and rendered-row bound.
+- Angular/Node versions, test runner, permission strategy, and minimum Chrome version.
+- Initial folder visibility, v2.0 typography/dimensions, and v2.2 defaults/bounds/palettes.
+- The v2.3 popup-close default and verified lifecycle limits.
+
+Resolve decisions before affected implementation. Analysis suggestions are not approved technical choices.
