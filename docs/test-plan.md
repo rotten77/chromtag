@@ -40,7 +40,7 @@ Expected: pagination controls appear above the cloud; disabled controls keep the
 5. Check the full title and URL in the editor.
 6. Select **Cancel**.
 
-Expected: the article fills the available list width. CSS truncates long text. URL and row folder/tag badge text are 80% of the title size. Hover reveals **Edit** without text overlap, layout shift, or horizontal list scrolling. Criteria: T-05-AC2/AC7.
+Expected: the article fills the available list width. CSS truncates long text. URL and row folder/tag badge text are 80% of the title size. The row's bottom spacing after the URL/badges matches its top padding. Hover reveals **Edit** without text overlap, layout shift, or horizontal list scrolling. Criteria: T-05-AC2/AC7.
 
 Automated Chrome checks repeat this case at 540 × 580 px with a 13 px font and 380 × 500 px with a 16 px font. These CSS checks do not add appearance settings to version 2.0.
 
@@ -61,7 +61,7 @@ Expected: filter-cloud folders are `#4CAF50` and tags are `#448AFF`. Both bookma
 3. Scroll within the bookmark list.
 4. Check the search field, cloud, and toolbar positions.
 
-Expected: only the bookmark-list area scrolls. Other main-popup controls stay visible and stationary. The outer popup has no scrollbar. Criterion: T-05-AC9.
+Expected: only the bookmark-list area scrolls. A 1 px top border in `--border-color` separates it from the controls above. Other main-popup controls stay visible and stationary. The outer popup has no scrollbar. Criterion: T-05-AC9.
 
 ## UI-07 — Title and Edit hover
 

@@ -44,7 +44,7 @@ T-05 review follow-up on 2026-11-12: apply Jan's search-field, combined wrapping
 
 Additional T-05 review: apply selected/hover colors and increase the popup height to 580 px. Jan chose a fixed cloud with collapsed excess labels; pagination keeps all filters reachable while only the bookmark-list area scrolls. Cloud-height follow-up: double its limit from 7rem to 14rem, move pagination above the cloud, avoid first-page blank space, and cap the cloud at smaller sizes to leave list space. Criteria T-05-AC6/AC8/AC9 and the layout test plan record these changes. Verification remains pending.
 
-Further T-05 review: underline bookmark titles, use the tag color for title hover, and reveal Edit on article hover while preserving keyboard access. URL and row-label typography follow-up: both use 80% of the title font size; row badges use gray #9E9E9E (T-05-AC2/AC8). Criteria T-05-AC7/AC10 and manual cases UI-04/UI-05/UI-07 cover these refinements; verification remains pending.
+Further T-05 review: underline bookmark titles, use the tag color for title hover, and reveal Edit on article hover while preserving keyboard access. URL and row-label typography follow-up: both use 80% of the title font size; row badges use gray #9E9E9E (T-05-AC2/AC8). The virtual row-height follow-up removes excess bottom spacing, and a top border separates the list from controls (T-05-AC7/AC9). Manual cases UI-04/UI-05/UI-06/UI-07 cover these refinements; verification remains pending.
 
 ### Feature stories
 

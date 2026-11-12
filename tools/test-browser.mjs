@@ -44,6 +44,12 @@ async function checkFixedLayout(page) {
   await viewport.evaluate(element => { element.scrollTop = 0; element.dispatchEvent(new Event('scroll')); });
   const before = await fixedBounds();
   assert(await viewport.isVisible(), 'Bookmark list remains visible at this popup size');
+  const listBorder = await page.locator('app-bookmark-list').evaluate(element => {
+    const style = getComputedStyle(element);
+    return { width: style.borderTopWidth, color: style.borderTopColor, expected: getComputedStyle(document.documentElement).getPropertyValue('--border-color').trim() };
+  });
+  assert.equal(listBorder.width, '1px', 'Bookmark list has a top separator');
+  assert.equal(listBorder.color, await page.evaluate(color => { const probe = document.createElement('span'); probe.style.color = color; document.body.append(probe); const value = getComputedStyle(probe).color; probe.remove(); return value; }, listBorder.expected), 'Separator uses --border-color');
   await viewport.hover();
   await page.mouse.wheel(0, 900);
   await page.waitForFunction(() => document.querySelector('cdk-virtual-scroll-viewport').scrollTop > 0);
@@ -53,6 +59,17 @@ async function checkFixedLayout(page) {
     .map(element => element.tagName));
   assert.deepEqual(scrollable, ['CDK-VIRTUAL-SCROLL-VIEWPORT'], 'Only the bookmark-list area scrolls');
   assert(await page.locator('.popup-content').evaluate(element => element.scrollHeight <= element.clientHeight + 1), 'The popup content fits its fixed height');
+}
+async function checkRowSpacing(page) {
+  const spacing = await page.locator('article.bookmark').first().evaluate(row => {
+    const url = row.querySelector('.url');
+    const labels = row.querySelector('.labels');
+    const lastContentBottom = Math.max(url.getBoundingClientRect().bottom, labels.getBoundingClientRect().bottom);
+    const bounds = row.getBoundingClientRect();
+    return { height: bounds.height, bottomGap: bounds.bottom - lastContentBottom, topPadding: parseFloat(getComputedStyle(row).paddingTop) };
+  });
+  assert(spacing.bottomGap >= spacing.topPadding - 1 && spacing.bottomGap <= spacing.topPadding + 4,
+    `Row bottom spacing matches top padding: ${JSON.stringify(spacing)}`);
 }
 async function checkBookmarkWidth(page) {
   const viewport = page.locator('cdk-virtual-scroll-viewport');
@@ -138,6 +155,7 @@ try {
   });
   await page.getByRole('button', { name: 'Refresh', exact: true }).click();
   await page.getByRole('button', { name: '<b>Saved page</b>', exact: true }).waitFor();
+  await checkRowSpacing(page);
   assert.equal(await page.locator('label.search').count(), 0);
   assert.equal(await page.getByRole('searchbox', { name: 'Search bookmarks' }).getAttribute('placeholder'), 'Search...');
   const cloudLayout = await page.locator('.filter-cloud').evaluate(cloud => {
@@ -396,7 +414,12 @@ try {
     document.documentElement.style.setProperty('--popup-width', '380px');
     document.documentElement.style.setProperty('--popup-height', '500px');
   });
-  await page.waitForFunction(() => Math.abs(document.querySelector('article.bookmark')?.getBoundingClientRect().height - 112) < 1);
+  await page.waitForFunction(() => Math.abs(document.querySelector('article.bookmark')?.getBoundingClientRect().height - 89.6) < 1);
+  await search.fill('example.invalid/scale/5000');
+  await page.getByText('1 of 10001 bookmarks', { exact: true }).waitFor();
+  await checkRowSpacing(page);
+  await search.fill('');
+  await page.getByText('10001 of 10001 bookmarks', { exact: true }).waitFor();
   await checkFixedLayout(page);
   await search.fill('example.invalid/scale/5000');
   await page.getByText('1 of 10001 bookmarks', { exact: true }).waitFor();

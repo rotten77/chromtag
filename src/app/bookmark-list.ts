@@ -38,7 +38,7 @@ export class BookmarkList implements AfterViewInit, OnDestroy {
     this.fontObserver = new MutationObserver(() => this.updateViewport());
     this.fontObserver.observe(document.documentElement, { attributes: true, attributeFilter: ['style', 'class'] });
   }
-  private fontRowHeight(): number { return (parseFloat(getComputedStyle(document.documentElement).fontSize) || 13) * 7; }
+  private fontRowHeight(): number { return (parseFloat(getComputedStyle(document.documentElement).fontSize) || 13) * 5.6; }
   private updateViewport(): void { this.rowHeight.set(this.fontRowHeight()); this.viewport().checkViewportSize(); }
   resetScroll(): void { this.viewport().scrollToIndex(0); }
   ngOnDestroy(): void { this.observer?.disconnect(); this.fontObserver?.disconnect(); }

@@ -29,6 +29,7 @@ button.title:hover { color: var(--tag-color); filter: none; }
 .result-count { margin: 0; padding: .25rem .5rem; border-top: 1px solid var(--border-color); font-size: .85em; }
 .search-field { min-width: 0; flex-shrink: 0; margin: .4rem .5rem; padding: .35rem; border: 1px solid var(--border-color); border-radius: .25rem; }
 .popup-content { display: flex; flex-direction: column; height: 100%; min-height: 0; overflow: hidden; }
+app-bookmark-list { border-top: 1px solid var(--border-color); }
 app-bookmark-list .cdk-virtual-scroll-content-wrapper { width: 100%; max-width: 100%; }
 .edit { border: 1px solid var(--border-color); border-radius: .25rem; background: var(--surface); padding: .25rem .4rem; opacity: 0; pointer-events: none; }
 .bookmark:hover .edit, .edit:focus-visible { opacity: 1; pointer-events: auto; }
