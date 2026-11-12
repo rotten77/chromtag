@@ -18,7 +18,7 @@ Tags begin with `#` at the title start or after whitespace. Punctuation stays in
 
 The list omits `javascript:` bookmarks. Rows fill the available list width. Long titles and URLs truncate with tooltips. Row folder/tag badges have a gray (`#9E9E9E`) background and, like URLs, use 80% of the title font size. Titles are underlined and turn tag-blue on hover. Hover the row to reveal **Edit**, or use Tab to focus that button.
 
-Folders and tags share 1 wrapping cloud. Selected labels are red (`#F44336`); hovered cloud buttons are dark (`#212121`). The cloud stays fixed without a scrollbar and leaves room for the bookmark list at smaller popup sizes. Use **More filters**, **Previous filters**, and **First filters** above the cloud to reach collapsed labels. Only the bookmark-list area scrolls in the main popup. **Hide folders** removes folders from the combined cloud; **Show folders** restores them.
+Folders and tags share 1 wrapping cloud. Selected labels have a red (`#F44336`) background without a shadow; hovered cloud buttons are dark (`#212121`). The cloud stays fixed without a scrollbar and leaves room for the bookmark list at smaller popup sizes. Use **More filters**, **Previous filters**, and **First filters** above the cloud to reach collapsed labels. Only the bookmark-list area scrolls in the main popup. **Hide folders** removes folders from the combined cloud; **Show folders** restores them.
 
 Filters and folder visibility last only while the popup is open in version 2.0. Folders appear again when the popup opens.
 

@@ -52,7 +52,7 @@ Automated Chrome checks repeat this case at 540 × 580 px with a 13 px font and 
 4. Select a folder or tag, then move the pointer away.
 5. Hover over default and selected cloud labels.
 
-Expected: filter-cloud folders are `#4CAF50` and tags are `#448AFF`. Both bookmark-row badge backgrounds are `#9E9E9E`, with text matching the URL size (80% of the title size). Selected cloud labels use `#F44336`. Hover uses `#212121`; leaving hover restores the selected/default color. Criteria: T-05-AC2/AC8.
+Expected: filter-cloud folders are `#4CAF50` and tags are `#448AFF`. Both bookmark-row badge backgrounds are `#9E9E9E`, with text matching the URL size (80% of the title size). Selected cloud labels use only a `#F44336` background, without a shadow. Hover uses `#212121`; leaving hover restores the selected/default color. The editor also has no shadow. Criteria: T-05-AC2/AC8.
 
 ## UI-06 — List-only scrolling
 

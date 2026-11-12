@@ -167,6 +167,7 @@ try {
   assert(await edit.evaluate(element => document.activeElement === element && getComputedStyle(element).opacity === '1'), 'Tab focus reveals Edit without mouse hover');
   await page.keyboard.press('Enter');
   await page.getByRole('dialog', { name: 'Edit bookmark' }).waitFor();
+  assert.equal(await page.locator('.editor').evaluate(element => getComputedStyle(element).boxShadow), 'none', 'Editor has no shadow');
   await page.getByRole('dialog').getByLabel('Title', { exact: true }).focus();
   await page.keyboard.press('Escape');
   await page.getByRole('dialog').waitFor({ state: 'detached' });
@@ -177,6 +178,7 @@ try {
     await page.locator('.filter-cloud .active').waitFor();
     await page.mouse.move(20, 20);
     assert.equal(await choice.evaluate(element => getComputedStyle(element).backgroundColor), 'rgb(244, 67, 54)', 'Selected cloud label uses #F44336');
+    assert.equal(await choice.evaluate(element => getComputedStyle(element).boxShadow), 'none', 'Selected cloud label has no shadow');
     await choice.hover();
     assert.equal(await choice.evaluate(element => getComputedStyle(element).backgroundColor), 'rgb(33, 33, 33)', 'Hovered cloud label uses #212121');
     await choice.click();
