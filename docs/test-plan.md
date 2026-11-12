@@ -79,4 +79,4 @@ Expected: title hover uses the tag blue (`#448AFF` by default). Row hover reveal
 
 Record the tested commit, Chrome version, date/time, scenario ID, expected result, and actual result when reporting an issue. Attach a screenshot when useful.
 
-Run `npm test` for a timestamped HTML report under `.local/test-results/`. See [the testing guide](testing.md). Overall E-20 verification remains pending. T-09 still owns the later full-feature manual materials after all planned releases.
+Run `npm test` for a timestamped HTML report under `.local/test-results/`. See [the testing guide](testing.md). Jan verified E-20 on 2026-11-12. T-09 still owns the later full-feature manual materials after all planned releases.

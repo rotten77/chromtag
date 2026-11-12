@@ -2,7 +2,7 @@
 
 Chromtag is a Chrome extension for browsing and editing Chrome bookmarks. Hashtags in bookmark titles provide tags without a separate bookmark database.
 
-This document describes implemented version 2.0 behavior and planned versions 2.1–2.3. Version 2.0 awaits user verification. The [technical specification](../.memory/technical-specification.md) owns acceptance criteria and unresolved decisions. The [plan](../.memory/plan.md) tracks progress.
+This document describes implemented version 2.0 behavior and planned versions 2.1–2.3. Jan verified version 2.0 on 2026-11-12; representative-profile testing remains open. The [technical specification](../.memory/technical-specification.md) owns acceptance criteria and unresolved decisions. The [plan](../.memory/plan.md) tracks progress.
 
 ## Version 2.0 — Modernized popup
 

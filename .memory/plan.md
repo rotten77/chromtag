@@ -10,7 +10,7 @@ Statuses: **Not started**, **In progress**, **Ready for verification**, **Verifi
 
 Implement no more than 1 user story at a time. Supporting tasks do not authorize implementing several stories together. Stop when a story is ready for verification. Start another only after user verification and the user's next instruction.
 
-Completed E-20 batch exception: the user explicitly authorized sequential implementation of the whole epic with task commits/logs. All E-20 implementation is ready for verification; no unverified item was marked Verified. This exception did not authorize E-21 or later releases.
+Completed E-20 batch exception: the user explicitly authorized sequential implementation of the whole epic with task commits/logs. Jan explicitly verified E-20, including T-02 through T-07 and US-01 through US-08, on 2026-11-12. This exception did not authorize E-21 or later releases.
 
 ## E-00 — Repository preparation
 
@@ -29,22 +29,22 @@ These tasks retain the supplied steps 1–7 and support the feature stories belo
 | ID | Task | Goal | Status | Criteria |
 |---|---|---|---|---|
 | T-01 | Define and baseline behavior | Establish behavior, resolve semantics, and measure legacy large-library failure. | Verified | T-01 |
-| T-02 | Audit the manifest | Retain MV3; verify metadata, assets, permissions, and compatibility. | Ready for verification | T-02 |
-| T-03 | Rebuild the popup with Angular | Establish the standalone TypeScript popup, build, safe bindings, and transient model. | Ready for verification | T-03 |
-| T-04 | Fix scale and search | Filter the model, virtualize rows with overscan, and support Unicode safely. | Ready for verification | T-04 |
-| T-05 | Preserve and refine the design | Retain the compact interface and improve typography, scaling, overflow, and focus. | Ready for verification | T-05 |
-| T-06 | Document and verify | Maintain documentation/test coverage; validate the built extension in Chrome. | Ready for verification | T-06 |
-| T-07 | Release version 2.0 | Set version 2.0, document development attribution, and remove replaced runtime code. | Ready for verification | T-07 |
+| T-02 | Audit the manifest | Retain MV3; verify metadata, assets, permissions, and compatibility. | Verified | T-02 |
+| T-03 | Rebuild the popup with Angular | Establish the standalone TypeScript popup, build, safe bindings, and transient model. | Verified | T-03 |
+| T-04 | Fix scale and search | Filter the model, virtualize rows with overscan, and support Unicode safely. | Verified | T-04 |
+| T-05 | Preserve and refine the design | Retain the compact interface and improve typography, scaling, overflow, and focus. | Verified | T-05 |
+| T-06 | Document and verify | Maintain documentation/test coverage; validate the built extension in Chrome. | Verified | T-06 |
+| T-07 | Release version 2.0 | Set version 2.0, document development attribution, and remove replaced runtime code. | Verified | T-07 |
 
 The user verified T-01 on 2026-11-12. It has a reproducible diagnostic runner and [synthetic measurements](../docs/legacy-measurements.md), including the 10,000-bookmark readiness timeout. The user approved hashtag, Unicode phrase-search, grapheme-boundary, and folder-filter semantics in the technical specification. Real-profile measurements and target timing budgets remain future work.
 
-T-02 provides the [manifest audit](../docs/manifest-audit.md), source manifest/icons in `public/`, and standalone source/package validation. The user selected `activeTab` with unavailable-metadata handling for US-06. T-02 awaits user verification. T-03 selected Angular 22 / TypeScript 6 / Chrome 157+ and verified asset copying, generated `index.html`, and native Chrome loadability.
+T-02 provides the [manifest audit](../docs/manifest-audit.md), source manifest/icons in `public/`, and standalone source/package validation. The user selected `activeTab` with unavailable-metadata handling for US-06. Jan verified T-02 as part of E-20 on 2026-11-12. T-03 selected Angular 22 / TypeScript 6 / Chrome 157+ and verified asset copying, generated `index.html`, and native Chrome loadability.
 
-T-05 review follow-up on 2026-11-12: apply Jan's search-field, combined wrapping cloud, full-width/truncated bookmark row, and palette changes. Matching criteria are T-05-AC5 through T-05-AC8; [the layout test plan](../docs/test-plan.md) covers manual review. T-05 remains ready for verification after the follow-up; this request does not verify E-20.
+T-05 review follow-up on 2026-11-12: apply Jan's search-field, combined wrapping cloud, full-width/truncated bookmark row, and palette changes. Matching criteria are T-05-AC5 through T-05-AC8; [the layout test plan](../docs/test-plan.md) covers manual review. Jan verified E-20 and its T-05 follow-ups on 2026-11-12.
 
-Additional T-05 review: apply selected/hover colors and increase the popup height to 580 px. Jan chose a fixed cloud with collapsed excess labels; pagination keeps all filters reachable while only the bookmark-list area scrolls. Cloud-height follow-up: double its limit from 7rem to 14rem, move pagination above the cloud, avoid first-page blank space, and cap the cloud at smaller sizes to leave list space. Criteria T-05-AC6/AC8/AC9 and the layout test plan record these changes. Verification remains pending.
+Additional T-05 review: apply selected/hover colors and increase the popup height to 580 px. Jan chose a fixed cloud with collapsed excess labels; pagination keeps all filters reachable while only the bookmark-list area scrolls. Cloud-height follow-up: double its limit from 7rem to 14rem, move pagination above the cloud, avoid first-page blank space, and cap the cloud at smaller sizes to leave list space. Criteria T-05-AC6/AC8/AC9 and the layout test plan record these changes. Jan verified E-20 on 2026-11-12.
 
-Further T-05 review: underline bookmark titles, use the tag color for title hover, and reveal Edit on article hover while preserving keyboard access. URL and row-label typography follow-up: both use 80% of the title font size; row badges use gray #9E9E9E (T-05-AC2/AC8). The virtual row-height follow-up removes excess bottom spacing, and a top border separates the list from controls (T-05-AC7/AC9). Manual cases UI-04/UI-05/UI-06/UI-07 cover these refinements; verification remains pending.
+Further T-05 review: underline bookmark titles, use the tag color for title hover, and reveal Edit on article hover while preserving keyboard access. URL and row-label typography follow-up: both use 80% of the title font size; row badges use gray #9E9E9E (T-05-AC2/AC8). The virtual row-height follow-up removes excess bottom spacing, and a top border separates the list from controls (T-05-AC7/AC9). Manual cases UI-04/UI-05/UI-06/UI-07 cover these refinements; Jan verified E-20 on 2026-11-12.
 
 ### Feature stories
 
@@ -52,14 +52,14 @@ These are the 8 supplied current-app stories, revised for the supplied moderniza
 
 | ID | Story | User goal | Status | Criteria |
 |---|---|---|---|---|
-| US-01 | Browse Chrome bookmarks | Find and open a saved page from the popup. | Ready for verification | US-01 |
-| US-02 | See and filter by tags | Find bookmarks by title hashtags. | Ready for verification | US-02 |
-| US-03 | Filter by bookmark folder | Narrow the collection by folder. | Ready for verification | US-03 |
-| US-04 | Search bookmarks | Find bookmarks across titles, folders, and URLs. | Ready for verification | US-04 |
-| US-05 | Reset filters | Return to the full supported collection with 1 action. | Ready for verification | US-05 |
-| US-06 | Add the current page | Save the active tab and edit the new bookmark. | Ready for verification | US-06 |
-| US-07 | Edit or delete a bookmark | Maintain details, tags, and folder placement. | Ready for verification | US-07 |
-| US-08 | Show or hide folders | Adjust the folder cloud during the popup session. | Ready for verification | US-08 |
+| US-01 | Browse Chrome bookmarks | Find and open a saved page from the popup. | Verified | US-01 |
+| US-02 | See and filter by tags | Find bookmarks by title hashtags. | Verified | US-02 |
+| US-03 | Filter by bookmark folder | Narrow the collection by folder. | Verified | US-03 |
+| US-04 | Search bookmarks | Find bookmarks across titles, folders, and URLs. | Verified | US-04 |
+| US-05 | Reset filters | Return to the full supported collection with 1 action. | Verified | US-05 |
+| US-06 | Add the current page | Save the active tab and edit the new bookmark. | Verified | US-06 |
+| US-07 | Edit or delete a bookmark | Maintain details, tags, and folder placement. | Verified | US-07 |
+| US-08 | Show or hide folders | Adjust the folder cloud during the popup session. | Verified | US-08 |
 
 Statuses describe the new implementation. Behavior in the ignored 1.8 reference does not mark a modernization story complete.
 
@@ -69,7 +69,7 @@ Statuses describe the new implementation. Behavior in the ignored 1.8 reference 
 |---|---|---|---|---|
 | T-13 | Show bookmark processing progress | Show loading and hashtag-processing progress in the popup, with an honest count when available and evidence-based guidance for large libraries. | Not started | T-13 |
 
-Schedule after version 2.0 user verification. The existing generic loading message is not counted as completion. Decide how to keep progress visible during model processing before implementation; do not claim a supported bookmark limit from synthetic tests.
+Scheduled after Jan's 2026-11-12 version 2.0 verification; implementation needs a new instruction. The existing generic loading message is not counted as completion. Decide how to keep progress visible during model processing before implementation; do not claim a supported bookmark limit from synthetic tests.
 
 ## E-21 — Version 2.1 session filters
 
@@ -111,4 +111,4 @@ T-10 uses the materials from T-09. Jan performs the final overall verification. 
 
 ## Next step
 
-Jan verifies the version 2.0 candidate in Chrome 157+ using `dist/chromtag/browser/` and [the usage guide](../docs/usage.md). T-02 through T-07 and US-01 through US-08 remain ready for explicit user verification. T-13 is planned after that verification; E-21 requires the user's next instruction.
+Jan verified E-20 on 2026-11-12. T-13 is planned but not implemented. Await Jan's next instruction before T-13 or E-21.
