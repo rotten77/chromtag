@@ -1,7 +1,2 @@
-Thumbs.db
-Desktop.ini
-*.todo
-*.crx
-*.pem
-video
-grafika
+# Local-only files
+.local/
