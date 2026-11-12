@@ -17,7 +17,7 @@ This document describes implemented version 2.0 behavior and planned versions 2.
 | Edit/delete | Edit title/URL, toggle or create tags, move folders, save, delete, or cancel unsaved fields. | US-07 |
 | Folder visibility | Show/hide the folder cloud for the current popup session only. | US-08 |
 
-The popup retains the compact toolbar, colored clouds, bookmark rows, and editor overlay. The base font is 13 px in a 540 × 580 px popup. Stable Chrome tests cover long content, keyboard focus, overflow, and CSS scaling.
+The popup retains the compact toolbar, colored clouds, bookmark rows, and editor overlay. The base font is 13 px in a 540 × 580 px popup. Bookmark URLs use 80% of the title font size. Stable Chrome tests cover long content, keyboard focus, overflow, and CSS scaling.
 
 The search field shows `Search...` without a visible label. Folders (`#4CAF50`) and tags (`#448AFF`) share 1 wrapping cloud without internal scrolling. The cloud stays fixed and collapses excess labels behind First/Previous/More filters. Only the bookmark-list area scrolls in the main popup. Selected labels use `#F44336`; hovered buttons use `#212121`. Full-width bookmark articles truncate long text with CSS and reserve space for Edit. Titles are underlined and turn tag-blue on hover. Edit appears on row hover or visible keyboard focus. See T-05-AC5 through T-05-AC10 and [the layout test plan](test-plan.md).
 

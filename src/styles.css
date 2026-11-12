@@ -11,10 +11,10 @@ header { display: flex; justify-content: space-between; padding: .5rem; border-b
 footer { display: flex; flex-wrap: wrap; align-items: center; gap: .35rem; padding: .5rem; background: var(--surface); border-top: 1px solid var(--border-color); flex-shrink: 0; }
 .close-popup { margin-left: auto; font-size: 1.2em; line-height: 1; }
 main { overflow: auto; min-height: 0; }
-.bookmark { padding: .5rem; border-bottom: 1px solid var(--border-color); }
-.title { border: 0; padding: 0; text-align: start; background: transparent; color: inherit; font-size: 1.08em; font-weight: 650; text-decoration: underline; text-underline-offset: .12em; }
+.bookmark { --title-font-size: 1.08em; padding: .5rem; border-bottom: 1px solid var(--border-color); }
+.title { border: 0; padding: 0; text-align: start; background: transparent; color: inherit; font-size: var(--title-font-size); font-weight: 650; text-decoration: underline; text-underline-offset: .12em; }
 button.title:hover { color: var(--tag-color); filter: none; }
-.url { color: var(--muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; margin: .15rem 0 .3rem; }
+.url { color: var(--muted); font-size: calc(var(--title-font-size) * .8); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; margin: .15rem 0 .3rem; }
 .labels { display: flex; flex-wrap: wrap; gap: .2rem; }
 .tag, .folder { border: 0; border-radius: .25rem; color: white; padding: .1rem .3rem; overflow-wrap: anywhere; }
 .tag { background: var(--tag-color); }

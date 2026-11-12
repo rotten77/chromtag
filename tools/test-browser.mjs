@@ -62,10 +62,12 @@ async function checkBookmarkWidth(page) {
     const edit = row.querySelector('.edit');
     const title = row.querySelector('.title');
     const url = row.querySelector('.url');
+    const fontRatio = parseFloat(getComputedStyle(url).fontSize) / parseFloat(getComputedStyle(title).fontSize);
     const bounds = node => ({ left: node.getBoundingClientRect().left, right: node.getBoundingClientRect().right });
-    return { width: element.clientWidth, scrollWidth: element.scrollWidth, viewport: bounds(element), row: bounds(row), edit: bounds(edit), title: bounds(title), titleTruncated: title.scrollWidth > title.clientWidth, urlTruncated: url.scrollWidth > url.clientWidth };
+    return { fontRatio, width: element.clientWidth, scrollWidth: element.scrollWidth, viewport: bounds(element), row: bounds(row), edit: bounds(edit), title: bounds(title), titleTruncated: title.scrollWidth > title.clientWidth, urlTruncated: url.scrollWidth > url.clientWidth };
   });
   assert.equal(layout.scrollWidth, layout.width, 'Long bookmarks must not widen the viewport');
+  assert(Math.abs(layout.fontRatio - .8) < .001, 'URL text stays at 80% of the title size');
   assert(Math.abs(layout.row.right - layout.row.left - layout.width) <= 1, 'Article fills all available viewport width');
   assert(layout.edit.left >= layout.row.left && layout.edit.right <= layout.viewport.left + layout.width + 1, 'Edit stays inside the visible row');
   assert(layout.title.right <= layout.edit.left, 'Truncated text does not overlap Edit');

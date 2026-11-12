@@ -40,7 +40,7 @@ Expected: the cloud stays fixed and collapses excess labels without a scrollbar.
 5. Check the full title and URL in the editor.
 6. Select **Cancel**.
 
-Expected: the article fills the available list width. CSS truncates long text. Hover reveals **Edit** without text overlap, layout shift, or horizontal list scrolling. Criterion: T-05-AC7.
+Expected: the article fills the available list width. CSS truncates long text. URL text is 80% of the title size. Hover reveals **Edit** without text overlap, layout shift, or horizontal list scrolling. Criterion: T-05-AC7.
 
 Automated Chrome checks repeat this case at 540 × 580 px with a 13 px font and 380 × 500 px with a 16 px font. These CSS checks do not add appearance settings to version 2.0.
 

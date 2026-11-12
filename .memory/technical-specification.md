@@ -219,7 +219,7 @@ Implementation uses iterative traversal, rows sized to 7 times the base font (91
 ### T-05 — Preserve and refine the design
 
 - **T-05-AC1:** Preserve the compact popup, colored clouds, bookmark rows, toolbar, and editor overlay.
-- **T-05-AC2:** Increase typography modestly through an adjustable base-font CSS property. Define layout/palette properties for later settings.
+- **T-05-AC2:** Increase typography modestly through an adjustable base-font CSS property. Set bookmark URL text to 80% of the title font size, preserving that ratio when the base font changes. Define layout/palette properties for later settings.
 - **T-05-AC3:** Scale controls, labels, and spacing consistently. Long titles/URLs, many tags, and supported dimensions cause no overlap.
 - **T-05-AC4:** Verify natural dimensions, overflow, keyboard focus, and editor/cloud layout in Chrome.
 - **T-05-AC5:** Show the search field without its visible label. Use the exact placeholder `Search...` and retain an accessible name.
