@@ -4,7 +4,7 @@ Chromtag is a Chrome extension for browsing and editing Chrome bookmarks. Hashta
 
 ## Project state
 
-The repository is prepared for modernization. The version 1.8 implementation is archived locally in ignored `.local/legacy/`. Manifest source and preserved icons are staged in `public/`. No Angular workspace or modernized extension exists yet.
+E-20 implementation is in progress. The standalone Angular popup now builds from `src/`; manifest source and preserved icons live in `public/`. The version 1.8 reference remains in ignored `.local/legacy/`.
 
 The planned releases are:
 
@@ -23,33 +23,41 @@ Version 2.1 uses `chrome.storage.session` only for the query and selected tags/f
 
 Version 1.8 uses Manifest V3 with `bookmarks` and `tabs`. The staged manifest replaces `tabs` with `activeTab` and defers `storage` until preferences use it. The planned add feature will report unavailable current-page metadata without creating an incomplete bookmark. See the [manifest audit](docs/manifest-audit.md).
 
-The staged manifest retains MV3 and sets the selected API floor to Chrome 90. Angular setup must finalize the framework's browser floor; Chrome 90 is not a tested release-support claim.
+The Angular 22 popup targets Chrome 157 or later. The manifest and browser build target use the same floor. See [Angular compatibility](https://angular.dev/reference/versions).
 
 ## Build, run, and test
 
 Git ignores `node_modules/`, `dist/`, and `.angular/`, along with private files in `.local/`.
 
-Application build and test commands are not available yet. Standalone manifest checks are available:
+Use Node.js `^22.22.3`, `^24.15.0`, or `^26.0.0`. The lockfile pins application and test dependencies. Standalone manifest checks are also available:
 
 ```powershell
 node tools/validate-manifest.mjs --source
 node --test tools/validate-manifest.test.mjs
 ```
 
-The [manifest audit](docs/manifest-audit.md#validation) describes built-package checks and their limits. Do not load `public/` as an unpacked extension.
+The [manifest audit](docs/manifest-audit.md#validation) describes package checks and their limits. Do not load `public/` as an unpacked extension.
 
-The following workflow is planned for Angular setup:
+Use these commands from the repository root:
 
-| Operation | Planned command | Description |
+| Operation | Command | Description |
 |---|---|---|
-| Initial setup | `npm install` | Install dependencies after workspace creation |
+| Initial setup | `npm install` | Install dependencies |
 | Reproducible install | `npm ci` | Install from the committed lockfile |
 | Build | `npm run build` | Run `ng build --configuration production` |
 | Development rebuild | `npm run watch` | Run `ng build --watch --configuration development` |
-| Test | `npm test` | Run the configured Angular unit-test runner |
+| Test | `npm test` | Run manifest, Angular/Vitest, build, and stable Chrome checks; save a timestamped HTML report in `.local/test-results/` |
+| Static checks | `npm run check` | Check TypeScript and the source manifest |
 | Run | Chrome **Load unpacked** | Load built `dist/chromtag/browser/` |
 
 Reload the unpacked extension after development builds. `ng serve` is not the extension runtime.
+
+1. Run `npm ci`.
+2. Run `npm run build`.
+3. Open `chrome://extensions` in Chrome.
+4. Enable **Developer mode**.
+5. Select **Load unpacked**.
+6. Select `dist/chromtag/browser/`.
 
 The [legacy diagnostic procedure](docs/legacy-measurements.md) measures the archived popup with synthetic bookmarks. It uses separate local test dependencies.
 

@@ -1,0 +1,5 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": { "outDir": "./out-tsc/spec", "types": ["chrome", "vitest/globals"] },
+  "include": ["src/**/*.ts"]
+}

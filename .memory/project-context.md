@@ -6,6 +6,7 @@ Chromtag is a Chrome bookmark browser/editor. Hashtags in native bookmark titles
 
 - Jan Zatloukal — developer; provides requirements and verifies implemented stories.
 - AI agents follow `AGENTS.md`, maintain documentation, and implement at most 1 story before user verification.
+- Current-session exception: Jan authorized the whole E-20 implementation with sequential task commits and logs. Keep verification pending; do not extend this authorization into E-21.
 - Finished tasks that pass applicable tests and checks trigger automatic session closing, log/status updates, and a commit under the standing authorization in `AGENTS.md`. User verification remains separate.
 - After E-23 implementation, Jan owns the instruction cleanup and final manual verification of all features. An agent prepares a simple manual test case and report template for that verification and extended use; see T-08 through T-10 in the plan.
 - After final testing, T-11 removes obsolete legacy/work files and refreshes documentation/screenshots so the working repository represents the current version. T-12 then archives the completed plan and updates references.
@@ -45,6 +46,7 @@ Do not duplicate target acceptance criteria in the plan or user documentation. S
 - Planned loadable output: `dist/chromtag/browser/`. Do not load source as an unpacked extension.
 - Planned commands become usable after tooling setup. `ng serve` is not the extension runtime.
 - Run standalone manifest checks with `node tools/validate-manifest.mjs --source` and `node --test tools/validate-manifest.test.mjs`. Built validation requires T-03 output.
+- Angular 22 / TypeScript 6 target Chrome 157+. `npm test` retains timestamped HTML reports in ignored `.local/test-results/`. Show the folder cloud initially; visibility remains popup-only.
 - The standalone legacy diagnostic lives in `tools/legacy-baseline.mjs`. Its dependencies and raw measurements remain under ignored `.local/`; it does not create application tooling.
 - Private/local references stay in ignored `.local/`. Shared documentation and memory remain tracked.
 - Preserve the ignored archive during implementation and final testing. T-11 handles obsolete legacy/work files after testing; its cleanup does not include unrelated private files.

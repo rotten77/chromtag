@@ -4,38 +4,16 @@ Updated: 2026-11-12
 
 ## Current state
 
-- Branch: `modernizing-chromtag`.
-- Workflow setup is committed in `e3ac7e7` (Set up AI agent workflow and move legacy code to local storage).
-- Modernization requirements and the roadmap are committed in `eac5420` (Document Chromtag modernization requirements and roadmap).
-- Legacy source/assets remain in ignored `.local/legacy/`; popup source is under `.local/legacy/chromtag/`. T-02 stages manifest source and copies of the icons in `public/`.
-- The supplied 1.8 baseline, analysis, modernization plan, and versions 2.0–2.3 requirements are organized into shared documentation.
-- The plan defines 11 supplied feature/release stories, 8 supporting tasks, and 5 post-implementation tasks. The technical specification holds matching criteria and open decisions.
-- Historical README/screenshots are preserved under `docs/`.
-- T-00 is **Verified** by the user on 2026-11-12 and committed in `e600c02` (Complete T-00 repository preparation).
-- T-00 checks passed: ignore rules, shared-file trackability, 29 relative documentation links, preservation of all 10 historical images and README text, and `git diff --check`.
-- T-01 is **Verified** by the user on 2026-11-12. All implementation stories remain **Not started**.
-- The user approved hashtag boundaries/identity, NFC and locale-independent lowercasing, literal phrase search with grapheme boundaries, and folder-ID filtering including descendants. The technical specification records the rules.
-- `tools/legacy-baseline.mjs` measures the archived popup with synthetic Chrome API callbacks in isolated headless Chrome contexts. Diagnostic dependencies and raw reports remain in ignored `.local/`.
-- Synthetic runs measured median startup at 35.6 ms for 100 bookmarks, 759.1 ms for 1,000, and 24.736 s for 5,000. The first 10,000-bookmark trial reached the 120-second readiness timeout.
-- Behavior probes reproduced callback-order, tag-regex, generated-selector, Unicode-normalization, and literal-rendering defects. Arabic, Chinese, and emoji samples matched; no blanket script failure was reproduced.
-- The focused 100/1,000-bookmark diagnostic and behavior assertions passed. A forced-timeout check correctly recorded a timeout, skipped remaining runs at that size, ran probes, and exited nonzero.
-- No Angular workspace, application dependencies, application test runner, or modernized extension exists. Application build/run/test commands remain planned.
-- T-01 runner, documentation, and memory updates are committed in `3fd5f06` (Complete T-01 legacy baseline and matching decisions). Session closing notes are committed in `d3fdaea`.
-- T-02 is **Ready for verification**. The manifest audit, source assets, and standalone validator are complete for review. The user selected `activeTab` with unavailable-metadata handling; the staged manifest and US-06 criteria reflect that decision.
-- T-02 checks passed: manifest source validation, 8 validator regression tests, 45 relative documentation links, preservation of all 3 icons, syntax checks, and `git diff --check`. No actual Angular build or browser loadability check is available yet.
-- T-02 and its closing notes are committed in `8c5cc5b` (Complete T-02 manifest and API audit). T-02 verification is pending; T-03 has not started.
-- The user changed the agent workflow: finished tasks that pass applicable tests/checks now end the session, update log/status, and create a commit automatically. `AGENTS.md` records the standing authorization; user verification remains separate.
-- The user added follow-up tasks after E-23: T-08 for Jan to remove automatic logging/commit instructions, T-09 for an agent to prepare a simple manual test case and test-report template, and T-10 for Jan's final manual verification of all features during extended use. These tasks are **Not started**.
-- T-11 follows final testing: remove obsolete legacy/work files, review current-version user documentation, and refresh screenshots. T-12 then archives the completed plan and updates references. Both tasks are **Not started**; no cleanup or archival has occurred.
+- Branch: modernizing-chromtag. T-00/T-01 are user-verified. T-02 remains ready for verification, committed in 8c5cc5b.
+- The user authorized the whole E-20 implementation with a separate commit and log entry per task. No E-21 work is authorized by this batch.
+- T-03 is ready for verification: Angular 22 standalone popup, TypeScript 6, CLI workspace/lockfile, native Chrome APIs, safe rendering, and an iterative single-snapshot model.
+- The manifest and build target now require Chrome 157+. Stable Chrome 157.0.8103.51 loaded the real package in an isolated profile with native bookmark loading and new-tab navigation; no runtime/CSP errors.
+- npm test passed: 8 manifest tests, 6 Angular tests, production build, and stable Chrome integration. npm run check and built-manifest validation passed.
+- Timestamped HTML test reports remain in ignored .local/test-results/, including failed runs. Latest passing report: 2026-11-12T17-37-52.004Z-6304.html.
+- Model tests cover 12,000 nested folders. Literal text remains text. No real user profile was read.
+- T-04 through T-07 and US-01 through US-08 remain incomplete. Later releases and post-implementation tasks remain not started.
+- Legacy reference and raw baseline reports stay in ignored .local/ through final testing; T-11/T-12 schedule cleanup and plan archival.
 
-## Remaining work and decisions
+## Remaining work and next steps
 
-- Obtain user verification of T-02. Source readiness does not establish actual Angular package loadability; T-03 owns that integration check.
-- Measure a representative real profile during T-06 when available; no universal failure threshold or target timing budget is established.
-- Finalize dependency versions and the framework/browser floor during T-03. The staged manifest currently declares the selected Chrome 90 API floor.
-- Define appearance defaults/bounds and the popup-close default before the relevant releases.
-- Establish application criterion-to-test coverage as implementation proceeds. Standalone manifest-validator regression checks exist; the Angular test suite does not.
-
-## Next step
-
-The user verifies T-02 using [the manifest audit](../docs/manifest-audit.md) and source/validator checks. The recommended next task is T-03, subject to the user's next instruction.
+Continue T-04 under the explicit batch instruction. Keep user verification pending. Real-profile performance is unavailable; report synthetic evidence separately. Version 2.2 appearance bounds/palettes and version 2.3 close default remain later decisions.

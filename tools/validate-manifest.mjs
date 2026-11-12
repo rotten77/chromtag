@@ -89,7 +89,7 @@ if (process.argv[1] && import.meta.url === pathToFileURL(resolve(process.argv[1]
     const result = await validateManifest(resolve(directory ?? resolve(repositoryRoot,
       built ? 'dist/chromtag/browser' : 'public')), { built });
     console.log(`PASS: ${built ? 'built package' : 'manifest source'}; ${result.iconFiles} PNG icons; Chrome API floor ${result.minimumChrome}.`);
-    if (!built) console.log('Generated index.html, Angular compatibility, and browser runtime checks remain pending T-03.');
+    if (!built) console.log('Source mode does not verify generated output or browser runtime; use --built and npm test.');
   } catch (error) {
     console.error(`Manifest validation failed: ${error.message}`);
     process.exitCode = 1;

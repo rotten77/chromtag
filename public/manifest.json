@@ -4,7 +4,7 @@
   "short_name": "ChromTag",
   "description": "Tag your bookmarks with #hashtag!",
   "version": "1.8",
-  "minimum_chrome_version": "90",
+  "minimum_chrome_version": "157",
   "icons": {
     "16": "icon.png",
     "48": "icon48.png",

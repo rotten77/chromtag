@@ -2,7 +2,7 @@
 
 Chromtag is a Chrome extension for browsing and editing Chrome bookmarks. Hashtags in bookmark titles provide tags without a separate bookmark database.
 
-This document describes the intended versions 2.0–2.3. The modernization is not implemented yet. The [technical specification](../.memory/technical-specification.md) owns acceptance criteria and unresolved decisions. The [plan](../.memory/plan.md) tracks progress.
+This document describes the intended versions 2.0–2.3. E-20 implementation is in progress; the Angular workspace and bookmark model are available. The [technical specification](../.memory/technical-specification.md) owns acceptance criteria and unresolved decisions. The [plan](../.memory/plan.md) tracks progress.
 
 ## Version 2.0 — Modernized popup
 
@@ -43,9 +43,9 @@ The extension uses no separate bookmark database, backend, account, or `localSto
 
 Manifest V3 remains in use. The staged manifest retains `bookmarks` and replaces broad `tabs` access with temporary `activeTab` access. Current-page bookmarking depends on Chrome exposing the required metadata; restricted pages or revoked access can prevent adding a page. Preference releases add `storage` when needed.
 
-The staged manifest sets a Chrome 90 API floor; Angular setup must finalize its framework/browser requirements. Version 2.1 needs at least Chrome 102 for session storage, retaining any higher framework floor. No service worker is required without a demonstrated need.
+The Angular 22 popup and manifest target Chrome 157+. Version 2.1 needs at least Chrome 102 for session storage, retaining any higher framework floor. No service worker is required without a demonstrated need.
 
-The [manifest audit](manifest-audit.md) describes the staged source, permission rationale, and checks. The generated popup and loadable build remain pending Angular setup.
+The [manifest audit](manifest-audit.md) describes the staged source, permission rationale, and checks. The build produces a loadable popup at `dist/chromtag/browser/`; T-03 verifies this package in stable Chrome.
 
 ## Verification and unresolved decisions
 

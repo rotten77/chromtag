@@ -1,3 +1,5 @@
+> T-03 update: Angular 22 / TypeScript 6 now build the popup. The manifest and browser target require Chrome 157+. `npm test` builds and loads the real extension in isolated stable Chrome; generated output and runtime checks are no longer pending. The audit below retains T-02 preparation context.
+
 # Manifest and API audit
 
 T-02 audit, 2026-11-12. The manifest source and icons belong in `public/`.

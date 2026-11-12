@@ -89,7 +89,7 @@ Do not use `localStorage`, a separate bookmark store, an account, or a backend. 
 - Keep `bookmarks` and replace broad `tabs` access with `activeTab`. The user approved this permission policy during T-02 on 2026-11-12.
 - Read current-page metadata only when Chrome exposes it under the action's temporary grant. If required metadata is unavailable, report that the page cannot be saved and create no incomplete bookmark. US-06 owns implementation and regression coverage.
 - Add `storage` for versions 2.1–2.3 preferences. Session storage requires Chrome 102 or a higher framework floor.
-- The staged `public/manifest.json` sets `minimum_chrome_version` to `90`, covering selected bookmark Promise APIs. T-03 must finalize or raise this API floor against the chosen Angular release and browser target before claiming release support.
+- T-03 selects Angular 22, TypeScript 6, and Chrome 157 as the conservative application floor. The manifest and `.browserslistrc` agree. Node ranges follow Angular's published compatibility table.
 - Use native `chrome.*` Promise APIs. Use `Intl.Segmenter` with grapheme granularity for the approved search-boundary policy; its Chrome 87 floor is below the selected extension API floor.
 - Add no background service worker without a demonstrated need.
 - Keep `manifest.json` and the preserved 16/48/128 px PNG icons in `public/`; copy them into the production output. Keep extension version `1.8` during preparation; T-07 sets `2.0` after applicable verification.
@@ -103,7 +103,7 @@ Built validation uses `node tools/validate-manifest.mjs --built` after T-03 crea
 
 ### Planned tooling
 
-Application configuration does not exist yet. The commands below become available only after workspace setup. Standalone manifest checks already exist.
+T-03 establishes the Angular CLI workspace and Vitest unit/component runner. `npm test` saves timestamped HTML evidence under ignored `.local/test-results/`, including failed runs. Build optimization disables critical-CSS inlining and remote-font processing for the extension CSP.
 
 | Operation | Required command or configuration |
 |---|---|
@@ -178,7 +178,7 @@ Application configuration does not exist yet. The commands below become availabl
 
 - **US-08-AC1:** Toolbar controls show or hide the folder cloud.
 - **US-08-AC2:** Keep visibility only in popup memory, never `localStorage` or either Chrome storage area.
-- **US-08-AC3:** Closing the popup discards the visibility choice. The initial visibility default remains undefined.
+- **US-08-AC3:** Closing the popup discards the visibility choice. Show folders initially; the user selected this default during E-20 implementation.
 
 ## Supporting task acceptance criteria
 
@@ -327,8 +327,7 @@ These steps apply after the relevant implementation and tooling exist.
 ## Open decisions and evidence gaps
 
 - Real-profile performance, timing targets, additional fixture shapes, debounce duration, and rendered-row bound. T-01 records the initial synthetic fixture and baseline.
-- Angular/Node versions, application test runner, and the final framework/browser floor. T-02 stages Chrome 90 as an API floor; it is not yet a tested Angular compatibility claim.
-- Initial folder visibility, v2.0 typography/dimensions, and v2.2 defaults/bounds/palettes.
+- Version 2.2 defaults/bounds/palettes. Version 2.0 starts with a 13 px base font and a 540 × 540 px popup; T-05 checks compact layout and overflow.
 - The v2.3 popup-close default and verified lifecycle limits.
 
 Resolve decisions before affected implementation. Analysis suggestions are not approved technical choices.
