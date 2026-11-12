@@ -1,8 +1,7 @@
 import { afterNextRender, ChangeDetectionStrategy, Component, computed, inject, Injector, OnDestroy, signal, viewChild } from '@angular/core';
 import { BookmarkStore } from './bookmark-store';
 import { BookmarkList } from './bookmark-list';
-import { filterBookmarks, Filters } from './model';
-import { Bookmark } from './model';
+import { Bookmark, filterBookmarks, Filters } from './model';
 import { BookmarkEditor } from './bookmark-editor';
 
 @Component({

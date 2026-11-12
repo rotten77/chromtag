@@ -7,8 +7,8 @@ Updated: 2026-11-12
 - Branch: modernizing-chromtag. T-00/T-01 are user-verified; T-02 verification remains pending (8c5cc5b).
 - Jan authorized implementing the entire E-20 sequentially, with per-task commits/logs. User verification remains pending. E-21 and later releases are outside this batch.
 - Angular 22 / TypeScript 6 / native Chrome APIs target Chrome 157+. Loadable output: dist/chromtag/browser/. No legacy runtime libraries or persisted bookmark/index data.
-- Refined the compact toolbar/cloud/row/editor design with 13 px typography, 540 x 540 layout, palette/layout CSS properties, proportional row sizing, visible keyboard focus, and restored editor focus. Stable Chrome checked 112 added folders, 130 tags, long content, default and 380 x 500 / 16 px scaling, scrolling, trap/restore/Escape, and overflow. Reviewed screenshots embedded in timestamped HTML. All 41 Angular and 8 manifest tests pass.
-- Latest passing HTML report: .local/test-results/2026-11-12T18-01-00.012Z-36152.html. Failed reports are retained too.
+- Completed usage/build/test documentation and mappings for all 69 preparation/E-20 criteria. Added project/package/link/storage-policy checks, every filter combination, literal text in all views, and synchronous API error recovery. Clean npm ci, npm run build, npm test (53 Angular + 8 manifest tests), npm run check, built manifest, and whitespace checks passed. Native Chrome confirmed Bookmark Manager updates and missing/revoked grant behavior. Real-profile verification remains unavailable and user verification pending.
+- Latest passing HTML report: .local/test-results/2026-11-12T18-08-43.791Z-38244.html. Failed reports are retained too.
 - Stable Chrome 157.0.8103.51 integration uses a fresh temporary profile with synthetic bookmarks, never the user's profile. A representative real profile is unavailable.
 
 ## E-20 progress
@@ -21,7 +21,7 @@ Updated: 2026-11-12
 | T-03 | Rebuild the popup with Angular | Establish the standalone TypeScript popup, build, safe bindings, and transient model. | Ready for verification | T-03 |
 | T-04 | Fix scale and search | Filter the model, virtualize rows with overscan, and support Unicode safely. | Ready for verification | T-04 |
 | T-05 | Preserve and refine the design | Retain the compact interface and improve typography, scaling, overflow, and focus. | Ready for verification | T-05 |
-| T-06 | Document and verify | Maintain documentation/test coverage; validate the built extension in Chrome. | Not started | T-06 |
+| T-06 | Document and verify | Maintain documentation/test coverage; validate the built extension in Chrome. | Ready for verification | T-06 |
 | T-07 | Release version 2.0 | Set version 2.0, document development attribution, and remove replaced runtime code. | Not started | T-07 |
 | US-01 | Browse Chrome bookmarks | Find and open a saved page from the popup. | Ready for verification | US-01 |
 | US-02 | See and filter by tags | Find bookmarks by title hashtags. | Ready for verification | US-02 |
@@ -34,7 +34,7 @@ Updated: 2026-11-12
 
 ## Next step
 
-Continue T-06 documentation, criterion coverage mapping, reproducible install, and full verification.
+Implement T-07: set version 2.0, add machine-assisted/human-guided development attribution, retain required package notices, and run final release-candidate checks.
 
 ## Later work
 

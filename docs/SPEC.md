@@ -2,7 +2,7 @@
 
 Chromtag is a Chrome extension for browsing and editing Chrome bookmarks. Hashtags in bookmark titles provide tags without a separate bookmark database.
 
-This document describes the intended versions 2.0–2.3. E-20 implementation is in progress; the Angular workspace and bookmark model are available. The [technical specification](../.memory/technical-specification.md) owns acceptance criteria and unresolved decisions. The [plan](../.memory/plan.md) tracks progress.
+This document describes implemented version 2.0 behavior and planned versions 2.1–2.3. Version 2.0 awaits user verification. The [technical specification](../.memory/technical-specification.md) owns acceptance criteria and unresolved decisions. The [plan](../.memory/plan.md) tracks progress.
 
 ## Version 2.0 — Modernized popup
 
@@ -17,7 +17,7 @@ This document describes the intended versions 2.0–2.3. E-20 implementation is 
 | Edit/delete | Edit title/URL, toggle or create tags, move folders, save, delete, or cancel unsaved fields. | US-07 |
 | Folder visibility | Show/hide the folder cloud for the current popup session only. | US-08 |
 
-The popup retains the compact toolbar, colored clouds, bookmark rows, and editor overlay. Typography increases modestly. Long content, keyboard focus, and overflow require verification.
+The popup retains the compact toolbar, colored clouds, bookmark rows, and editor overlay. The base font is 13 px in a 540 × 540 px popup. Stable Chrome tests cover long content, keyboard focus, overflow, and CSS scaling.
 
 Search matches respect grapheme boundaries. A query cannot match only part of an accented character or emoji cluster.
 
@@ -41,11 +41,11 @@ Bookmarks, folder relationships, and title hashtags remain in Chrome's native tr
 
 The extension uses no separate bookmark database, backend, account, or `localStorage`. Session/persistent preferences never contain bookmark records or indexes.
 
-Manifest V3 remains in use. The staged manifest retains `bookmarks` and replaces broad `tabs` access with temporary `activeTab` access. Current-page bookmarking depends on Chrome exposing the required metadata; restricted pages or revoked access can prevent adding a page. Preference releases add `storage` when needed.
+Manifest V3 remains in use. The manifest uses `bookmarks` and temporary `activeTab` access. Current-page bookmarking depends on Chrome exposing the required metadata; restricted pages or revoked access can prevent adding a page. Preference releases add `storage` when needed.
 
 The Angular 22 popup and manifest target Chrome 157+. Version 2.1 needs at least Chrome 102 for session storage, retaining any higher framework floor. No service worker is required without a demonstrated need.
 
-The [manifest audit](manifest-audit.md) describes the staged source, permission rationale, and checks. The build produces a loadable popup at `dist/chromtag/browser/`; T-03 verifies this package in stable Chrome.
+The [manifest audit](manifest-audit.md) describes package metadata, permission rationale, and checks. The build produces a loadable popup at `dist/chromtag/browser/`; T-03 verifies this package in stable Chrome.
 
 ## Verification and unresolved decisions
 

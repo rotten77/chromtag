@@ -11,7 +11,7 @@
     "watch": "ng build --watch --configuration development",
     "test": "node tools/run-tests.mjs",
     "test:unit": "ng test --watch=false",
-    "check": "tsc --noEmit -p tsconfig.app.json && node tools/validate-manifest.mjs --source"
+    "check": "tsc --noEmit -p tsconfig.app.json && node tools/check-project.mjs"
   },
   "dependencies": {
     "@angular/cdk": "22.2.7",

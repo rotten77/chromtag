@@ -40,6 +40,7 @@ context.setDefaultNavigationTimeout(10000);
 try {
   const browser = context.browser();
   await context.route('https://example.invalid/**', route => route.fulfill({ contentType: 'text/html', body: '<title>Test destination</title>' }));
+  await context.route('https://other.invalid/**', route => route.fulfill({ contentType: 'text/html', body: '<title>New origin without grant</title>' }));
   console.log(`Stable Chrome: ${browser.version()}`);
   const session = await browser.newBrowserCDPSession();
   const { id } = await session.send('Extensions.loadUnpacked', { path: resolve('dist/chromtag/browser') });
@@ -160,6 +161,12 @@ try {
   assert.equal(saved.title, 'Edited <b>literal</b> #C++ #中文');
   assert.equal(saved.parentId, folderId);
   await page.locator('.tag-cloud').getByRole('button', { name: '#中文', exact: true }).waitFor();
+  const manager = await context.newPage();
+  await manager.goto(`chrome://bookmarks/?id=${folderId}`);
+  await manager.getByText(saved.title, { exact: true }).waitFor();
+  await manager.close();
+  await page.bringToFront();
+  console.log('PASS: saved and moved bookmark appears in Chrome Bookmark Manager.');
   await search.fill('example.invalid/edited');
   await page.getByText('1 of 10001 bookmarks', { exact: true }).waitFor();
   await page.getByRole('button', { name: 'Edit Edited <b>literal</b>', exact: true }).click();
@@ -208,6 +215,12 @@ try {
   assert(added.parentId, 'Chrome selected the default folder');
   assert.equal(added.title, 'Test destination', 'Cancel must retain the already created bookmark');
   assert.equal(await page.evaluate(() => globalThis.treeReads), 4, 'Add refreshes the tree once');
+  await activePage.goto('https://other.invalid/revoked');
+  await activePage.bringToFront();
+  await page.getByRole('button', { name: 'Add bookmark', exact: true }).click();
+  await page.getByRole('alert').filter({ hasText: 'Chrome did not provide' }).waitFor();
+  assert.equal(await page.evaluate(async () => (await chrome.bookmarks.search({ url: 'https://other.invalid/revoked' })).length), 0);
+  assert.equal(await page.evaluate(() => globalThis.treeReads), 4, 'Revoked grant must not mutate or refresh');
   await activePage.close();
   await page.getByRole('button', { name: 'Reset filter', exact: true }).click();
   await page.getByText('10001 of 10001 bookmarks', { exact: true }).waitFor();

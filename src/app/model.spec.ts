@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { buildModel, parseTags, withoutTags } from './model';
+import { buildModel, codePointOrder, parseTags, withoutTags } from './model';
 
 describe('snapshot model', () => {
   it('resolves nested parents from a single snapshot and omits javascript bookmarks', () => {
@@ -21,5 +21,11 @@ describe('snapshot model', () => {
     let node: chrome.bookmarks.BookmarkTreeNode = { syncing: false, id: 'leaf', title: 'Deep', url: 'https://example.org' };
     for (let i = 12000; i > 0; i--) node = { syncing: false, id: String(i), title: `Folder ${i}`, children: [node] };
     expect(buildModel([node]).bookmarks[0].parentId).toBe('12000');
+  });
+  it('sorts Unicode identities by code points and retains accents and original hashtag spelling', () => {
+    const model = buildModel([{ syncing: false, id: '1', title: '#CAFÉ #cafe\u0301 #cafe #中文 #العربية #👩🏽‍💻 #"] #\uE000 #😀', url: 'https://a.example' }]);
+    expect(model.tags.find(tag => tag.key === 'café')?.label).toBe('CAFÉ');
+    expect(model.tags.map(tag => tag.key)).toEqual(['"]', 'cafe', 'café', 'العربية', '中文', '\uE000', '👩🏽‍💻', '😀']);
+    expect(codePointOrder('\uE000', '😀')).toBeLessThan(0);
   });
 });

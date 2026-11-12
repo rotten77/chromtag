@@ -1,7 +1,6 @@
 import { inject, Injectable, signal } from '@angular/core';
 import { CHROME } from './chrome-api';
-import { buildModel } from './model';
-import { Bookmark } from './model';
+import { Bookmark, buildModel } from './model';
 
 export interface BookmarkDraft { id: string; title: string; url: string; parentId: string; originalParentId?: string }
 
@@ -18,7 +17,7 @@ export class BookmarkStore {
     if (this.pending) return this.pending;
     this.loading.set(true);
     this.error.set('');
-    this.pending = this.api.bookmarks.getTree().then(tree => { this.model.set(buildModel(tree)); })
+    this.pending = Promise.resolve().then(() => this.api.bookmarks.getTree()).then(tree => { this.model.set(buildModel(tree)); })
       .catch(() => { this.error.set('Bookmarks could not be loaded. Try Refresh.'); })
       .finally(() => { this.loading.set(false); this.pending = undefined; });
     return this.pending;

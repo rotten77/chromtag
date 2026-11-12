@@ -4,7 +4,7 @@ Chromtag is a Chrome extension for browsing and editing Chrome bookmarks. Hashta
 
 ## Project state
 
-E-20 implementation is in progress. The standalone Angular popup now builds from `src/`; manifest source and preserved icons live in `public/`. The version 1.8 reference remains in ignored `.local/legacy/`.
+The version 2.0 features are implemented and await user verification. The standalone Angular popup builds from `src/`; manifest source and preserved icons live in `public/`. The version 1.8 reference remains in ignored `.local/legacy/`.
 
 The current popup supports nested bookmarks and a virtualized list. Select blue tags to filter; multiple selected tags must all match. Select a tag again to clear it.
 
@@ -35,11 +35,11 @@ See the [product specification](docs/SPEC.md), [plan](.memory/plan.md), and [cur
 
 ## Data and compatibility
 
-Chrome's native bookmark tree remains the source of truth. Tags remain hashtags in titles. The planned app keeps bookmarks and derived indexes in popup memory, without a separate database, account, backend, or `localStorage`.
+Chrome's native bookmark tree remains the source of truth. Tags remain hashtags in titles. The app keeps bookmarks and derived indexes in popup memory, without a separate database, account, backend, or `localStorage`.
 
 Version 2.1 uses `chrome.storage.session` only for the query and selected tags/folder. Versions 2.2/2.3 use `chrome.storage.local` only for appearance/layout and bookmark-click preferences. Folder visibility remains popup-only.
 
-Version 1.8 uses Manifest V3 with `bookmarks` and `tabs`. The staged manifest replaces `tabs` with `activeTab` and defers `storage` until preferences use it. The planned add feature will report unavailable current-page metadata without creating an incomplete bookmark. See the [manifest audit](docs/manifest-audit.md).
+The popup uses Manifest V3 with `bookmarks` and `activeTab`. It reports unavailable page metadata without creating an incomplete bookmark. Later preferences add `storage` when required. See the [manifest audit](docs/manifest-audit.md).
 
 The Angular 22 popup targets Chrome 157 or later. The manifest and browser build target use the same floor. See [Angular compatibility](https://angular.dev/reference/versions).
 
@@ -79,9 +79,13 @@ Reload the unpacked extension after development builds. `ng serve` is not the ex
 
 The [legacy diagnostic procedure](docs/legacy-measurements.md) measures the archived popup with synthetic bookmarks. It uses separate local test dependencies.
 
+Stable Google Chrome 157+ must be installed for `npm test`. Browser tests use a fresh temporary profile with synthetic bookmarks. See [test evidence and reports](docs/testing.md) and the [criterion mapping](docs/test-coverage.md).
+
 ## Documentation and references
 
 The [documentation index](docs/README.md) links product requirements and historical references. The [historical README](docs/legacy-readme.md) preserves version history and screenshots.
+
+The [usage guide](docs/usage.md) explains filtering and bookmark changes.
 
 ## AI agent workflow
 

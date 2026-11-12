@@ -12,6 +12,7 @@ it('coalesces overlapping refreshes to one read and opens URLs with native tabs'
   const store = TestBed.inject(BookmarkStore);
   const first = store.refresh();
   expect(store.refresh()).toBe(first);
+  await Promise.resolve();
   expect(getTree).toHaveBeenCalledTimes(1);
   resolve([{ syncing: false, id: '1', title: 'Title', url: 'https://example.org' }]);
   await first;
@@ -93,4 +94,16 @@ it('reports a revoked tab grant without creating or refreshing', async () => {
   expect(await store.addCurrentPage()).toBeUndefined();
   expect(create).not.toHaveBeenCalled(); expect(getTree).not.toHaveBeenCalled();
   expect(store.busy()).toBe(false);
+});
+
+it('recovers from synchronous Chrome errors and allows retry', async () => {
+  const getTree = vi.fn().mockImplementationOnce(() => { throw new Error('Extension context invalidated'); }).mockResolvedValue([]);
+  TestBed.configureTestingModule({ providers: [{ provide: CHROME, useValue: { bookmarks: { getTree } } }] });
+  const store = TestBed.inject(BookmarkStore);
+  await store.refresh();
+  expect(store.loading()).toBe(false);
+  expect(store.error()).toContain('could not be loaded');
+  await store.refresh();
+  expect(getTree).toHaveBeenCalledTimes(2);
+  expect(store.error()).toBe('');
 });

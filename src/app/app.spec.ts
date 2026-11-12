@@ -137,3 +137,21 @@ it('opens the newly created bookmark editor and cancellation retains the created
   expect(fixture.componentInstance.store.model().bookmarks[0].id).toBe('new');
   expect(getTree).toHaveBeenCalledTimes(2);
 });
+
+it('renders markup-significant folders, tags, title, and URL as literal text in every view', async () => {
+  const getTree = vi.fn().mockResolvedValue([{ id: 'folder', title: '<svg/onload=alert(1)>', children: [
+    { id: 'b', title: '<img src=x> #<svg/onload=1> #"]', url: 'https://a.example/<script>alert(1)</script>' },
+  ] }]);
+  TestBed.configureTestingModule({ providers: [{ provide: CHROME, useValue: { bookmarks: { getTree }, tabs: {} } }] });
+  const fixture = TestBed.createComponent(App);
+  await fixture.whenStable();
+  const root: HTMLElement = fixture.nativeElement;
+  expect(root.querySelector('svg,script,article img')).toBeNull();
+  expect(root.querySelector('.folder-cloud')?.textContent).toContain('<svg/onload=alert(1)>');
+  expect(root.querySelector('.tag-cloud')?.textContent).toContain('#<svg/onload=1>');
+  fixture.componentInstance.openEditor(fixture.componentInstance.filtered()[0]);
+  fixture.detectChanges();
+  await fixture.whenStable();
+  expect(root.querySelector('svg,script,article img')).toBeNull();
+  expect(root.querySelector<HTMLTextAreaElement>('#edit-title')!.value).toContain('<img src=x>');
+});

@@ -6,9 +6,9 @@ Updated: 2026-11-12
 
 Chromtag is a Chrome extension for browsing and editing Chrome bookmarks through a popup. Hashtags in bookmark titles provide tags.
 
-This specification records the supplied requirements for versions 2.0–2.3, not completed implementation. Acceptance criteria live here. The plan tracks matching IDs. `docs/SPEC.md` describes the intended product. Historical 1.8 behavior and analysis remain in `docs/legacy-baseline.md` and `docs/legacy-analysis.md`.
+This specification defines implemented E-20 behavior and planned versions 2.1–2.3. The plan distinguishes automated readiness from user verification. Acceptance criteria live here. The plan tracks matching IDs. `docs/SPEC.md` describes the intended product. Historical 1.8 behavior and analysis remain in `docs/legacy-baseline.md` and `docs/legacy-analysis.md`.
 
-## Existing implementation
+## Historical implementation
 
 The local reference is `.local/legacy/chromtag/`. Version 1.8 already uses Manifest V3, `bookmarks` and `tabs` permissions, and a popup without a background service worker. It uses jQuery, NanoScroller, and YUI CSS. Bookmarks remain in Chrome; folder visibility uses `localStorage`.
 
@@ -101,7 +101,7 @@ The [manifest audit](../docs/manifest-audit.md) records sources, compatibility l
 Source checks use `node tools/validate-manifest.mjs --source`; validator tests use `node --test tools/validate-manifest.test.mjs`.
 Built validation uses `node tools/validate-manifest.mjs --built` after T-03 creates the production artifact. Source validation does not imply that artifact exists or is loadable.
 
-### Planned tooling
+### Tooling
 
 T-03 establishes the Angular CLI workspace and Vitest unit/component runner. `npm test` saves timestamped HTML evidence under ignored `.local/test-results/`, including failed runs. Build optimization disables critical-CSS inlining and remote-font processing for the extension CSP.
 
@@ -233,7 +233,7 @@ Implementation uses iterative traversal, rows sized to 7 times the base font (91
 - **T-06-AC6:** Verify 10,000+ synthetic bookmarks and a representative real profile when available. Record baseline measurements and remaining limits.
 - **T-06-AC7:** Cover literal rendering of markup-significant titles/folders/URLs/tags, all filter combinations, and international-text cases.
 
-Regression tests are explicit supplied requirements. Standalone manifest-validator regression checks exist. Application tests and their criterion-to-test mapping remain pending workspace setup.
+Regression tests are explicit supplied requirements. `npm test` runs manifest, Angular/Vitest unit/component, production build, project/package, and native stable Chrome checks. [Criterion mapping](../docs/test-coverage.md) links every E-20/preparation criterion to evidence. [Testing documentation](../docs/testing.md) records limits and timestamped HTML reports.
 
 ### T-07 — Release version 2.0
 
@@ -326,7 +326,7 @@ These steps apply after the relevant implementation and tooling exist.
 
 ## Open decisions and evidence gaps
 
-- Real-profile performance, timing targets, additional fixture shapes, debounce duration, and rendered-row bound. T-01 records the initial synthetic fixture and baseline.
+- Real-profile performance and timing targets. T-01 records the legacy synthetic baseline; T-04/T-05 use 10,001 supported browser records and deep unit fixtures. Tests check at most 24 live rows in exercised layouts; this is not a timing guarantee.
 - Version 2.2 defaults/bounds/palettes. Version 2.0 starts with a 13 px base font and a 540 × 540 px popup; T-05 checks compact layout and overflow.
 - The v2.3 popup-close default and verified lifecycle limits.
 

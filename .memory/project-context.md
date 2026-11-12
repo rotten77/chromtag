@@ -43,11 +43,11 @@ Do not duplicate target acceptance criteria in the plan or user documentation. S
 
 - Implementation branch: user-created `modernizing-chromtag`. Verify its presence before implementation; request user creation if absent.
 - Application code: `src/`; manifest source and preserved static icons: `public/`.
-- Planned loadable output: `dist/chromtag/browser/`. Do not load source as an unpacked extension.
-- Planned commands become usable after tooling setup. `ng serve` is not the extension runtime.
-- Run standalone manifest checks with `node tools/validate-manifest.mjs --source` and `node --test tools/validate-manifest.test.mjs`. Built validation requires T-03 output.
+- Loadable output: `dist/chromtag/browser/`. Do not load source as an unpacked extension.
+- Build, test, and static commands are defined in package.json. `ng serve` is not the extension runtime.
+- Run standalone manifest checks with `node tools/validate-manifest.mjs --source` and `node --test tools/validate-manifest.test.mjs`. Built validation checks the real Angular output.
 - Angular 22 / TypeScript 6 target Chrome 157+. `npm test` retains timestamped HTML reports in ignored `.local/test-results/`. Show the folder cloud initially; visibility remains popup-only.
 - The standalone legacy diagnostic lives in `tools/legacy-baseline.mjs`. Its dependencies and raw measurements remain under ignored `.local/`; it does not create application tooling.
 - Private/local references stay in ignored `.local/`. Shared documentation and memory remain tracked.
 - Preserve the ignored archive during implementation and final testing. T-11 handles obsolete legacy/work files after testing; its cleanup does not include unrelated private files.
-- Every target feature/criterion requires repository regression coverage under the supplied requirements.
+- Every target feature/criterion requires repository regression coverage. docs/test-coverage.md maps E-20 criteria; npm test includes native Chrome integration and self-contained timestamped HTML reports with screenshots.

@@ -1,135 +1,64 @@
-> T-03 update: Angular 22 / TypeScript 6 now build the popup. The manifest and browser target require Chrome 157+. `npm test` builds and loads the real extension in isolated stable Chrome; generated output and runtime checks are no longer pending. The audit below retains T-02 preparation context.
-
 # Manifest and API audit
 
-T-02 audit, 2026-11-12. The manifest source and icons belong in `public/`.
-The Angular build and generated popup remain T-03 work. The source directory is not a loadable extension.
+The Manifest V3 popup uses native Chrome APIs without a background worker. T-02 established the permission policy; T-03 integrated the Angular package. User verification remains separate from automated checks.
 
 ## Metadata and assets
 
-| Field | Audit result |
+| Field | Current implementation |
 |---|---|
-| Manifest generation | Retain Manifest V3. The archived version already uses it. |
-| Name | Preserve `ChromTag - tag your bookmarks`. |
-| Short name | Preserve `ChromTag`. |
-| Description | Preserve `Tag your bookmarks with #hashtag!`. |
-| Action title | Preserve `Chromtag`. |
-| Extension version | Retain `1.8` during preparation. T-07 sets `2.0` after verification. This manifest does not represent a completed 1.8 or 2.0 application. |
-| Popup | Change `popup.html` to generated `index.html`. The future loadable root is `dist/chromtag/browser/`. |
-| Icons | Copy the existing 16 × 16, 48 × 48, and 128 × 128 PNG files without modification. Use those sizes in both icon maps. |
-| Background execution | No service worker, content scripts, or background page. All planned operations can start from the popup. |
-| Content Security Policy | Set `script-src 'self'; object-src 'none';` explicitly for extension pages. |
+| Name | ChromTag - tag your bookmarks |
+| Short name | ChromTag |
+| Description | Tag your bookmarks with #hashtag! |
+| Version | Preparation retains 1.8; T-07 sets 2.0 after automated checks |
+| Icons | Preserved local PNG files at 16, 48, and 128 px |
+| Action | Local icons, title Chromtag, generated index.html popup |
+| Source | public/manifest.json and public/icon*.png |
+| Loadable root | dist/chromtag/browser/ |
+| Browser floor | Chrome 157+, matching the Angular build target |
+| Extension CSP | script-src 'self'; object-src 'none'; |
 
-The name and description meet Chrome's documented limits. The short name fits its recommended length.
-See Chrome's [name](https://developer.chrome.com/docs/extensions/reference/manifest/name), [short name](https://developer.chrome.com/docs/extensions/reference/manifest/short-name), and [description](https://developer.chrome.com/docs/extensions/reference/manifest/description) references.
-
-All 3 preserved icons have the dimensions declared in the manifest.
-Chrome supports these PNG assets and selects an available action size for the display scale.
-See [manifest icons](https://developer.chrome.com/docs/extensions/reference/manifest/icons) and [action icons](https://developer.chrome.com/docs/extensions/reference/api/action#icon).
-
-The explicit policy permits packaged scripts and prohibits inline JavaScript, string evaluation, and plugin objects.
-It does not add a style restriction that would prevent Angular's component styles.
-See Chrome's [extension Content Security Policy](https://developer.chrome.com/docs/extensions/reference/manifest/content-security-policy).
-T-03 must verify the actual production bundles and generated HTML under this policy.
+See Chrome's [manifest format](https://developer.chrome.com/docs/extensions/reference/manifest), [icons](https://developer.chrome.com/docs/extensions/reference/manifest/icons), and [action API](https://developer.chrome.com/docs/extensions/reference/api/action).
 
 ## Permissions
 
-The archived manifest requests `bookmarks` and `tabs`. It requests no host permissions or storage permission.
-The staged manifest uses `bookmarks` and `activeTab`, following the user's T-02 decision on 2026-11-12.
+Version 2.0 declares exactly `bookmarks` and `activeTab`. It declares no host permissions, content scripts, sandbox, background worker, or web-accessible resources.
 
-| Operation | Required access |
-|---|---|
-| Read or change Chrome bookmarks | `bookmarks`. |
-| Open a saved URL in a new tab | `chrome.tabs.create()` does not require the `tabs` permission. |
-| Navigate the current tab in 2.3 | `chrome.tabs.update()` does not require broad tab-metadata access merely to set its URL. |
-| Read the current page's title and URL | Use temporary `activeTab` access after action invocation. Do not request broad `tabs` access. |
-| Retain filters in 2.1 | Add `storage` when implementing `chrome.storage.session`. |
-| Retain preferences in 2.2/2.3 | Keep `storage` for `chrome.storage.local`. |
+The [bookmarks API](https://developer.chrome.com/docs/extensions/reference/api/bookmarks) reads and mutates the native tree. The [tabs API](https://developer.chrome.com/docs/extensions/reference/api/tabs#permissions) opens saved links and queries the active tab.
 
-The permission for the `chrome.tabs` namespace differs from permission to read sensitive tab properties.
-Most tab operations require no `tabs` permission. See the [Tabs API permission reference](https://developer.chrome.com/docs/extensions/reference/api/tabs#permissions).
-Bookmark operations require [the bookmarks permission](https://developer.chrome.com/docs/extensions/reference/api/bookmarks#permissions).
+The user selected [activeTab](https://developer.chrome.com/docs/extensions/develop/concepts/activeTab) instead of broad `tabs` access. Chrome grants temporary metadata access following action invocation. Restricted pages or expired access can leave required title/URL fields unavailable.
 
-`activeTab` grants temporary metadata access following a user invocation. Navigation can revoke that grant.
-Chrome restricts this access on internal pages. See [activeTab](https://developer.chrome.com/docs/extensions/develop/concepts/activeTab).
-The user selected `activeTab` with unavailable-metadata handling.
-US-06 must show a clear message and make no bookmark-creation call when Chrome does not expose the required current-page metadata.
-This includes restricted pages or a missing/revoked grant. The implementation must inspect available metadata rather than assume access from the URL alone.
-The technical specification records this supported-page clarification under US-06; the add feature is not implemented by T-02.
+The add feature checks exposed metadata. When required fields are unavailable, the popup shows a message and makes no bookmark-creation call. It does not assume access from the URL alone.
 
-No planned feature requires host permissions, `scripting`, `unlimitedStorage`, or externally accessible resources.
-Do not add `storage` before a preference feature uses it. The [Storage API](https://developer.chrome.com/docs/extensions/reference/api/storage#permissions) requires that permission.
+Versions 2.1–2.3 add [storage](https://developer.chrome.com/docs/extensions/reference/api/storage#permissions) for explicit preferences. Version 2.0 does not use either Chrome storage area or localStorage.
 
-## API compatibility
+## Compatibility
 
-Use the native `chrome.*` namespace. Current documentation also shows `browser.*`, whose Chrome availability differs.
-The popup will use Promise-returning APIs without a compatibility wrapper.
-
-| API or feature | Chrome API floor | Use |
+| API or feature | API floor | Use |
 |---|---|---|
-| Manifest V3 and `chrome.action` | 88 | Action popup registration. |
-| Bookmark Promises: `getTree`, `get`, `create`, `update`, `move`, `remove` | 90 | Load and mutate bookmarks. |
-| Tab Promises: `query`, `create`, `update` | 88 | Current-page metadata and saved-link navigation. |
-| `Intl.Segmenter` with grapheme granularity | 87 | Implement the approved grapheme-boundary matching policy. |
-| `chrome.storage.session` | 102 | Version 2.1 session filters. |
+| Manifest V3 and action | Chrome 88 | Popup registration |
+| Bookmark Promises | Chrome 90 | getTree/create/update/move/remove |
+| Tab Promises | Chrome 88 | query/create |
+| Intl.Segmenter graphemes | Chrome 87 | Literal phrase boundaries |
+| storage.session | Chrome 102 | Version 2.1 filters |
 
-Sources: [action availability](https://developer.chrome.com/docs/extensions/reference/api/action#availability),
-[bookmark methods](https://developer.chrome.com/docs/extensions/reference/api/bookmarks#methods),
-[tab methods](https://developer.chrome.com/docs/extensions/reference/api/tabs#methods),
-[MDN's Segmenter compatibility data](https://github.com/mdn/browser-compat-data/blob/main/javascript/builtins/Intl/Segmenter.json),
-and [session storage](https://developer.chrome.com/docs/extensions/reference/api/storage#property-session).
+Use native `chrome.*` Promises. These API floors alone do not establish Angular support. T-03 raised the preparation floor from 90 to a conservative Chrome 157 application target, tested in stable Chrome 157.0.8103.51. The manifest and `.browserslistrc` agree.
 
-The staged manifest sets `minimum_chrome_version` to `90`, the highest selected 2.0 API floor.
-This value is an API floor, not a tested Angular support promise.
-T-03 must raise it if the selected Angular release, browser target, or implementation requires newer Chrome.
-Angular defines its supported browser set by release. See [Angular browser compatibility](https://angular.dev/reference/versions#browser-support).
+Angular 22 uses TypeScript 6. Supported Node ranges follow [Angular compatibility](https://angular.dev/reference/versions): `^22.22.3`, `^24.15.0`, or `^26.0.0`. Keep any higher framework floor when later APIs arrive.
 
-Version 2.1 requires at least Chrome 102 for session storage. Keep any higher framework floor.
-Version 2.2/2.3 must retain the highest applicable floor and recheck newly used APIs.
-Never lower the manifest floor automatically when adding a release.
-Chrome uses [`minimum_chrome_version`](https://developer.chrome.com/docs/extensions/reference/manifest/minimum-chrome-version) to restrict installation.
+Sources: [bookmark methods](https://developer.chrome.com/docs/extensions/reference/api/bookmarks#methods), [tab methods](https://developer.chrome.com/docs/extensions/reference/api/tabs#methods), [Segmenter compatibility](https://github.com/mdn/browser-compat-data/blob/main/javascript/builtins/Intl/Segmenter.json), [session storage](https://developer.chrome.com/docs/extensions/reference/api/storage#property-session), and [minimum Chrome version](https://developer.chrome.com/docs/extensions/reference/manifest/minimum-chrome-version).
 
 ## Validation
 
-The standalone validator uses Node.js built-in modules. It does not install Angular or any application dependencies.
+1. Run `node tools/validate-manifest.mjs --source` to check source metadata and PNG dimensions.
+2. Run `node --test tools/validate-manifest.test.mjs` to check validator regressions.
+3. Run `npm run build` to create the production package.
+4. Run `node tools/validate-manifest.mjs --built` to check the generated popup and copied assets.
+5. Run `npm test` to check the built extension in stable Chrome.
 
-1. Open PowerShell in the repository root.
-2. Validate the manifest source:
+The exact permission set excludes duplicates and unrelated capabilities. Preference versions require `storage` and at least Chrome 102, retaining the higher framework floor. Built validation compares manifest/icon bytes with `public/`.
 
-   ```powershell
-   node tools/validate-manifest.mjs --source
-   ```
+Source validation does not establish loadability. The project/package check inspects generated local script paths. Browser tests establish actual native API behavior and check runtime/CSP errors. See [testing and reports](testing.md).
 
-3. Run the validator regression checks:
+Angular production optimization disables critical-CSS inlining and remote-font processing. The package contains local AOT scripts and styles. Chrome enforces the declared [extension CSP](https://developer.chrome.com/docs/extensions/reference/manifest/content-security-policy).
 
-   ```powershell
-   node --test tools/validate-manifest.test.mjs
-   ```
-
-After T-03 creates the production build, validate the package:
-
-```powershell
-node tools/validate-manifest.mjs --built
-```
-
-Source mode checks metadata, API floors, capability declarations, policy, popup target, and local PNG headers/dimensions.
-The exact permission set excludes duplicate or unrelated permissions. Preference releases require `storage` and at least the Chrome 102 session-API floor.
-It deliberately does not require generated `index.html` inside `public/`.
-Built mode also requires that popup file. It compares the manifest and icon bytes against `public/`.
-An optional directory argument lets tests validate an isolated package fixture.
-
-These checks do not parse all JavaScript bundles, decode PNG pixels, or replace Chrome's manifest/runtime validation.
-T-03 must copy `public/` into the output and run built mode against the real artifact.
-T-03/T-06 must check loadability, popup behavior, permissions, API errors, and CSP violations in Chrome.
-T-06 must integrate the applicable validator checks with application tooling.
-
-## Acceptance evidence and handoff
-
-| Criterion | T-02 evidence and remaining integration |
-|---|---|
-| T-02-AC1 | Metadata/icon audit, permission analysis, API compatibility table, and staged manifest floor. T-03 must finalize the framework floor. |
-| T-02-AC2 | Source manifest targets local icons and generated `index.html`, with no background worker. Actual output copying and loadability await T-03. |
-| T-02-AC3 | Storage permission and Chrome 102 session-API check are assigned to US-09. Later preference releases retain and recheck the floor. |
-
-The source and validator are reviewable before Angular setup. No generated popup or application build exists at this stage.
-T-02 is ready for user verification. The permission choice is resolved; actual Angular packaging and runtime checks remain assigned to T-03.
+The standalone validator checks PNG headers/dimensions without decoding pixels. It does not parse all JavaScript bundles or replace Chrome's own manifest validation.

@@ -14,6 +14,7 @@ const commands = [
   ['Manifest regression tests', ['--test', 'tools/validate-manifest.test.mjs']],
   ['Angular unit and component tests', ['node_modules/@angular/cli/bin/ng.js', 'test', '--watch=false']],
   ['Production build', ['node_modules/@angular/cli/bin/ng.js', 'build', '--configuration', 'production']],
+  ['Project and package checks', ['tools/check-project.mjs', '--built']],
   ['Stable Chrome integration', ['tools/test-browser.mjs']],
 ];
 for (const [name, args] of commands) {

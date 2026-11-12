@@ -33,12 +33,12 @@ These tasks retain the supplied steps 1–7 and support the feature stories belo
 | T-03 | Rebuild the popup with Angular | Establish the standalone TypeScript popup, build, safe bindings, and transient model. | Ready for verification | T-03 |
 | T-04 | Fix scale and search | Filter the model, virtualize rows with overscan, and support Unicode safely. | Ready for verification | T-04 |
 | T-05 | Preserve and refine the design | Retain the compact interface and improve typography, scaling, overflow, and focus. | Ready for verification | T-05 |
-| T-06 | Document and verify | Maintain documentation/test coverage; validate the built extension in Chrome. | Not started | T-06 |
+| T-06 | Document and verify | Maintain documentation/test coverage; validate the built extension in Chrome. | Ready for verification | T-06 |
 | T-07 | Release version 2.0 | Set version 2.0, document development attribution, and remove replaced runtime code. | Not started | T-07 |
 
 The user verified T-01 on 2026-11-12. It has a reproducible diagnostic runner and [synthetic measurements](../docs/legacy-measurements.md), including the 10,000-bookmark readiness timeout. The user approved hashtag, Unicode phrase-search, grapheme-boundary, and folder-filter semantics in the technical specification. Real-profile measurements and target timing budgets remain future work.
 
-T-02 provides the [manifest audit](../docs/manifest-audit.md), source manifest/icons in `public/`, and standalone source/package validation. The user selected `activeTab` with unavailable-metadata handling for US-06. T-02 awaits user verification. T-03 must finalize Angular compatibility and verify actual output copying, generated `index.html`, and runtime loadability.
+T-02 provides the [manifest audit](../docs/manifest-audit.md), source manifest/icons in `public/`, and standalone source/package validation. The user selected `activeTab` with unavailable-metadata handling for US-06. T-02 awaits user verification. T-03 selected Angular 22 / TypeScript 6 / Chrome 157+ and verified asset copying, generated `index.html`, and native Chrome loadability.
 
 ### Feature stories
 

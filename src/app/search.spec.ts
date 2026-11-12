@@ -44,3 +44,17 @@ it('filters 12,000 records without DOM access and retains first native spelling'
   expect(snapshot.tags).toEqual([{ key: 'café', label: 'cafe\u0301' }]);
   expect(filterBookmarks(snapshot, { query: 'Bookmark 11999', tags: new Set(['café']), folderId: '1' })).toHaveLength(1);
 });
+
+it.each([
+  { query: '', tags: [], folderId: null, ids: ['3', '4', '6'] },
+  { query: 'café', tags: [], folderId: null, ids: ['3'] },
+  { query: '', tags: ['中文'], folderId: null, ids: ['3', '6'] },
+  { query: '', tags: [], folderId: '1', ids: ['3', '4'] },
+  { query: '', tags: ['c++'], folderId: '1', ids: ['3', '4'] },
+  { query: 'Outside', tags: ['中文'], folderId: null, ids: ['6'] },
+  { query: 'Café', tags: [], folderId: '1', ids: ['3'] },
+  { query: 'Café', tags: ['c++', '中文'], folderId: '1', ids: ['3'] },
+  { query: 'Outside', tags: ['c++', '中文'], folderId: '1', ids: [] },
+])('covers every query/tag/folder combination: %j', ({ query, tags, folderId, ids }) => {
+  expect(filterBookmarks(model(), { query, tags: new Set(tags), folderId }).map(row => row.id)).toEqual(ids);
+});

@@ -3,6 +3,9 @@
 | Document | Purpose |
 |---|---|
 | [Product specification](SPEC.md) | Intended version 2.0–2.3 features and data policy |
+| [Usage guide](usage.md) | Browse, filter, add, edit, delete, and handle errors |
+| [Testing and reports](testing.md) | Reproducible checks, timestamped HTML reports, scale evidence and limits |
+| [Criterion mapping](test-coverage.md) | Version 2.0 criteria linked to regression evidence |
 | [Technical specification](../.memory/technical-specification.md) | Architecture, authoritative acceptance criteria, verification, and open decisions |
 | [Modernization plan](../.memory/plan.md) | Epics, stories, supporting tasks, and statuses |
 | [Project status](../.memory/project-status.md) | Current state and next steps |
