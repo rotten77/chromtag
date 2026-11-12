@@ -31,7 +31,7 @@ These tasks retain the supplied steps 1–7 and support the feature stories belo
 | T-01 | Define and baseline behavior | Establish behavior, resolve semantics, and measure legacy large-library failure. | Verified | T-01 |
 | T-02 | Audit the manifest | Retain MV3; verify metadata, assets, permissions, and compatibility. | Ready for verification | T-02 |
 | T-03 | Rebuild the popup with Angular | Establish the standalone TypeScript popup, build, safe bindings, and transient model. | Ready for verification | T-03 |
-| T-04 | Fix scale and search | Filter the model, virtualize rows with overscan, and support Unicode safely. | In progress | T-04 |
+| T-04 | Fix scale and search | Filter the model, virtualize rows with overscan, and support Unicode safely. | Ready for verification | T-04 |
 | T-05 | Preserve and refine the design | Retain the compact interface and improve typography, scaling, overflow, and focus. | Not started | T-05 |
 | T-06 | Document and verify | Maintain documentation/test coverage; validate the built extension in Chrome. | Not started | T-06 |
 | T-07 | Release version 2.0 | Set version 2.0, document development attribution, and remove replaced runtime code. | Not started | T-07 |
@@ -52,7 +52,7 @@ These are the 8 supplied current-app stories, revised for the supplied moderniza
 | US-04 | Search bookmarks | Find bookmarks across titles, folders, and URLs. | Ready for verification | US-04 |
 | US-05 | Reset filters | Return to the full supported collection with 1 action. | Ready for verification | US-05 |
 | US-06 | Add the current page | Save the active tab and edit the new bookmark. | Not started | US-06 |
-| US-07 | Edit or delete a bookmark | Maintain details, tags, and folder placement. | Not started | US-07 |
+| US-07 | Edit or delete a bookmark | Maintain details, tags, and folder placement. | Ready for verification | US-07 |
 | US-08 | Show or hide folders | Adjust the folder cloud during the popup session. | Ready for verification | US-08 |
 
 Statuses describe the new implementation. Behavior in the ignored 1.8 reference does not mark a modernization story complete.

@@ -77,6 +77,17 @@ export function withoutTags(title: string, spans = parseTags(title)): string {
   return (result + title.slice(end)).trim();
 }
 
+export function newTag(value: string): Tag | undefined {
+  const label = value.trim().replace(/^#/u, '');
+  return !label || /[\s#]/u.test(label) ? undefined : { key: normalize(label), label };
+}
+
+export function toggleTitleTag(title: string, tag: Tag): string {
+  const spans = parseTags(title).filter(span => span.key === tag.key);
+  if (spans.length) return withoutTags(title, spans);
+  return `${title}${title && !/\s$/u.test(title) ? ' ' : ''}#${tag.label}`;
+}
+
 export function buildModel(tree: chrome.bookmarks.BookmarkTreeNode[]): Model {
   const bookmarks: Bookmark[] = [];
   const folders: Folder[] = [];

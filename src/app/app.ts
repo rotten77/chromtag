@@ -2,13 +2,16 @@ import { ChangeDetectionStrategy, Component, computed, inject, OnDestroy, signal
 import { BookmarkStore } from './bookmark-store';
 import { BookmarkList } from './bookmark-list';
 import { filterBookmarks, Filters } from './model';
+import { Bookmark } from './model';
+import { BookmarkEditor } from './bookmark-editor';
 
 @Component({
   selector: 'app-root',
-  imports: [BookmarkList],
+  imports: [BookmarkList, BookmarkEditor],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <header><strong>Chromtag</strong><button type="button" (click)="store.refresh()" [disabled]="store.loading()">Refresh</button></header>
+    <div class="popup-content" [inert]="!!editing()">
+    <header><strong>Chromtag</strong><button type="button" (click)="store.refresh()" [disabled]="store.loading() || store.busy()">Refresh</button></header>
     <label class="search">Search bookmarks<input #search type="search" [value]="queryInput()" (input)="onQuery(search.value)" placeholder="Title, folder, or URL" autocomplete="off"></label>
     @if (store.error()) { <p role="alert">{{ store.error() }}</p> }
     @if (store.loading()) { <p role="status">Loading bookmarks…</p> }
@@ -24,12 +27,14 @@ import { filterBookmarks, Filters } from './model';
         <button type="button" class="tag" [class.active]="filters().tags.has(tag.key)" [attr.aria-pressed]="filters().tags.has(tag.key)" (click)="toggleTag(tag.key)">#{{ tag.label }}</button>
       }
     </section>
-    <app-bookmark-list [rows]="filtered()" (open)="store.open($event)" />
+    <app-bookmark-list [rows]="filtered()" (open)="store.open($event)" (edit)="openEditor($event)" />
     <p class="result-count" role="status">{{ filtered().length }} of {{ store.model().bookmarks.length }} bookmarks</p>
     @if (!store.loading() && !filtered().length) { <p>{{ store.model().bookmarks.length ? 'No matching bookmarks.' : 'No bookmarks yet.' }}</p> }
     <footer><button type="button" (click)="resetFilters()">Reset filter</button>
       <button type="button" aria-controls="folder-cloud" [attr.aria-expanded]="foldersVisible()" (click)="foldersVisible.set(!foldersVisible())">{{ foldersVisible() ? 'Hide folders' : 'Show folders' }}</button>
     </footer>
+    </div>
+    @if (editing(); as bookmark) { <app-bookmark-editor [bookmark]="bookmark" [model]="store.model()" (closed)="editing.set(null)" /> }
   `,
 })
 export class App implements OnDestroy {
@@ -39,8 +44,10 @@ export class App implements OnDestroy {
   readonly list = viewChild(BookmarkList);
   readonly queryInput = signal('');
   readonly foldersVisible = signal(true);
+  readonly editing = signal<Bookmark | null>(null);
   private queryTimer?: ReturnType<typeof setTimeout>;
   constructor() { void this.store.refresh(); }
+  openEditor(bookmark: Bookmark): void { this.store.error.set(''); this.editing.set(bookmark); }
   onQuery(value: string): void {
     this.queryInput.set(value);
     clearTimeout(this.queryTimer);

@@ -20,3 +20,18 @@ main { overflow: auto; min-height: 0; }
 .result-count { margin: 0; padding: .25rem .5rem; border-top: 1px solid var(--border-color); font-size: .85em; }
 .search { display: flex; align-items: center; gap: .5rem; padding: .4rem .5rem; font-weight: 600; }
 .search input { min-width: 0; flex: 1; padding: .35rem; border: 1px solid var(--border-color); border-radius: .25rem; }
+.popup-content { display: flex; flex-direction: column; height: 100%; min-height: 0; }
+.bookmark { position: relative; padding-right: 4rem; }
+.edit { position: absolute; right: .5rem; top: .6rem; border: 1px solid var(--border-color); border-radius: .25rem; background: #f2f5fa; padding: .25rem .4rem; }
+.overlay { position: fixed; inset: 0; background: #26304488; display: flex; align-items: center; justify-content: center; padding: 1rem; z-index: 10; }
+.editor { width: 100%; max-height: 100%; overflow: auto; padding: 1rem; border: 1px solid var(--border-color); border-radius: .5rem; background: var(--background); box-shadow: 0 .5rem 2rem #0004; }
+.editor h2 { margin: 0 0 .75rem; font-size: 1.2em; }
+.editor label { display: block; font-weight: 600; margin: .5rem 0 .2rem; }
+.editor input, .editor textarea, .editor select { width: 100%; max-width: 100%; min-width: 0; padding: .4rem; border: 1px solid var(--border-color); border-radius: .25rem; background: var(--background); color: var(--foreground); }
+.editor textarea { resize: vertical; }
+.editor-tags { padding: .5rem 0; max-height: 95px; }
+.new-tag { display: flex; gap: .4rem; }.new-tag input { flex: 1; }.new-tag button { flex-shrink: 0; }
+.editor-actions { display: flex; gap: .5rem; margin-top: 1rem; }.editor-actions button { padding: .4rem .8rem; }
+.danger { color: #a52020; margin-left: auto; }.primary { font-weight: 700; }
+button:disabled { cursor: wait; opacity: .6; }
+[role=alert] { color: #a52020; overflow-wrap: anywhere; }

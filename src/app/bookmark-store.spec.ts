@@ -26,3 +26,39 @@ it('reports failed loads without leaving the popup busy', async () => {
   expect(store.error()).toContain('could not be loaded');
   expect(store.loading()).toBe(false);
 });
+
+it('saves details then moves, refreshes once, and removes with one further refresh', async () => {
+  const getTree = vi.fn().mockResolvedValue([]);
+  const update = vi.fn().mockResolvedValue({});
+  const move = vi.fn().mockResolvedValue({});
+  const remove = vi.fn().mockResolvedValue(undefined);
+  TestBed.configureTestingModule({ providers: [{ provide: CHROME, useValue: { bookmarks: { getTree, update, move, remove } } }] });
+  const store = TestBed.inject(BookmarkStore);
+  expect(await store.save({ id: 'b', title: 'Saved #中文', url: ' https://a.example ', parentId: 'new', originalParentId: 'old' })).toBe(true);
+  expect(update).toHaveBeenCalledWith('b', { title: 'Saved #中文', url: 'https://a.example' });
+  expect(move).toHaveBeenCalledWith('b', { parentId: 'new' });
+  expect(update.mock.invocationCallOrder[0]).toBeLessThan(move.mock.invocationCallOrder[0]);
+  expect(getTree).toHaveBeenCalledTimes(1);
+  expect(await store.remove('b')).toBe(true);
+  expect(remove).toHaveBeenCalledWith('b');
+  expect(getTree).toHaveBeenCalledTimes(2);
+});
+
+it('handles partial save and removal failures honestly, preserving actual snapshot state', async () => {
+  const getTree = vi.fn().mockResolvedValue([]);
+  const update = vi.fn().mockResolvedValue({});
+  const move = vi.fn().mockRejectedValue(new Error('Managed folder'));
+  const remove = vi.fn().mockRejectedValue(new Error('No access'));
+  TestBed.configureTestingModule({ providers: [{ provide: CHROME, useValue: { bookmarks: { getTree, update, move, remove } } }] });
+  const store = TestBed.inject(BookmarkStore);
+  expect(await store.save({ id: 'b', title: 'Changed', url: 'https://a.example', parentId: 'new', originalParentId: 'old' })).toBe(false);
+  expect(store.error()).toContain('Details saved');
+  expect(getTree).toHaveBeenCalledTimes(1);
+  expect(await store.remove('b')).toBe(false);
+  expect(getTree).toHaveBeenCalledTimes(1);
+  expect(store.busy()).toBe(false);
+  update.mockRejectedValueOnce(new Error('No access'));
+  expect(await store.save({ id: 'b', title: '', url: 'https://a.example', parentId: 'same', originalParentId: 'same' })).toBe(false);
+  expect(getTree).toHaveBeenCalledTimes(1);
+  expect(store.error()).toContain('could not be saved');
+});

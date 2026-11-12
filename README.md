@@ -16,6 +16,8 @@ Select **Reset filter** to clear search, tags, and folder together.
 
 Folders appear when the popup opens. **Hide folders** and **Show folders** change visibility for that popup only.
 
+Each row has an **Edit** button. The editor changes title, URL, tags, and folder. **Save** and **Delete** update Chrome bookmarks. **Cancel**, Escape, or the overlay discards unsaved fields.
+
 The planned releases are:
 
 - **2.0:** Angular popup, one transient bookmark model per refresh, virtualized rows, safe rendering, and Unicode search across titles, folders, and URLs.

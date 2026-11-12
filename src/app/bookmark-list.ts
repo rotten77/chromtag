@@ -15,6 +15,7 @@ import { Bookmark } from './model';
           @if (bookmark.folderName) { <span class="folder" [title]="bookmark.folderName">{{ bookmark.folderName }}</span> }
           @for (tag of bookmark.tags; track tag.key) { <span class="tag">#{{ tag.label }}</span> }
         </div>
+        <button class="edit" type="button" [attr.aria-label]="'Edit ' + (bookmark.displayTitle || bookmark.url)" (click)="edit.emit(bookmark)">Edit</button>
       </article>
     </cdk-virtual-scroll-viewport>
   `,
@@ -23,6 +24,7 @@ import { Bookmark } from './model';
 export class BookmarkList implements AfterViewInit, OnDestroy {
   readonly rows = input.required<Bookmark[]>();
   readonly open = output<string>();
+  readonly edit = output<Bookmark>();
   readonly viewport = viewChild.required(CdkVirtualScrollViewport);
   private observer?: ResizeObserver;
   readonly trackId = (_: number, bookmark: Bookmark): string => bookmark.id;
