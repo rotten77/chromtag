@@ -76,6 +76,13 @@ try {
   await page.getByText('10001 of 10001 bookmarks', { exact: true }).waitFor();
   assert.equal(await search.inputValue(), '');
   assert.equal(await page.locator('.cloud [aria-pressed="true"]').count(), 0);
+  await page.getByRole('button', { name: 'Hide folders', exact: true }).click();
+  await page.locator('.folder-cloud').waitFor({ state: 'detached' });
+  assert.equal(await page.locator('.folder-cloud').count(), 0);
+  assert.equal(await page.evaluate(() => localStorage.length), 0);
+  await page.reload();
+  await page.getByRole('button', { name: 'Hide folders', exact: true }).waitFor();
+  assert.equal(await page.locator('.folder-cloud').count(), 1);
   console.log(`10,001 native synthetic bookmarks: startup ${elapsed.toFixed(1)} ms, ${liveRows} live rows; last row reached.`);
   assert.deepEqual(errors, [], 'No runtime or CSP errors');
   console.log('PASS: loadable extension, native bookmark snapshot, literal rendering, new-tab navigation, no runtime/CSP errors.');

@@ -53,7 +53,7 @@ These are the 8 supplied current-app stories, revised for the supplied moderniza
 | US-05 | Reset filters | Return to the full supported collection with 1 action. | Ready for verification | US-05 |
 | US-06 | Add the current page | Save the active tab and edit the new bookmark. | Not started | US-06 |
 | US-07 | Edit or delete a bookmark | Maintain details, tags, and folder placement. | Not started | US-07 |
-| US-08 | Show or hide folders | Adjust the folder cloud during the popup session. | Not started | US-08 |
+| US-08 | Show or hide folders | Adjust the folder cloud during the popup session. | Ready for verification | US-08 |
 
 Statuses describe the new implementation. Behavior in the ignored 1.8 reference does not mark a modernization story complete.
 

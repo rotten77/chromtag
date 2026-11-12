@@ -103,3 +103,21 @@ it('resets every filter, visible input, and pending debounce in one action', asy
     expect(app.filtered()).toHaveLength(1);
   } finally { vi.useRealTimers(); }
 });
+
+it('shows folders initially, keeps visibility in memory, and resets on popup creation', async () => {
+  const setItem = vi.spyOn(Storage.prototype, 'setItem');
+  TestBed.configureTestingModule({ providers: [{ provide: CHROME, useValue: {
+    bookmarks: { getTree: vi.fn().mockResolvedValue([{ id: '1', title: 'Folder' }]) }, tabs: {},
+  } }] });
+  const first = TestBed.createComponent(App);
+  await first.whenStable();
+  first.componentInstance.foldersVisible.set(false);
+  first.detectChanges();
+  expect(first.nativeElement.querySelector('.folder-cloud')).toBeNull();
+  expect(setItem).not.toHaveBeenCalled();
+  first.destroy();
+  const reopened = TestBed.createComponent(App);
+  await reopened.whenStable();
+  expect(reopened.componentInstance.foldersVisible()).toBe(true);
+  setItem.mockRestore();
+});

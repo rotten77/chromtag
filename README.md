@@ -14,6 +14,8 @@ Search matches a literal phrase in the full title, immediate folder name, or URL
 
 Select **Reset filter** to clear search, tags, and folder together.
 
+Folders appear when the popup opens. **Hide folders** and **Show folders** change visibility for that popup only.
+
 The planned releases are:
 
 - **2.0:** Angular popup, one transient bookmark model per refresh, virtualized rows, safe rendering, and Unicode search across titles, folders, and URLs.
