@@ -28,7 +28,7 @@ Release scope:
 
 - **2.0 (implemented):** Angular popup, one transient bookmark model per refresh, virtualized rows, safe rendering, and Unicode search across titles, folders, and URLs.
 - **2.1:** Search and tag/folder filters retained during the browser session.
-- **2.2:** Persistent typography, popup dimensions, and independent light/dark palettes.
+- **2.2:** Persistent typography, popup dimensions, combined folder/tag cloud height, and independent Material palette choices for light/dark foreground, tags, and folders. Backgrounds stay white/light and `#212121`/dark.
 - **2.3:** Persistent bookmark tab-target and popup-close preferences.
 
 See the [product specification](docs/SPEC.md), [plan](.memory/plan.md), and [current status](.memory/project-status.md). The [technical specification](.memory/technical-specification.md) defines acceptance criteria and open decisions.

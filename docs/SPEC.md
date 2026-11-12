@@ -31,7 +31,7 @@ The query and selected tags/folder survive popup closure during the browser sess
 
 ## Version 2.2 — Appearance preferences
 
-Users configure base font size, popup width/height, and light/dark themes. Each theme has independent background, foreground, tag, and folder colors. `chrome.storage.local` retains appearance/layout preferences across restarts. Exact defaults and supported bounds remain undefined. See US-10 criteria.
+Users configure base font size, popup width/height, and the height of the combined folder/tag cloud. The cloud remains fixed; pagination keeps collapsed labels reachable. Users select foreground, tag, and folder colors independently for light and dark themes from a Material Design palette. Backgrounds are not editable: light is white (`#FFFFFF`), dark is `#212121`. `chrome.storage.local` retains appearance/layout preferences across restarts. Editable-color defaults, supported bounds, and exact palette choices remain undefined. See US-10 criteria.
 
 ## Version 2.3 — Bookmark-click preferences
 

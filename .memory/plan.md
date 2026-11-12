@@ -75,7 +75,7 @@ Depends on version 2.0 filters. Include version/permission updates, documentatio
 
 | ID | Story | User goal | Status | Criteria |
 |---|---|---|---|---|
-| US-10 | Configure appearance | Set typography, dimensions, and independent light/dark palettes that persist across restarts. | Not started | US-10 |
+| US-10 | Configure appearance | Set typography, popup and combined folder/tag cloud height, and independent light/dark Material palette colors that persist across restarts; theme backgrounds are fixed. | Not started | US-10 |
 
 Follow version 2.1. Include default/bounds decisions, version update, documentation, and regression tests.
 

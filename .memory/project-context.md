@@ -38,6 +38,7 @@ Do not duplicate target acceptance criteria in the plan or user documentation. S
 - Preserve the compact design. Support Unicode without transliteration, search URLs/titles/folders, and preserve diacritic distinctions.
 - Jan's 2.0 layout review: show Search... without a visible label; combine folders and tags into 1 fixed wrapping cloud with collapsed choices reachable through First/Previous/More filters. Only the bookmark-list area scrolls in the main popup (540 x 580 px). Use folder green #4CAF50 and tag blue #448AFF, selected #F44336, and hover #212121. Keep full-width bookmark rows CSS-truncated with space reserved for Edit. Size URL text at 80% of the title font size. Underline titles and use tag-blue on hover; reveal Edit on row hover or visible keyboard focus.
 - T-01 records user-approved hashtag, phrase-search, and folder-ID/descendant semantics in the technical specification. Use those rules when implementing the affected stories.
+- Version 2.2 plans configurable combined folder/tag cloud height and independently selected Material Design foreground/tag/folder colors for light and dark themes. Backgrounds are fixed at white/light and #212121/dark; no background editor.
 - Default bookmark clicks open a new tab. Version 2.3 adds target and popup-close preferences.
 
 ## Repository conventions

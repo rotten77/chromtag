@@ -264,15 +264,15 @@ The supplied plan names `legacy/`; no tracked directory with that name exists no
 
 ### US-10 — Configure appearance (version 2.2)
 
-- **US-10-AC1:** Provide base-font and popup width/height controls within supported bounds that respect Chrome popup limits.
-- **US-10-AC2:** Provide light/dark themes with independent background, foreground, tag, and folder colors.
-- **US-10-AC3:** Switching themes applies that palette; editing one does not overwrite the other.
+- **US-10-AC1:** Provide base-font, popup width/height, and combined folder/tag cloud height controls within supported bounds that respect Chrome popup limits and leave usable bookmark-list space. Keep cloud overflow collapsed and every label reachable through pagination.
+- **US-10-AC2:** Provide light/dark themes. Let users select foreground, tag, and folder colors independently for each theme from the Material Design color palette. Fix the light background at white (`#FFFFFF`) and the dark background at `#212121`; do not provide background-color editing.
+- **US-10-AC3:** Switching themes applies that theme's colors and fixed background; editing one theme does not overwrite the other.
 - **US-10-AC4:** Save appearance/layout in `chrome.storage.local`; restore across popup/browser restarts.
 - **US-10-AC5:** Separate preferences from bookmarks/indexes/session filters. Do not persist folder visibility.
 - **US-10-AC6:** Set version `2.2`. Update README and product documentation.
-- **US-10-AC7:** Regression-test defaults, each setting/palette, switching, persistence, bounds, overflow, and scaling.
+- **US-10-AC7:** Regression-test defaults, each setting/palette, switching, persistence, bounds, overflow, scaling, fixed backgrounds, and cloud pagination at supported heights.
 
-Exact defaults, supported bounds, and palette values remain undefined.
+The light/dark backgrounds are fixed. Exact defaults for editable colors and cloud height, supported bounds, and the precise Material Design palette choices remain undefined.
 
 ### US-11 — Configure bookmark-click behavior (version 2.3)
 
@@ -335,7 +335,7 @@ These steps apply after the relevant implementation and tooling exist.
 ## Open decisions and evidence gaps
 
 - Real-profile performance and timing targets. T-01 records the legacy synthetic baseline; T-04/T-05 use 10,001 supported browser records and deep unit fixtures. Tests check at most 24 live rows in exercised layouts; this is not a timing guarantee.
-- Version 2.2 defaults/bounds/palettes. Version 2.0 starts with a 13 px base font and a 540 × 580 px popup; T-05 checks compact layout and overflow.
+- Version 2.2 editable-color defaults, supported bounds (including cloud height), and precise Material Design palette choices. Light/dark backgrounds are fixed at `#FFFFFF`/`#212121`. Version 2.0 starts with a 13 px base font and a 540 × 580 px popup; T-05 checks compact layout and overflow.
 - The v2.3 popup-close default and verified lifecycle limits.
 
 Resolve decisions before affected implementation. Analysis suggestions are not approved technical choices.
