@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, inject, signal, viewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, OnDestroy, signal, viewChild } from '@angular/core';
 import { BookmarkStore } from './bookmark-store';
 import { BookmarkList } from './bookmark-list';
 import { filterBookmarks, Filters } from './model';
@@ -9,6 +9,7 @@ import { filterBookmarks, Filters } from './model';
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <header><strong>Chromtag</strong><button type="button" (click)="store.refresh()" [disabled]="store.loading()">Refresh</button></header>
+    <label class="search">Search bookmarks<input #search type="search" [value]="queryInput()" (input)="onQuery(search.value)" placeholder="Title, folder, or URL" autocomplete="off"></label>
     @if (store.error()) { <p role="alert">{{ store.error() }}</p> }
     @if (store.loading()) { <p role="status">Loading bookmarks…</p> }
     <section class="cloud folder-cloud" aria-label="Folder filters">
@@ -26,20 +27,37 @@ import { filterBookmarks, Filters } from './model';
     @if (!store.loading() && !filtered().length) { <p>{{ store.model().bookmarks.length ? 'No matching bookmarks.' : 'No bookmarks yet.' }}</p> }
   `,
 })
-export class App {
+export class App implements OnDestroy {
   readonly store = inject(BookmarkStore);
   readonly filters = signal<Filters>({ query: '', tags: new Set(), folderId: null });
   readonly filtered = computed(() => filterBookmarks(this.store.model(), this.filters()));
   readonly list = viewChild(BookmarkList);
+  readonly queryInput = signal('');
+  private queryTimer?: ReturnType<typeof setTimeout>;
   constructor() { void this.store.refresh(); }
+  onQuery(value: string): void {
+    this.queryInput.set(value);
+    clearTimeout(this.queryTimer);
+    this.queryTimer = setTimeout(() => {
+      this.filters.update(filters => ({ ...filters, query: value }));
+      this.list()?.resetScroll();
+    }, 150);
+  }
+  private flushQuery(): void {
+    clearTimeout(this.queryTimer);
+    this.filters.update(filters => ({ ...filters, query: this.queryInput() }));
+  }
   toggleTag(key: string): void {
+    this.flushQuery();
     const tags = new Set(this.filters().tags);
     if (tags.has(key)) tags.delete(key); else tags.add(key);
     this.filters.update(filters => ({ ...filters, tags }));
     this.list()?.resetScroll();
   }
   toggleFolder(id: string): void {
+    this.flushQuery();
     this.filters.update(filters => ({ ...filters, folderId: filters.folderId === id ? null : id }));
     this.list()?.resetScroll();
   }
+  ngOnDestroy(): void { clearTimeout(this.queryTimer); }
 }

@@ -10,6 +10,8 @@ The current popup supports nested bookmarks and a virtualized list. Select blue 
 
 Select a green folder to include its descendants. Select the active folder again to clear it. Folder and tag filters combine.
 
+Search matches a literal phrase in the full title, immediate folder name, or URL after a short delay. Matching ignores case and preserves accents.
+
 The planned releases are:
 
 - **2.0:** Angular popup, one transient bookmark model per refresh, virtualized rows, safe rendering, and Unicode search across titles, folders, and URLs.

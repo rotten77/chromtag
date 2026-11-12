@@ -59,6 +59,17 @@ try {
   await page.locator('cdk-virtual-scroll-viewport').evaluate(element => { element.scrollTop = element.scrollHeight; element.dispatchEvent(new Event('scroll')); });
   await page.getByRole('button', { name: 'Scale bookmark 9999', exact: true }).waitFor();
   assert(await page.locator('article.bookmark').count() <= 24);
+  const search = page.getByRole('searchbox', { name: 'Search bookmarks' });
+  const filterStart = performance.now();
+  await search.fill('Scale bookmark 9999');
+  await page.getByText('1 of 10001 bookmarks', { exact: true }).waitFor();
+  console.log(`10,001-record filter including 150 ms debounce: ${(performance.now() - filterStart).toFixed(1)} ms.`);
+  await search.fill('.*["');
+  await page.getByText('No matching bookmarks.', { exact: true }).waitFor();
+  await search.fill('example.invalid/scale/9999');
+  await page.getByText('1 of 10001 bookmarks', { exact: true }).waitFor();
+  await search.fill('');
+  await page.getByText('10001 of 10001 bookmarks', { exact: true }).waitFor();
   console.log(`10,001 native synthetic bookmarks: startup ${elapsed.toFixed(1)} ms, ${liveRows} live rows; last row reached.`);
   assert.deepEqual(errors, [], 'No runtime or CSP errors');
   console.log('PASS: loadable extension, native bookmark snapshot, literal rendering, new-tab navigation, no runtime/CSP errors.');

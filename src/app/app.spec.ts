@@ -59,3 +59,29 @@ it('replaces or clears the active folder by ID and includes nested bookmarks', a
   fixture.detectChanges();
   expect(fixture.nativeElement.textContent).toContain('Parent / Same [2]');
 });
+
+it('debounces phrase search, flushes on tag changes, and never rereads the tree for filters', async () => {
+  const getTree = vi.fn().mockResolvedValue([
+    { id: '1', title: 'Café #C++', url: 'https://a.example/中文' },
+    { id: '2', title: 'İ #C++', url: 'https://b.example' },
+  ]);
+  TestBed.configureTestingModule({ providers: [{ provide: CHROME, useValue: { bookmarks: { getTree }, tabs: {} } }] });
+  const fixture = TestBed.createComponent(App);
+  await fixture.whenStable();
+  const app = fixture.componentInstance;
+  vi.useFakeTimers();
+  try {
+    app.onQuery(' cafe\u0301 ');
+    vi.advanceTimersByTime(149);
+    expect(app.filtered()).toHaveLength(2);
+    vi.advanceTimersByTime(1);
+    expect(app.filtered().map(b => b.id)).toEqual(['1']);
+    app.onQuery('i');
+    app.toggleTag('c++');
+    expect(app.filtered()).toHaveLength(0);
+    app.onQuery('中文');
+    vi.advanceTimersByTime(150);
+    expect(app.filtered()).toHaveLength(1);
+    expect(getTree).toHaveBeenCalledTimes(1);
+  } finally { vi.useRealTimers(); }
+});
