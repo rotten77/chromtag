@@ -1,6 +1,6 @@
 import { inject, Injectable, signal } from '@angular/core';
 import { CHROME } from './chrome-api';
-import { Bookmark, buildModel } from './model';
+import { Bookmark, buildModel, countBookmarkNodes, ModelBuilder } from './model';
 
 export interface BookmarkDraft { id: string; title: string; url: string; parentId: string; originalParentId?: string }
 
@@ -9,6 +9,8 @@ export class BookmarkStore {
   readonly api = inject(CHROME);
   readonly model = signal(buildModel([]));
   readonly loading = signal(false);
+  readonly progress = signal<{ processed: number; total: number } | null>(null);
+  readonly phase = signal<'idle' | 'reading' | 'processing'>('idle');
   readonly error = signal('');
   readonly busy = signal(false);
   private pending?: Promise<void>;
@@ -16,10 +18,29 @@ export class BookmarkStore {
   refresh(): Promise<void> {
     if (this.pending) return this.pending;
     this.loading.set(true);
+    this.phase.set('reading');
+    this.progress.set(null);
     this.error.set('');
-    this.pending = Promise.resolve().then(() => this.api.bookmarks.getTree()).then(tree => { this.model.set(buildModel(tree)); })
+    this.pending = Promise.resolve().then(() => this.api.bookmarks.getTree()).then(async tree => {
+      const total = countBookmarkNodes(tree); // Includes unsupported URL nodes so progress reflects the snapshot.
+      const builder = new ModelBuilder(tree);
+      this.phase.set('processing');
+      this.progress.set({ processed: 0, total });
+      // Yield for large snapshots; keep small loads and existing interactions immediate.
+      if (total >= 1000) await new Promise<void>(resolve => {
+        requestAnimationFrame(() => setTimeout(resolve, 0));
+      });
+      while (!builder.done) {
+        const start = performance.now();
+        do { builder.step(256); } while (!builder.done && (total < 1000 || performance.now() - start < 8));
+        if (builder.done) break;
+        this.progress.set({ processed: builder.processed, total });
+        await new Promise<void>(resolve => setTimeout(resolve, 0));
+      }
+      this.model.set(builder.finish());
+    })
       .catch(() => { this.error.set('Bookmarks could not be loaded. Try Refresh.'); })
-      .finally(() => { this.loading.set(false); this.pending = undefined; });
+      .finally(() => { this.phase.set('idle'); this.progress.set(null); this.loading.set(false); this.pending = undefined; });
     return this.pending;
   }
 

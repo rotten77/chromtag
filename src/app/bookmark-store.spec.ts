@@ -11,12 +11,16 @@ it('coalesces overlapping refreshes to one read and opens URLs with native tabs'
   TestBed.configureTestingModule({ providers: [{ provide: CHROME, useValue: { bookmarks: { getTree }, tabs: { create } } }] });
   const store = TestBed.inject(BookmarkStore);
   const first = store.refresh();
+  expect(store.phase()).toBe('reading');
+  expect(store.progress()).toBeNull();
   expect(store.refresh()).toBe(first);
   await Promise.resolve();
   expect(getTree).toHaveBeenCalledTimes(1);
   resolve([{ syncing: false, id: '1', title: 'Title', url: 'https://example.org' }]);
   await first;
   expect(store.model().bookmarks).toHaveLength(1);
+  expect(store.phase()).toBe('idle');
+  expect(store.progress()).toBeNull();
   await store.open('https://example.org');
   expect(create).toHaveBeenCalledWith({ url: 'https://example.org' });
 });
@@ -26,6 +30,35 @@ it('reports failed loads without leaving the popup busy', async () => {
   await store.refresh();
   expect(store.error()).toContain('could not be loaded');
   expect(store.loading()).toBe(false);
+  expect(store.phase()).toBe('idle');
+  expect(store.progress()).toBeNull();
+});
+
+it('reports actual node counts while processing a large snapshot and refreshes once per load', async () => {
+  const nodes = Array.from({ length: 12000 }, (_, i) => ({ id: String(i + 2), title: `Page ${i} #tag`, url: `https://example.org/${i}` }));
+  const getTree = vi.fn().mockResolvedValue([{ id: '0', title: '', children: [
+    { id: '1', title: 'Folder', children: nodes },
+    { id: 'unsafe', title: 'Unsafe', url: 'javascript:alert(1)' },
+  ] }]);
+  TestBed.configureTestingModule({ providers: [{ provide: CHROME, useValue: { bookmarks: { getTree } } }] });
+  const store = TestBed.inject(BookmarkStore);
+  const first = store.refresh();
+  while (store.phase() === 'reading') await new Promise(done => setTimeout(done, 0));
+  expect(store.phase()).toBe('processing');
+  expect(store.progress()).toEqual({ processed: 0, total: 12001 });
+  let intermediate = false;
+  const timer = setInterval(() => {
+    const progress = store.progress();
+    if (progress && progress.processed > 0 && progress.processed < progress.total) intermediate = true;
+  }, 0);
+  try { await first; } finally { clearInterval(timer); }
+  expect(intermediate).toBe(true);
+  expect(store.model().bookmarks).toHaveLength(12000);
+  expect(store.progress()).toBeNull();
+  expect(store.phase()).toBe('idle');
+  expect(getTree).toHaveBeenCalledTimes(1);
+  await store.refresh();
+  expect(getTree).toHaveBeenCalledTimes(2);
 });
 
 it('saves details then moves, refreshes once, and removes with one further refresh', async () => {

@@ -67,9 +67,9 @@ Statuses describe the new implementation. Behavior in the ignored 1.8 reference 
 
 | ID | Task | Goal | Status | Criteria |
 |---|---|---|---|---|
-| T-13 | Show bookmark processing progress | Show loading and hashtag-processing progress in the popup, with an honest count when available and evidence-based guidance for large libraries. | Not started | T-13 |
+| T-13 | Show bookmark processing progress | Show loading and hashtag-processing progress in the popup, with an honest count when available and evidence-based guidance for large libraries. | Verified | T-13 |
 
-Scheduled after Jan's 2026-11-12 version 2.0 verification; implementation needs a new instruction. The existing generic loading message is not counted as completion. Decide how to keep progress visible during model processing before implementation; do not claim a supported bookmark limit from synthetic tests.
+Jan verified T-08 and requested T-13 implementation on 2026-11-12. The existing generic loading message is not counted as completion. The count covers all URL-bearing tree nodes, including unsupported `javascript:` bookmarks. Chunked processing yields for large snapshots; a 10,000-node threshold triggers evidence-based guidance. Jan tested with an imported 50,000-bookmark synthetic collection and approved the result on 2026-11-12. Do not claim a supported bookmark limit from synthetic tests.
 
 ## E-21 — Version 2.1 session filters
 
@@ -99,9 +99,9 @@ Follow version 2.2. Include lifecycle verification, version update, documentatio
 
 | ID | Task | Owner | Goal | Status | Criteria |
 |---|---|---|---|---|---|
-| T-08 | Remove automatic logging and commit instructions | AI agent, at Jan's request | Remove the automatic log and commit requirements from agent guidance. | Ready for verification | T-08 |
+| T-08 | Remove automatic logging and commit instructions | AI agent, at Jan's request | Remove the automatic log and commit requirements from agent guidance. | Verified | T-08 |
 
-Jan moved T-08 forward on 2026-11-12 and requested a final log and commit for this change. Future logs and commits require an explicit request. T-08 still needs Jan's verification.
+Jan moved T-08 forward on 2026-11-12 and requested a final log and commit for this change. Future logs and commits require an explicit request. Jan verified T-08 on 2026-11-12.
 
 ## After E-23 — Verification, cleanup, and plan archival
 
@@ -118,4 +118,4 @@ T-10 uses the materials from T-09. Jan performs the final overall verification. 
 
 ## Next step
 
-Jan verified E-20 on 2026-11-12. T-08 is ready for Jan's verification. T-13 is planned but not implemented; await Jan's next instruction before T-13 or E-21.
+Jan verified E-20, T-08, and T-13. E-21 still requires a separate instruction.

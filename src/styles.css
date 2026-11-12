@@ -46,3 +46,6 @@ app-bookmark-list .cdk-virtual-scroll-content-wrapper { width: 100%; max-width: 
 button:disabled { cursor: wait; opacity: .6; }
 [role=alert] { color: var(--danger-color); overflow-wrap: anywhere; }
 .popup-content > [role=alert], .popup-content > p:not(.result-count) { margin: .3rem .5rem; max-height: 4rem; overflow: auto; flex-shrink: 0; }
+.loading-progress { display: flex; flex-direction: column; gap: .15rem; margin: .3rem .5rem; flex-shrink: 0; font-size: .85em; }
+.loading-progress span { overflow-wrap: anywhere; }
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }

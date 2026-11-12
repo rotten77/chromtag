@@ -54,6 +54,8 @@ Chrome processes detail updates and folder moves separately. If a move fails aft
 
 Select **Refresh** after changing bookmarks outside the popup. Each refresh reads Chrome's tree once. Successful additions, saves, moves, and deletions refresh automatically.
 
+The popup shows a reading message while Chrome retrieves the tree. It then shows how many bookmark nodes it has processed out of the total, including `javascript:` bookmarks that do not appear in the list. For 10,000 or more nodes, a message cites a test with 10,001 synthetic bookmarks. This is not a guaranteed limit or wait time. Progress disappears when processing finishes or fails.
+
 The popup reports unavailable metadata, load failures, and failed mutations. A failed load keeps the previous snapshot when one exists. Select **Refresh** to try again.
 
 Chrome Bookmark Manager uses the same native bookmarks. No bookmark database, account, or backend is required.

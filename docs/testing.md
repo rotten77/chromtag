@@ -33,7 +33,7 @@ The [popup layout test plan](test-plan.md) covers the review changes. Browser ch
 
 Every `npm test` run saves an HTML file under ignored `.local/test-results/`. The filename and document contain UTC timestamps. Reports include pass/fail status, output, Node/manifest versions, source HEAD, and whether the working tree had changes.
 
-Completed visual scenarios add embedded screenshots. Reports remain self-contained if the accompanying PNG files move. Failed runs remain available. Private test evidence is not committed.
+Completed visual scenarios add embedded screenshots, including T-13 processing progress for the large synthetic collection. Reports remain self-contained if the accompanying PNG files move. Failed runs remain available. Private test evidence is not committed.
 
 `npm run test:unit` is a faster Angular-only command. It does not create the complete HTML report. Use `npm test` when you need retained evidence.
 
@@ -47,4 +47,4 @@ These are individual synthetic observations, not timing guarantees or real-profi
 
 The suite checks at most 24 live rows in the exercised layouts. Actual rows depend on viewport height, font size, and overscan. Font scaling also changes the virtual row height.
 
-A representative real profile is unavailable to the automated run. Jan's manual verification remains pending. The final extended-use test materials are scheduled under T-09 after all implementation releases.
+A representative real profile is unavailable to the automated run. Jan separately verified T-13 using a synthetic 50,000-bookmark HTML import in a testing browser on 2026-11-12; this is not real-profile evidence or a supported-capacity claim. The final extended-use test materials are scheduled under T-09 after all implementation releases.

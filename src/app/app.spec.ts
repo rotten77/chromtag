@@ -18,6 +18,34 @@ it('renders user text literally and loads only once on popup creation', async ()
   expect(create).toHaveBeenCalledWith({ url: 'https://example.org/<script>' });
 });
 
+it('shows reading, then processing and large-library guidance, and clears progress on failure', async () => {
+  let resolve!: (tree: chrome.bookmarks.BookmarkTreeNode[]) => void;
+  const getTree = vi.fn(() => new Promise<chrome.bookmarks.BookmarkTreeNode[]>(done => { resolve = done; }));
+  TestBed.configureTestingModule({ providers: [{ provide: CHROME, useValue: { bookmarks: { getTree }, tabs: {} } }] });
+  const fixture = TestBed.createComponent(App);
+  fixture.detectChanges();
+  const root: HTMLElement = fixture.nativeElement;
+  expect(root.querySelector('.loading-progress')?.textContent).toContain('Reading bookmarks from Chrome');
+  expect(root.querySelector('.loading-progress')?.textContent).not.toContain('/');
+  await Promise.resolve();
+  const nodes = Array.from({ length: 10000 }, (_, i) => ({ id: String(i), title: `Page ${i} #tag`, url: `https://example.org/${i}` }));
+  resolve([{ id: '0', title: '', children: nodes }] as chrome.bookmarks.BookmarkTreeNode[]);
+  await new Promise(done => setTimeout(done, 0));
+  fixture.detectChanges();
+  expect(root.querySelector('.loading-progress')?.textContent).toContain('Processing bookmarks and hashtags:');
+  expect(root.querySelector('.loading-progress')?.textContent).toContain('/10000');
+  expect(root.querySelector('.loading-progress')?.textContent).toContain('10,001 synthetic bookmarks');
+  expect(root.querySelector('.sr-only')?.textContent).toBe('Processing bookmarks');
+  while (fixture.componentInstance.store.loading()) await new Promise(done => setTimeout(done, 0));
+  fixture.detectChanges();
+  expect(root.querySelector('.loading-progress')).toBeNull();
+  getTree.mockRejectedValueOnce(new Error('Denied'));
+  root.querySelector<HTMLButtonElement>('header button')!.click();
+  await fixture.whenStable(); fixture.detectChanges();
+  expect(root.querySelector('.loading-progress')).toBeNull();
+  expect(root.querySelector('[role="alert"]')?.textContent).toContain('could not be loaded');
+});
+
 it('toggles multiple normalized tags immediately and combines them with AND', async () => {
   TestBed.configureTestingModule({ providers: [{ provide: CHROME, useValue: {
     bookmarks: { getTree: vi.fn().mockResolvedValue([

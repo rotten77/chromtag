@@ -6,6 +6,8 @@ Chromtag is a Chrome extension for browsing and editing Chrome bookmarks. Hashta
 
 The version 2.0 release candidate is implemented and user-verified. Representative-profile testing remains open. The standalone Angular popup builds from `src/`; manifest source and preserved icons live in `public/`. The version 1.8 reference remains in ignored `.local/legacy/`.
 
+The popup shows when it reads Chrome bookmarks and processes the returned tree, including hashtags. During processing, it counts URL-bearing nodes, including bookmarks excluded from the list. For 10,000 or more such nodes, it notes that Chromtag was tested with 10,001 synthetic bookmarks without promising a limit or completion time.
+
 The current popup supports nested bookmarks and a virtualized list. Select blue tags to filter; multiple selected tags must all match. Select a tag again to clear it.
 
 Select a bookmark title to open its URL in a new tab. Rows show the URL, immediate folder, tags, and an edit control. The list excludes `javascript:` bookmarks.
@@ -27,7 +29,7 @@ The compact popup uses a 13 px base font and a 540 × 580 px layout. The `Search
 Release scope:
 
 - **2.0 (implemented):** Angular popup, one transient bookmark model per refresh, virtualized rows, safe rendering, and Unicode search across titles, folders, and URLs.
-- **Planned 2.0 follow-up:** Loading and bookmark/hashtag-processing progress, with counts when reliable and evidence-based guidance for large libraries.
+- **2.0 follow-up (user-verified):** Popup loading and bookmark/hashtag-processing feedback, with counts after Chrome returns the tree and evidence-based guidance for large libraries.
 - **2.1:** Search and tag/folder filters retained during the browser session.
 - **2.2:** Persistent typography, popup dimensions, combined folder/tag cloud height, and independent Material palette choices for light/dark foreground, tags, and folders. Backgrounds stay white/light and `#212121`/dark.
 - **2.3:** Persistent bookmark tab-target and popup-close preferences.

@@ -88,45 +88,91 @@ export function toggleTitleTag(title: string, tag: Tag): string {
   return `${title}${title && !/\s$/u.test(title) ? ' ' : ''}#${tag.label}`;
 }
 
-export function buildModel(tree: chrome.bookmarks.BookmarkTreeNode[]): Model {
-  const bookmarks: Bookmark[] = [];
-  const folders: Folder[] = [];
-  const folderById = new Map<string, Folder>();
-  const tags = new Map<string, Tag>();
-  let order = 0;
-  type Frame = { node: chrome.bookmarks.BookmarkTreeNode; parent?: Folder; exit?: Folder };
-  const stack: Frame[] = tree.toReversed().map(node => ({ node }));
+// Count every URL-bearing node, including unsupported javascript: bookmarks, on the same snapshot.
+export function countBookmarkNodes(tree: chrome.bookmarks.BookmarkTreeNode[]): number {
+  const stack = [...tree];
+  let count = 0;
   while (stack.length) {
-    const { node, parent, exit } = stack.pop()!;
-    if (exit) { exit.end = order; continue; }
-    if (node.url !== undefined) {
-      if (/^\s*javascript:/iu.test(node.url)) continue;
-      const spans = parseTags(node.title);
-      const uniqueTags = new Map(spans.map(span => [span.key, { key: span.key, label: span.label }]));
-      for (const span of spans) if (!tags.has(span.key)) tags.set(span.key, { key: span.key, label: span.label });
-      bookmarks.push({ id: node.id, title: node.title, displayTitle: withoutTags(node.title, spans), url: node.url,
-        parentId: parent?.id, folderName: parent?.title ?? '', folderOrder: parent?.order ?? -1,
-        tags: [...uniqueTags.values()], searchFields: [node.title, parent?.title ?? '', node.url].map(text => ({ text: normalize(text) })) });
-    } else {
-      // Chrome's invisible tree root is not a destination or cloud entry.
-      const folder = node.id === '0' ? undefined : {
-        id: node.id, title: node.title, label: node.title, parentId: parent?.id,
-        order: order++, end: 0, editable: !node.unmodifiable,
-      } satisfies Folder;
-      if (folder) { folders.push(folder); folderById.set(folder.id, folder); stack.push({ node, exit: folder }); }
-      for (const child of (node.children ?? []).toReversed()) stack.push({ node: child, parent: folder ?? parent });
+    const node = stack.pop()!;
+    if (node.url !== undefined) count++;
+    else for (const child of node.children ?? []) stack.push(child);
+  }
+  return count;
+}
+
+export function buildModel(tree: chrome.bookmarks.BookmarkTreeNode[]): Model {
+  const builder = new ModelBuilder(tree);
+  while (!builder.done) builder.step(Number.POSITIVE_INFINITY);
+  return builder.finish();
+}
+
+// Keep traversal and finalization chunkable without changing the synchronous model contract.
+export class ModelBuilder {
+  private readonly bookmarks: Bookmark[] = [];
+  private readonly folders: Folder[] = [];
+  private readonly folderById = new Map<string, Folder>();
+  private readonly tags = new Map<string, Tag>();
+  private readonly names = new Map<string, number>();
+  private order = 0;
+  private stage: 'traverse' | 'count names' | 'label folders' | 'finished' = 'traverse';
+  private folderIndex = 0;
+  private readonly stack: { node: chrome.bookmarks.BookmarkTreeNode; parent?: Folder; exit?: Folder }[];
+  processed = 0;
+
+  constructor(tree: chrome.bookmarks.BookmarkTreeNode[]) {
+    this.stack = tree.toReversed().map(node => ({ node }));
+  }
+
+  get done(): boolean { return this.stage === 'finished'; }
+
+  step(budget: number): void {
+    let work = 0;
+    while (work < budget && !this.done) {
+      if (this.stage === 'traverse') {
+        if (!this.stack.length) { this.stage = 'count names'; this.folderIndex = 0; continue; }
+        const { node, parent, exit } = this.stack.pop()!;
+        if (exit) { exit.end = this.order; continue; }
+        if (node.url !== undefined) {
+          this.processed++;
+          if (!/^\s*javascript:/iu.test(node.url)) {
+            const spans = parseTags(node.title);
+            const uniqueTags = new Map(spans.map(span => [span.key, { key: span.key, label: span.label }]));
+            for (const span of spans) if (!this.tags.has(span.key)) this.tags.set(span.key, { key: span.key, label: span.label });
+            this.bookmarks.push({ id: node.id, title: node.title, displayTitle: withoutTags(node.title, spans), url: node.url,
+              parentId: parent?.id, folderName: parent?.title ?? '', folderOrder: parent?.order ?? -1,
+              tags: [...uniqueTags.values()], searchFields: [node.title, parent?.title ?? '', node.url].map(text => ({ text: normalize(text) })) });
+          }
+        } else {
+          // Chrome's invisible tree root is not a destination or cloud entry.
+          const folder = node.id === '0' ? undefined : {
+            id: node.id, title: node.title, label: node.title, parentId: parent?.id,
+            order: this.order++, end: 0, editable: !node.unmodifiable,
+          } satisfies Folder;
+          if (folder) { this.folders.push(folder); this.folderById.set(folder.id, folder); this.stack.push({ node, exit: folder }); }
+          for (const child of (node.children ?? []).toReversed()) this.stack.push({ node: child, parent: folder ?? parent });
+        }
+      } else if (this.stage === 'count names') {
+        if (this.folderIndex === this.folders.length) { this.stage = 'label folders'; this.folderIndex = 0; continue; }
+        const name = normalize(this.folders[this.folderIndex++].title);
+        this.names.set(name, (this.names.get(name) ?? 0) + 1);
+      } else {
+        if (this.folderIndex === this.folders.length) { this.stage = 'finished'; continue; }
+        const folder = this.folders[this.folderIndex++];
+        if (this.names.get(normalize(folder.title))! > 1) {
+          const path: string[] = [];
+          let current: Folder | undefined = folder;
+          while (current) { path.push(current.title || '(Untitled folder)'); current = this.folderById.get(current.parentId ?? ''); }
+          folder.label = `${path.reverse().join(' / ')} [${folder.id}]`;
+        } else folder.label ||= '(Untitled folder)';
+      }
+      work++;
     }
   }
-  const names = new Map<string, number>();
-  for (const folder of folders) names.set(normalize(folder.title), (names.get(normalize(folder.title)) ?? 0) + 1);
-  for (const folder of folders) {
-    if (names.get(normalize(folder.title))! > 1) {
-      const path: string[] = [];
-      let current: Folder | undefined = folder;
-      while (current) { path.push(current.title || '(Untitled folder)'); current = folderById.get(current.parentId ?? ''); }
-      folder.label = `${path.reverse().join(' / ')} [${folder.id}]`;
-    } else folder.label ||= '(Untitled folder)';
+
+  finish(): Model {
+    if (!this.done) throw new Error('Bookmark snapshot is still processing');
+    this.folders.sort((a, b) => codePointOrder(normalize(a.label), normalize(b.label)) || codePointOrder(a.id, b.id));
+    return { bookmarks: this.bookmarks, folders: this.folders, folderById: this.folderById,
+      tags: [...this.tags.values()].sort((a, b) => codePointOrder(a.key, b.key)) };
   }
-  folders.sort((a, b) => codePointOrder(normalize(a.label), normalize(b.label)) || codePointOrder(a.id, b.id));
-  return { bookmarks, folders, folderById, tags: [...tags.values()].sort((a, b) => codePointOrder(a.key, b.key)) };
 }

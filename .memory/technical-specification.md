@@ -261,7 +261,7 @@ The supplied plan names `legacy/`; no tracked directory with that name exists no
 - **T-13-AC4:** For large collections, provide reassuring guidance based only on measured evidence. It may cite the 10,001-supported-bookmark synthetic Chrome test, but must not imply a guaranteed maximum, real-profile result, or universal processing time. Decide whether to show guidance at a count threshold and select that threshold before implementation.
 - **T-13-AC5:** Regression-test loading, determinate progress when available, completion/failure, large-library messaging, and snapshot/performance boundaries; verify in stable Chrome.
 
-The current popup shows a generic `Loading bookmarks…` message. It does not report model-processing progress. Decide how to yield rendering time to the popup during processing before implementing a live count; synchronous processing cannot display intermediate updates.
+T-13 counts all URL-bearing tree nodes, including unsupported `javascript:` bookmarks; only supported bookmarks enter the list. The count uses a separate iterative pass over the same tree, not another Chrome read. A chunked iterative builder yields to the browser at most every 8 ms for large snapshots (1,000+ bookmark nodes), allowing progress to paint; small snapshots keep the synchronous fast path. Folder finalization also runs in chunks. The UI displays a count only after the tree arrives. At 10,000+ URL nodes it shows guidance citing the 10,001-supported-bookmark synthetic Chrome test without promising a capacity or duration. Assistive technology receives only the phase change, not each numeric increment.
 
 ## Later release acceptance criteria
 
@@ -351,7 +351,7 @@ These steps apply after the relevant implementation and tooling exist.
 ## Open decisions and evidence gaps
 
 - Real-profile performance and timing targets. T-01 records the legacy synthetic baseline; T-04/T-05 use 10,001 supported browser records and deep unit fixtures. Tests check at most 24 live rows in exercised layouts; this is not a timing guarantee.
-- T-13 progress count scope, rendering/yield strategy, and any large-library message threshold. The 10,001-bookmark synthetic test is evidence, not a support guarantee.
+- T-13 uses all URL-bearing nodes for progress, an 8 ms chunk budget for large snapshots, and a 10,000-node threshold for guidance. The 10,001-bookmark synthetic test is evidence, not a support guarantee.
 - Version 2.2 editable-color defaults, supported bounds (including cloud height), and precise Material Design palette choices. Light/dark backgrounds are fixed at `#FFFFFF`/`#212121`. Version 2.0 starts with a 13 px base font and a 540 × 580 px popup; T-05 checks compact layout and overflow.
 - The v2.3 popup-close default and verified lifecycle limits.
 

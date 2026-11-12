@@ -221,8 +221,29 @@ try {
     }
   });
   const started = performance.now();
-  await page.reload();
+  await page.reload({ waitUntil: 'commit' });
+  const progress = await page.evaluate(() => new Promise((resolve, reject) => {
+    const deadline = performance.now() + 10000;
+    const poll = () => {
+      const element = document.querySelector('.loading-progress');
+      const text = element?.textContent;
+      if (text?.includes('Processing bookmarks and hashtags:') && /\d+\/10002/u.test(text)) {
+        requestAnimationFrame(() => requestAnimationFrame(() => {
+          const current = document.querySelector('.loading-progress');
+          if (current) resolve(current.textContent);
+          else reject(new Error('Progress disappeared before capture'));
+        }));
+      } else if (performance.now() < deadline) setTimeout(poll, 0);
+      else reject(new Error('Did not observe processing progress'));
+    };
+    poll();
+  }));
+  assert.match(progress, /Processing bookmarks and hashtags: \d+\/10002/u, 'Progress counts all URL nodes, including excluded javascript: bookmarks');
+  assert.match(progress, /10,001 synthetic bookmarks/u, 'Large-library guidance cites measured synthetic evidence');
+  await screenshot(page, 'processing-progress');
   await page.getByRole('button', { name: 'Scale bookmark 0', exact: true }).waitFor();
+  await page.locator('.loading-progress').waitFor({ state: 'detached' });
+  assert.equal(await page.evaluate(() => globalThis.treeReads), 1, 'Initial large popup reads one tree');
   const elapsed = performance.now() - started;
   const liveRows = await page.locator('article.bookmark').count();
   assert(liveRows > 0 && liveRows <= 24, `10,001 records must have bounded live rows, saw ${liveRows}`);
@@ -263,6 +284,7 @@ try {
   assert.equal(await page.evaluate(() => localStorage.length), 0);
   await page.reload();
   await page.getByRole('button', { name: 'Hide folders', exact: true }).waitFor();
+  await page.getByText('10001 of 10001 bookmarks', { exact: true }).waitFor();
   assert(await page.locator('.filter-cloud > .folder').count() > 1);
   await page.locator('.filter-cloud[aria-busy="false"]').waitFor();
   const fullCloud = await page.locator('.filter-cloud').evaluate(cloud => ({

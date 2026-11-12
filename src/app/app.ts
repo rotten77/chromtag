@@ -14,7 +14,16 @@ import { FilterCloud } from './filter-cloud';
     <header><strong class="brand"><img src="icon.png" alt="">Chromtag</strong><button type="button" (click)="store.refresh()" [disabled]="store.loading() || store.busy()">Refresh</button></header>
     <input #search class="search-field" type="search" aria-label="Search bookmarks" [value]="queryInput()" (input)="onQuery(search.value)" placeholder="Search..." autocomplete="off">
     @if (store.error()) { <p role="alert">{{ store.error() }}</p> }
-    @if (store.loading()) { <p role="status">Loading bookmarks…</p> }
+    <span class="sr-only" role="status" aria-live="polite">{{ store.phase() === 'reading' ? 'Reading bookmarks from Chrome' : store.phase() === 'processing' ? 'Processing bookmarks' : '' }}</span>
+    @if (store.loading()) {
+      <div class="loading-progress" aria-label="Bookmark loading status">
+        @if (store.phase() === 'reading') { <span>Reading bookmarks from Chrome…</span> }
+        @else {
+          <span>Processing bookmarks and hashtags: {{ store.progress()?.processed }}/{{ store.progress()?.total }}</span>
+          @if ((store.progress()?.total ?? 0) >= 10000) { <span>Large libraries can take longer. Chromtag was tested with 10,001 synthetic bookmarks; this is not a guaranteed limit or time.</span> }
+        }
+      </div>
+    }
     <app-filter-cloud [folders]="store.model().folders" [tags]="store.model().tags" [showFolders]="foldersVisible()"
       [selectedFolder]="filters().folderId" [selectedTags]="filters().tags" (folderSelected)="toggleFolder($event)" (tagSelected)="toggleTag($event)" />
     <app-bookmark-list [rows]="filtered()" (open)="store.open($event)" (edit)="openEditor($event)" />

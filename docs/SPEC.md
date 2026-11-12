@@ -25,9 +25,9 @@ Search matches respect grapheme boundaries. A query cannot match only part of an
 
 Angular standalone components and TypeScript replace the old UI libraries. One Chrome bookmark snapshot supplies the transient model per load/refresh. Model filtering and a virtualized list with overscan address large collections, including 10,000+ synthetic bookmarks.
 
-## Planned version 2.0 follow-up — Loading progress
+## Version 2.0 follow-up — Loading progress
 
-The popup will show when it is reading and processing bookmarks, including hashtags. When a reliable total is available, it will show processed/total counts. Large-library guidance must reflect the 10,001-supported-bookmark synthetic test without promising a maximum or timing guarantee. Progress count scope and any message threshold remain open. This is not implemented in the version 2.0 candidate; see T-13 criteria.
+The popup shows when it reads Chrome's bookmark tree and processes its bookmarks and hashtags. Once Chrome returns the tree, it displays processed/total counts for all URL-bearing nodes, including bookmarks excluded from the list. For 10,000 or more such nodes, it cites the 10,001-supported-bookmark synthetic Chrome test without promising a maximum or completion time. Processing yields to keep progress visible on large snapshots. Jan verified T-13 with a 50,000-bookmark synthetic import on 2026-11-12; this does not establish a supported limit. See its criteria.
 
 ## Version 2.1 — Session filters
 
