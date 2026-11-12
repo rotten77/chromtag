@@ -2,7 +2,7 @@
 
 This document describes the existing Chromtag 1.8 popup as implemented, before the planned v2.0 modernization. It is a baseline to revise, not a claim that every behavior works reliably with large bookmark collections or all writing systems.
 
-**Reference only:** Supplied by the user on 2026-11-12. Paths reflect the current local archive. Target criteria live in [the technical specification](../.memory/technical-specification.md); intended releases are described in [SPEC.md](SPEC.md).
+**Reference only:** Supplied by the user on 2026-11-12. Paths reflect the current local archive. Target criteria live in [the technical specification](../.memory/technical-specification.md); intended releases are described in [SPEC.md](SPEC.md). T-01 runtime evidence is recorded separately in [legacy measurements](legacy-measurements.md).
 
 ## Purpose
 

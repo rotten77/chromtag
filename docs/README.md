@@ -8,6 +8,7 @@
 | [Project status](../.memory/project-status.md) | Current state and next steps |
 | [Historical 1.8 baseline](legacy-baseline.md) | Supplied description and historical acceptance criteria |
 | [Legacy issue analysis](legacy-analysis.md) | Confirmed code causes, inferred risks, and proposed fixes |
+| [Legacy measurements](legacy-measurements.md) | T-01 synthetic performance evidence, behavior probes, and reproduction instructions |
 | [Historical README](legacy-readme.md) | Preserved version history and screenshots from the old repository |
 
 Images in `img/` are historical visual references. They do not demonstrate the planned releases. Refresh screenshots only when the implemented UI changes materially.

@@ -9,15 +9,17 @@ This document describes the intended versions 2.0–2.3. The modernization is no
 | Feature | Intended behavior | Criteria |
 |---|---|---|
 | Browse | List nested bookmarks with title, URL, folder, tags, and edit control. Open links in new tabs; exclude `javascript:` bookmarks. | US-01 |
-| Tags | Derive a sorted unique cloud from title hashtags. Toggle multiple tags; matches satisfy every selected tag. | US-02 |
-| Folders | Show a sorted flattened cloud. Select at most 1 folder and combine it with tags/search. | US-03 |
-| Search | Search titles, parent folder names, and URLs. Support Unicode case-insensitive matching while preserving diacritic distinctions. | US-04 |
+| Tags | Recognize hashtags at title start or after whitespace. Preserve spelling and punctuation; deduplicate by normalized identity. Toggle multiple tags; matches satisfy every selected tag. | US-02 |
+| Folders | Show a sorted flattened cloud. Select at most 1 folder by ID, including its descendants, and combine it with tags/search. Distinguish duplicate names with parent paths. | US-03 |
+| Search | Match 1 literal phrase within a full title, immediate folder name, or URL. Use NFC normalization and locale-independent lowercasing while preserving diacritic distinctions. | US-04 |
 | Reset | Clear the query and all tag/folder filters. | US-05 |
 | Add | Create a bookmark from the active tab and open its editor. | US-06 |
 | Edit/delete | Edit title/URL, toggle or create tags, move folders, save, delete, or cancel unsaved fields. | US-07 |
 | Folder visibility | Show/hide the folder cloud for the current popup session only. | US-08 |
 
 The popup retains the compact toolbar, colored clouds, bookmark rows, and editor overlay. Typography increases modestly. Long content, keyboard focus, and overflow require verification.
+
+Search matches respect grapheme boundaries. A query cannot match only part of an accented character or emoji cluster.
 
 Angular standalone components and TypeScript replace the old UI libraries. One Chrome bookmark snapshot supplies the transient model per load/refresh. Model filtering and a virtualized list with overscan address large collections, including 10,000+ synthetic bookmarks.
 
@@ -45,4 +47,4 @@ Manifest V3 remains in use. The modernization audits metadata, icons, permission
 
 The [technical specification](../.memory/technical-specification.md) defines verification, regression-test coverage, and open semantic decisions. Every applicable feature and criterion requires repository tests as implementation proceeds, plus built-extension verification in Chrome.
 
-URL search, diacritic-preserving Unicode matching, and popup-only folder visibility intentionally change the 1.8 baseline. Later releases introduce the explicitly scoped storage exceptions. The [historical baseline](legacy-baseline.md) and [analysis](legacy-analysis.md) remain references, not target acceptance criteria.
+URL search, diacritic-preserving Unicode matching, hashtag boundaries/identity, folder-ID/descendant filtering, and popup-only folder visibility intentionally change the 1.8 baseline. Later releases introduce the explicitly scoped storage exceptions. The [historical baseline](legacy-baseline.md) and [analysis](legacy-analysis.md) remain references, not target acceptance criteria.

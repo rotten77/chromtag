@@ -14,9 +14,9 @@ Implement no more than 1 user story at a time. Supporting tasks do not authorize
 
 | ID | Task | Goal | Status | Criteria |
 |---|---|---|---|---|
-| T-00 | Prepare the repository | Use the modernization branch, preserve documentation/images, and prepare ignore rules. | Ready for verification | T-00 |
+| T-00 | Prepare the repository | Use the modernization branch, preserve documentation/images, and prepare ignore rules. | Verified | T-00 |
 
-The user-created branch exists and workflow setup is committed. Historical documentation/images are preserved under `docs/`, with working relative links. Dependency, build-output, and Angular-cache ignore rules are in place. T-00 awaits user verification.
+The user verified T-00 on 2026-11-12. Repository preparation is committed in `e600c02`. Historical documentation/images are preserved under `docs/`, with working relative links. Dependency, build-output, and Angular-cache ignore rules are in place.
 
 ## E-20 — Version 2.0 modernization
 
@@ -26,7 +26,7 @@ These tasks retain the supplied steps 1–7 and support the feature stories belo
 
 | ID | Task | Goal | Status | Criteria |
 |---|---|---|---|---|
-| T-01 | Define and baseline behavior | Establish behavior, resolve semantics, and measure legacy large-library failure. | In progress | T-01 |
+| T-01 | Define and baseline behavior | Establish behavior, resolve semantics, and measure legacy large-library failure. | Ready for verification | T-01 |
 | T-02 | Audit the manifest | Retain MV3; verify metadata, assets, permissions, and compatibility. | Not started | T-02 |
 | T-03 | Rebuild the popup with Angular | Establish the standalone TypeScript popup, build, safe bindings, and transient model. | Not started | T-03 |
 | T-04 | Fix scale and search | Filter the model, virtualize rows with overscan, and support Unicode safely. | Not started | T-04 |
@@ -34,7 +34,7 @@ These tasks retain the supplied steps 1–7 and support the feature stories belo
 | T-06 | Document and verify | Maintain documentation/test coverage; validate the built extension in Chrome. | Not started | T-06 |
 | T-07 | Release version 2.0 | Set version 2.0, document development attribution, and remove replaced runtime code. | Not started | T-07 |
 
-T-01 has a documented baseline and target criteria. Performance reproduction, measurements, and semantic decisions remain pending.
+T-01 has a reproducible diagnostic runner and [synthetic measurements](../docs/legacy-measurements.md), including the 10,000-bookmark readiness timeout. The user approved hashtag, Unicode phrase-search, grapheme-boundary, and folder-filter semantics in the technical specification. T-01 awaits user verification. Real-profile measurements and target timing budgets remain future work.
 
 ### Feature stories
 
@@ -79,4 +79,4 @@ Follow version 2.2. Include lifecycle verification, version update, documentatio
 
 ## Next step
 
-Verify T-00. After user verification, the recommended next task is T-01: measure legacy behavior and resolve semantics relevant to the first implementation story. Further work requires the user's next instruction.
+Verify T-01. After user verification, the recommended next task is T-02: audit manifest metadata, assets, permissions, and API compatibility before Angular setup. Further work requires the user's next instruction.

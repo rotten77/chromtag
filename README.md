@@ -27,7 +27,7 @@ Version 1.8 already uses Manifest V3 with `bookmarks` and `tabs`. Modernization 
 
 Git ignores `node_modules/`, `dist/`, and `.angular/`, along with private files in `.local/`.
 
-No build, run, or test commands are available in the current repository. The following workflow is planned for Angular setup:
+Application build and test commands are not available yet. The following workflow is planned for Angular setup:
 
 | Operation | Planned command | Description |
 |---|---|---|
@@ -39,6 +39,8 @@ No build, run, or test commands are available in the current repository. The fol
 | Run | Chrome **Load unpacked** | Load built `dist/chromtag/browser/` |
 
 Reload the unpacked extension after development builds. `ng serve` is not the extension runtime.
+
+The [legacy diagnostic procedure](docs/legacy-measurements.md) measures the archived popup with synthetic bookmarks. It uses separate local test dependencies.
 
 ## Documentation and references
 

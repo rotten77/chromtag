@@ -2,7 +2,7 @@
 
 This analysis describes the current implementation in `.local/legacy/chromtag/`. It separates causes confirmed by the code from risks that should be reproduced or tested. It is intended to support the planned v2.0 work; it does not change application behavior.
 
-**Reference only:** Supplied by the user on 2026-11-12. Source structure was checked against the local archive; runtime failures and timing thresholds have not been reproduced in this session. Fix directions remain proposals unless adopted in [the technical specification](../.memory/technical-specification.md).
+**Reference only:** Supplied by the user on 2026-11-12. The original analysis checked source structure without runtime measurements. T-01 now records synthetic runtime evidence in [legacy measurements](legacy-measurements.md). Fix directions remain proposals unless adopted in [the technical specification](../.memory/technical-specification.md).
 
 ## Summary
 

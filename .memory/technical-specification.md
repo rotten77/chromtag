@@ -12,7 +12,11 @@ This specification records the supplied requirements for versions 2.0–2.3, not
 
 The local reference is `.local/legacy/chromtag/`. Version 1.8 already uses Manifest V3, `bookmarks` and `tabs` permissions, and a popup without a background service worker. It uses jQuery, NanoScroller, and YUI CSS. Bookmarks remain in Chrome; folder visibility uses `localStorage`.
 
-Confirmed structural issues include 3 tree reads per refresh, DOM-based folder lookup, filtering after each inserted row, unbounded rendering, limited slug normalization, generated selectors, dynamic tag regexes, and HTML-string interpolation. Deep recursive traversal is an inferred risk. No large-library failure threshold or timing baseline is recorded.
+Confirmed structural issues include 3 tree reads per refresh, DOM-based folder lookup, filtering after each inserted row, unbounded rendering, limited slug normalization, generated selectors, dynamic tag regexes, and HTML-string interpolation. Deep recursive traversal is an inferred risk.
+
+T-01 recorded a synthetic timing baseline and behavior probes in [legacy measurements](../docs/legacy-measurements.md).
+At 5,000 bookmarks, median startup was 24.736 seconds. A 10,000-bookmark trial reached the 120-second readiness timeout.
+These measurements do not establish a universal failure threshold or measure a real user profile.
 
 ## Architecture and data
 
@@ -24,9 +28,46 @@ Confirmed structural issues include 3 tree reads per refresh, DOM-based folder l
 - Filter fields directly, without selectors or regexes constructed from raw user data.
 - Bound live rows with virtualization and overscan. Debounce text input; apply tag/folder interactions immediately.
 - Preserve Unicode text without transliteration. Normalize queries and fields consistently; ignore case while preserving diacritic distinctions.
-- Parse hashtags with Unicode-safe boundaries and preserve tag spelling in titles. Exact boundaries and canonical identity remain open decisions.
+- Parse hashtags with the agreed Unicode-safe boundaries and identity policy below. Preserve tag spelling in titles.
 - Remove jQuery, NanoScroller, and the legacy CSS reset from the runtime. Delete replaced dependencies only after confirming no references remain.
 - Use CSS custom properties for font size, popup dimensions, and palettes. Preserve the compact visual direction.
+
+### Matching and hashtag decisions
+
+The user approved these rules on 2026-11-12 during T-01. They define target behavior, not legacy behavior.
+
+#### Hashtags
+
+- Recognize `#` only at the start of a title or immediately after Unicode whitespace.
+- A tag contains at least 1 following character. Stop at whitespace, another `#`, or the title end. Whitespace follows ECMAScript's Unicode-aware whitespace definition.
+- Keep punctuation as part of the tag. For example, `#C++` and `#work,` are valid tags.
+- A lone `#` and `word#tag` are plain title text. In `#one#two`, only `#one` is a tag; the second `#` lacks a preceding boundary.
+- Compute identity with NFC normalization, locale-independent Unicode lowercasing, then NFC normalization again. Preserve accents; do not transliterate or apply compatibility normalization.
+- Preserve original tag spelling in stored titles. Use the first spelling encountered in native tree order for the cloud's display label.
+- Deduplicate by normalized identity. Sort identities lexicographically by Unicode code point, independently of the machine's locale.
+- Remove or toggle parsed title spans using literal operations, without constructing regular expressions from tag text.
+- New-tag input trims outer whitespace and accepts 1 optional leading `#`. Reject empty input, internal whitespace, or any remaining `#`.
+
+#### Text search
+
+- Normalize fields and queries with NFC, locale-independent Unicode lowercasing, then NFC again. Preserve accents and original stored text.
+- Trim only the query's outer whitespace. Keep internal whitespace and punctuation literal.
+- Treat the query as 1 phrase. It must occur within 1 field: full stored title including hashtags, immediate containing-folder name, or URL.
+- Do not split words, interpret operators, or match phrases across field boundaries. Empty queries impose no text restriction.
+- `café` and `cafe\u0301` are canonically equivalent; `cafe` differs from `café`. `I` and `i` share a normalized key; `İ` normalizes to `i\u0307`, and `ı` remains `ı`.
+- A phrase match must start and end on Unicode extended grapheme-cluster boundaries in the normalized field. Do not match a partial combining-mark or emoji cluster.
+- Consequently, query `i` matches `I` but does not match `İ` or `ı`. Query `e` does not match an accented `e` cluster, including accents that lack a precomposed form.
+
+NFC handles canonical equivalence without removing accents. Lowercasing is locale-independent; this policy does not require full Unicode case folding.
+References: [Unicode normalization](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/normalize) and [JavaScript lowercasing](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/toLowerCase).
+
+#### Folder filters
+
+- Identify folders by Chrome bookmark ID, independently of their labels.
+- Include bookmarks directly in the selected folder and in all descendant folders.
+- Keep same-named folders as separate choices. Include parent paths in labels where needed to distinguish those choices.
+- Text search still uses only the bookmark's immediate containing-folder name. Selecting an ancestor does not add ancestor names to the search fields.
+- Combine the folder predicate with every selected tag and the text predicate using logical AND.
 
 ### Storage policy
 
@@ -87,18 +128,19 @@ This configuration does not exist yet. Commands become available only after work
 
 ### US-03 — Filter by bookmark folder
 
-- **US-03-AC1:** A flattened, alphabetically sorted cloud includes nested folders.
+- **US-03-AC1:** A flattened, alphabetically sorted cloud includes nested folders. Same-named folders remain separate by ID, with parent paths in labels where needed.
 - **US-03-AC2:** At most 1 folder is active. Selecting another replaces it; selecting the active folder clears it.
 - **US-03-AC3:** Folder filtering combines with tags and text search.
 - **US-03-AC4:** Folder labels and search use the same model snapshot, independently of callback order.
+- **US-03-AC5:** The selected folder matches its direct bookmarks and all descendant-folder bookmarks by Chrome ID, never by a label substring.
 
 ### US-04 — Search bookmarks
 
 - **US-04-AC1:** Typing updates results after debouncing. Tag/folder changes take effect immediately.
-- **US-04-AC2:** Search titles, containing folder names, and URLs.
+- **US-04-AC2:** Search full stored titles including hashtags, immediate containing-folder names, and URLs. Match 1 trimmed literal phrase within any 1 field, without token splitting or cross-field phrase matches.
 - **US-04-AC3:** Combine queries with all active tag filters and the active folder filter.
-- **US-04-AC4:** Normalize fields/queries for Unicode case-insensitive matching without transliteration or loss of diacritic distinctions.
-- **US-04-AC5:** Composed/decomposed text follows the agreed normalization policy. Test accented Latin, Turkish casing, Arabic, Chinese, mixed scripts, emoji, and punctuation.
+- **US-04-AC4:** Normalize fields/queries for Unicode case-insensitive matching without transliteration or loss of diacritic distinctions. Require phrase matches to start and end on grapheme-cluster boundaries in the normalized field.
+- **US-04-AC5:** Normalize fields/queries with NFC, locale-independent Unicode lowercasing, then NFC again. Test accented Latin, Turkish casing, Arabic, Chinese, mixed scripts, emoji, and punctuation under the matching policy above.
 - **US-04-AC6:** Query metacharacters cannot break matching. Empty/no-match queries produce the corresponding full/empty filtered collection.
 
 ### US-05 — Reset filters
@@ -244,11 +286,7 @@ These steps apply after the relevant implementation and tooling exist.
 
 ## Open decisions and evidence gaps
 
-- Unicode normalization/case handling, including Turkish casing, with diacritic distinctions preserved.
-- Hashtag boundaries, empty tags, punctuation, embedded `#`, identity, display spelling, sorting, and new-tag whitespace handling.
-- Folder identity/descendant matching. Legacy filtering uses normalized substrings rather than strict folder-ID comparison.
-- Query phrase/token behavior, punctuation semantics, and matching across fields beyond the stated field coverage.
-- Measured performance, timing targets, fixture shape, debounce duration, and rendered-row bound.
+- Real-profile performance, timing targets, additional fixture shapes, debounce duration, and rendered-row bound. T-01 records the initial synthetic fixture and baseline.
 - Angular/Node versions, test runner, permission strategy, and minimum Chrome version.
 - Initial folder visibility, v2.0 typography/dimensions, and v2.2 defaults/bounds/palettes.
 - The v2.3 popup-close default and verified lifecycle limits.
