@@ -47,6 +47,10 @@ try {
   const elapsed = performance.now() - started;
   const liveRows = await page.locator('article.bookmark').count();
   assert(liveRows > 0 && liveRows <= 24, `10,001 records must have bounded live rows, saw ${liveRows}`);
+  await page.getByRole('button', { name: '#C++', exact: true }).click();
+  await page.getByText('1 of 10001 bookmarks', { exact: true }).waitFor();
+  await page.getByRole('button', { name: '#C++', exact: true }).click();
+  await page.getByText('10001 of 10001 bookmarks', { exact: true }).waitFor();
   await page.locator('cdk-virtual-scroll-viewport').evaluate(element => { element.scrollTop = element.scrollHeight; element.dispatchEvent(new Event('scroll')); });
   await page.getByRole('button', { name: 'Scale bookmark 9999', exact: true }).waitFor();
   assert(await page.locator('article.bookmark').count() <= 24);

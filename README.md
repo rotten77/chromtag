@@ -6,6 +6,8 @@ Chromtag is a Chrome extension for browsing and editing Chrome bookmarks. Hashta
 
 E-20 implementation is in progress. The standalone Angular popup now builds from `src/`; manifest source and preserved icons live in `public/`. The version 1.8 reference remains in ignored `.local/legacy/`.
 
+The current popup supports nested bookmarks and a virtualized list. Select blue tags to filter; multiple selected tags must all match. Select a tag again to clear it.
+
 The planned releases are:
 
 - **2.0:** Angular popup, one transient bookmark model per refresh, virtualized rows, safe rendering, and Unicode search across titles, folders, and URLs.

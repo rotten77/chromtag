@@ -14,3 +14,7 @@ main { overflow: auto; min-height: 0; }
 .tag, .folder { border: 0; border-radius: .25rem; color: white; padding: .1rem .3rem; overflow-wrap: anywhere; }
 .tag { background: var(--tag-color); }
 .folder { background: var(--folder-color); }
+.cloud { display: flex; flex-wrap: wrap; gap: .25rem; padding: .35rem .5rem; max-height: 110px; overflow: auto; flex-shrink: 0; }
+.cloud:empty { display: none; }
+.cloud .active { background: #a82e28; box-shadow: inset 0 0 0 1px currentColor; }
+.result-count { margin: 0; padding: .25rem .5rem; border-top: 1px solid var(--border-color); font-size: .85em; }

@@ -17,3 +17,22 @@ it('renders user text literally and loads only once on popup creation', async ()
   root.querySelector<HTMLButtonElement>('.title')!.click();
   expect(create).toHaveBeenCalledWith({ url: 'https://example.org/<script>' });
 });
+
+it('toggles multiple normalized tags immediately and combines them with AND', async () => {
+  TestBed.configureTestingModule({ providers: [{ provide: CHROME, useValue: {
+    bookmarks: { getTree: vi.fn().mockResolvedValue([
+      { id: '1', title: 'Both #C++ #中文', url: 'https://example.org/1' },
+      { id: '2', title: 'One #c++', url: 'https://example.org/2' },
+    ]) }, tabs: { create: vi.fn() },
+  } }] });
+  const fixture = TestBed.createComponent(App);
+  await fixture.whenStable();
+  fixture.componentInstance.toggleTag('c++');
+  expect(fixture.componentInstance.filtered()).toHaveLength(2);
+  fixture.componentInstance.toggleTag('中文');
+  expect(fixture.componentInstance.filtered().map(b => b.id)).toEqual(['1']);
+  fixture.componentInstance.toggleTag('c++');
+  expect(fixture.componentInstance.filters().tags).toEqual(new Set(['中文']));
+  fixture.detectChanges();
+  expect(fixture.nativeElement.querySelector('.tag-cloud [aria-pressed="true"]').textContent).toContain('中文');
+});

@@ -7,8 +7,8 @@ Updated: 2026-11-12
 - Branch: modernizing-chromtag. T-00/T-01 are user-verified; T-02 verification remains pending (8c5cc5b).
 - Jan authorized implementing the entire E-20 sequentially, with per-task commits/logs. User verification remains pending. E-21 and later releases are outside this batch.
 - Angular 22 / TypeScript 6 / native Chrome APIs target Chrome 157+. Loadable output: dist/chromtag/browser/. No legacy runtime libraries or persisted bookmark/index data.
-- Implemented CDK virtualization with overscan, cached normalized phrase matching with grapheme boundaries, folder subtree intervals, and model-only filter predicates. Passed 23 Angular tests including 12,000 deep folders/records and 8 manifest tests. Stable Chrome rendered 10 of 10,001 native synthetic bookmarks, reached the final row, and recorded 137.3 ms startup. Editor-row verification remains assigned to US-07.
-- Latest passing HTML report: .local/test-results/2026-11-12T17-40-02.012Z-7796.html. Failed reports are retained too.
+- Implemented the sorted normalized tag cloud, first-spelling display, multiple AND-combined tag toggles, active button state, and immediate model filtering. Passed 24 Angular tests, 8 manifest tests, and native Chrome tag-filter checks across 10,001 records.
+- Latest passing HTML report: .local/test-results/2026-11-12T17-41-47.061Z-20504.html. Failed reports are retained too.
 - Stable Chrome 157.0.8103.51 integration uses a fresh temporary profile with synthetic bookmarks, never the user's profile. A representative real profile is unavailable.
 
 ## E-20 progress
@@ -24,7 +24,7 @@ Updated: 2026-11-12
 | T-06 | Document and verify | Maintain documentation/test coverage; validate the built extension in Chrome. | Not started | T-06 |
 | T-07 | Release version 2.0 | Set version 2.0, document development attribution, and remove replaced runtime code. | Not started | T-07 |
 | US-01 | Browse Chrome bookmarks | Find and open a saved page from the popup. | Not started | US-01 |
-| US-02 | See and filter by tags | Find bookmarks by title hashtags. | Not started | US-02 |
+| US-02 | See and filter by tags | Find bookmarks by title hashtags. | Ready for verification | US-02 |
 | US-03 | Filter by bookmark folder | Narrow the collection by folder. | Not started | US-03 |
 | US-04 | Search bookmarks | Find bookmarks across titles, folders, and URLs. | Not started | US-04 |
 | US-05 | Reset filters | Return to the full supported collection with 1 action. | Not started | US-05 |
@@ -34,7 +34,7 @@ Updated: 2026-11-12
 
 ## Next step
 
-Continue US-02 tag filtering, then folder/search/reset and editing stories under the batch authorization.
+Continue US-03 folder filtering under the E-20 batch authorization.
 
 ## Later work
 
