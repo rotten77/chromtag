@@ -40,6 +40,8 @@ The user verified T-01 on 2026-11-12. It has a reproducible diagnostic runner an
 
 T-02 provides the [manifest audit](../docs/manifest-audit.md), source manifest/icons in `public/`, and standalone source/package validation. The user selected `activeTab` with unavailable-metadata handling for US-06. T-02 awaits user verification. T-03 selected Angular 22 / TypeScript 6 / Chrome 157+ and verified asset copying, generated `index.html`, and native Chrome loadability.
 
+T-05 review follow-up on 2026-11-12: apply Jan's search-field, combined wrapping cloud, full-width/truncated bookmark row, and palette changes. Matching criteria are T-05-AC5 through T-05-AC8; [the layout test plan](../docs/test-plan.md) covers manual review. T-05 remains ready for verification after the follow-up; this request does not verify E-20.
+
 ### Feature stories
 
 These are the 8 supplied current-app stories, revised for the supplied modernization changes.

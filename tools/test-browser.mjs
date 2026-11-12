@@ -10,6 +10,23 @@ await mkdir(resolve('.local/test-results'), { recursive: true });
 async function screenshot(page, name) {
   await page.locator('body').screenshot({ path: resolve('.local/test-results', `${screenshotId}-${name}.png`) });
 }
+async function checkBookmarkWidth(page) {
+  const viewport = page.locator('cdk-virtual-scroll-viewport');
+  await viewport.scrollIntoViewIfNeeded();
+  const layout = await viewport.evaluate(element => {
+    const row = element.querySelector('article');
+    const edit = row.querySelector('.edit');
+    const title = row.querySelector('.title');
+    const url = row.querySelector('.url');
+    const bounds = node => ({ left: node.getBoundingClientRect().left, right: node.getBoundingClientRect().right });
+    return { width: element.clientWidth, scrollWidth: element.scrollWidth, viewport: bounds(element), row: bounds(row), edit: bounds(edit), title: bounds(title), titleTruncated: title.scrollWidth > title.clientWidth, urlTruncated: url.scrollWidth > url.clientWidth };
+  });
+  assert.equal(layout.scrollWidth, layout.width, 'Long bookmarks must not widen the viewport');
+  assert(Math.abs(layout.row.right - layout.row.left - layout.width) <= 1, 'Article fills all available viewport width');
+  assert(layout.edit.left >= layout.row.left && layout.edit.right <= layout.viewport.left + layout.width + 1, 'Edit stays inside the visible row');
+  assert(layout.title.right <= layout.edit.left, 'Truncated text does not overlap Edit');
+  assert(layout.titleTruncated && layout.urlTruncated, 'Long title and URL truncate with CSS');
+}
 async function targetCommand(session, sessionId, method, params = {}) {
   const id = ++commandId;
   let listener;
@@ -63,6 +80,19 @@ try {
   });
   await page.getByRole('button', { name: 'Refresh', exact: true }).click();
   await page.getByRole('button', { name: '<b>Saved page</b>', exact: true }).waitFor();
+  assert.equal(await page.locator('label.search').count(), 0);
+  assert.equal(await page.getByRole('searchbox', { name: 'Search bookmarks' }).getAttribute('placeholder'), 'Search...');
+  const cloudLayout = await page.locator('.filter-cloud').evaluate(cloud => {
+    const folders = cloud.querySelectorAll(':scope > .folder');
+    const lastFolder = folders[folders.length - 1];
+    const firstTag = cloud.querySelector(':scope > .tag');
+    return { adjacent: lastFolder.nextElementSibling === firstTag, sameLine: lastFolder.offsetTop === firstTag.offsetTop,
+      folderColor: getComputedStyle(lastFolder).backgroundColor, tagColor: getComputedStyle(firstTag).backgroundColor };
+  });
+  assert(cloudLayout.adjacent && cloudLayout.sameLine, 'Last folder and first tag share a wrapping flow and available line');
+  assert.equal(cloudLayout.folderColor, 'rgb(76, 175, 80)');
+  assert.equal(cloudLayout.tagColor, 'rgb(68, 138, 255)');
+  await screenshot(page, 'popup');
   assert.equal(await page.locator('article b').count(), 0, 'Bookmark markup must remain literal text');
   assert.equal(await page.getByRole('button', { name: 'Excluded javascript bookmark', exact: true }).count(), 0);
   assert.equal(await page.getByRole('button', { name: '#excluded', exact: true }).count(), 0);
@@ -106,6 +136,9 @@ try {
   await page.getByText('No matching bookmarks.', { exact: true }).waitFor();
   await search.fill('example.invalid/scale/9999');
   await page.getByText('1 of 10001 bookmarks', { exact: true }).waitFor();
+  await search.fill('example.invalid/scale/5000');
+  await page.getByRole('button', { name: /^Scale bookmark 5000 /u }).waitFor();
+  await checkBookmarkWidth(page);
   await search.fill('<b>Saved');
   await page.getByText('1 of 10001 bookmarks', { exact: true }).waitFor();
   await page.getByRole('button', { name: '#C++', exact: true }).click();
@@ -115,13 +148,24 @@ try {
   assert.equal(await search.inputValue(), '');
   assert.equal(await page.locator('.cloud [aria-pressed="true"]').count(), 0);
   await page.getByRole('button', { name: 'Hide folders', exact: true }).click();
-  await page.locator('.folder-cloud').waitFor({ state: 'detached' });
-  assert.equal(await page.locator('.folder-cloud').count(), 0);
+  await page.locator('.filter-cloud > .folder').first().waitFor({ state: 'detached' });
+  assert.equal(await page.locator('.filter-cloud > .folder').count(), 0);
   assert.equal(await page.evaluate(() => localStorage.length), 0);
   await page.reload();
   await page.getByRole('button', { name: 'Hide folders', exact: true }).waitFor();
-  assert.equal(await page.locator('.folder-cloud').count(), 1);
-  await screenshot(page, 'popup');
+  assert(await page.locator('.filter-cloud > .folder').count() > 1);
+  const fullCloud = await page.locator('.filter-cloud').evaluate(cloud => ({
+    height: cloud.clientHeight, scrollHeight: cloud.scrollHeight,
+    overflow: getComputedStyle(cloud).overflowY, tags: cloud.querySelectorAll(':scope > .tag').length,
+    sections: cloud.querySelectorAll('section').length,
+  }));
+  assert.equal(fullCloud.tags, 130);
+  assert.equal(fullCloud.sections, 0);
+  assert.equal(fullCloud.overflow, 'visible');
+  assert(fullCloud.scrollHeight <= fullCloud.height + 1, 'The entire cloud wraps without internal scrolling or clipping');
+  await page.locator('.filter-cloud > .tag').last().scrollIntoViewIfNeeded();
+  assert(await page.locator('.filter-cloud > .tag').last().isVisible(), 'All tags remain reachable through popup scrolling');
+  await screenshot(page, 'crowded');
   await page.locator('cdk-virtual-scroll-viewport').evaluate(element => { element.scrollTop = element.scrollHeight; element.dispatchEvent(new Event('scroll')); });
   await page.getByRole('button', { name: 'Edit Scale bookmark 9999', exact: true }).click();
   const dialog = page.getByRole('dialog', { name: 'Edit bookmark' });
@@ -160,7 +204,7 @@ try {
   const saved = await page.evaluate(async () => (await chrome.bookmarks.search({ url: 'https://example.invalid/edited' }))[0]);
   assert.equal(saved.title, 'Edited <b>literal</b> #C++ #中文');
   assert.equal(saved.parentId, folderId);
-  await page.locator('.tag-cloud').getByRole('button', { name: '#中文', exact: true }).waitFor();
+  await page.locator('.filter-cloud').getByRole('button', { name: '#中文', exact: true }).waitFor();
   const manager = await context.newPage();
   await manager.goto(`chrome://bookmarks/?id=${folderId}`);
   await manager.getByText(saved.title, { exact: true }).waitFor();
@@ -175,7 +219,7 @@ try {
   await page.getByText('0 of 10000 bookmarks', { exact: true }).waitFor();
   assert.equal(await page.evaluate(() => globalThis.treeReads), 3, 'Successful delete refreshes once');
   assert.equal(await page.evaluate(async () => (await chrome.bookmarks.search({ url: 'https://example.invalid/edited' })).length), 0);
-  await page.locator('.tag-cloud').getByRole('button', { name: '#中文', exact: true }).waitFor({ state: 'detached' });
+  await page.locator('.filter-cloud').getByRole('button', { name: '#中文', exact: true }).waitFor({ state: 'detached' });
   const activePage = await context.newPage();
   await activePage.goto('https://example.invalid/current');
   await activePage.bringToFront();
@@ -230,7 +274,10 @@ try {
     document.documentElement.style.setProperty('--popup-height', '500px');
   });
   await page.waitForFunction(() => Math.abs(document.querySelector('article.bookmark')?.getBoundingClientRect().height - 112) < 1);
-  await page.getByRole('button', { name: 'Edit <b>Saved page</b>', exact: true }).click();
+  await search.fill('example.invalid/scale/5000');
+  await page.getByText('1 of 10001 bookmarks', { exact: true }).waitFor();
+  await checkBookmarkWidth(page);
+  await page.locator('article.bookmark .edit').click();
   await dialog.waitFor();
   await dialog.getByLabel('Title', { exact: true }).fill('Long editable title 中文 café <b>literal</b> '.repeat(20));
   await screenshot(page, 'scaled');
@@ -240,6 +287,7 @@ try {
   await dialog.waitFor({ state: 'detached' });
   assert(await page.locator('article.bookmark').count() <= 24, 'Font scaling keeps virtual rows bounded');
   console.log('PASS: crowded 112-folder/130-tag clouds, long title/URL, keyboard trap/restore/Escape, CSS font/dimension scaling, and editor overflow.');
+  console.log('PASS: label-free Search... input, joined flowing cloud without internal scrolling, requested green/blue colors, full-width CSS-truncated articles, and always-visible Edit at both sizes.');
   console.log('PASS: activeTab missing-grant rejection and real action grant, default-folder creation, editor population, and cancel retaining creation.');
   console.log(`10,001 supported native synthetic bookmarks: startup ${elapsed.toFixed(1)} ms, ${liveRows} live rows; last row reached.`);
   assert.deepEqual(errors, [], 'No runtime or CSP errors');

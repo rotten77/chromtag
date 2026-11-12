@@ -34,7 +34,7 @@ it('toggles multiple normalized tags immediately and combines them with AND', as
   fixture.componentInstance.toggleTag('c++');
   expect(fixture.componentInstance.filters().tags).toEqual(new Set(['中文']));
   fixture.detectChanges();
-  expect(fixture.nativeElement.querySelector('.tag-cloud [aria-pressed="true"]').textContent).toContain('中文');
+  expect(fixture.nativeElement.querySelector('.filter-cloud .tag[aria-pressed="true"]').textContent).toContain('中文');
 });
 
 it('replaces or clears the active folder by ID and includes nested bookmarks', async () => {
@@ -113,7 +113,7 @@ it('shows folders initially, keeps visibility in memory, and resets on popup cre
   await first.whenStable();
   first.componentInstance.foldersVisible.set(false);
   first.detectChanges();
-  expect(first.nativeElement.querySelector('.folder-cloud')).toBeNull();
+  expect(first.nativeElement.querySelector('.filter-cloud .folder')).toBeNull();
   expect(setItem).not.toHaveBeenCalled();
   first.destroy();
   const reopened = TestBed.createComponent(App);
@@ -147,8 +147,8 @@ it('renders markup-significant folders, tags, title, and URL as literal text in 
   await fixture.whenStable();
   const root: HTMLElement = fixture.nativeElement;
   expect(root.querySelector('svg,script,article img')).toBeNull();
-  expect(root.querySelector('.folder-cloud')?.textContent).toContain('<svg/onload=alert(1)>');
-  expect(root.querySelector('.tag-cloud')?.textContent).toContain('#<svg/onload=1>');
+  expect(root.querySelector('.filter-cloud .folder')?.textContent).toContain('<svg/onload=alert(1)>');
+  expect(root.querySelector('.filter-cloud')?.textContent).toContain('#<svg/onload=1>');
   fixture.componentInstance.openEditor(fixture.componentInstance.filtered()[0]);
   fixture.detectChanges();
   await fixture.whenStable();

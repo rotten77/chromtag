@@ -27,6 +27,8 @@ The actual toolbar popup is a separate Chrome debugging target. The test inspect
 
 See the [criterion mapping](test-coverage.md). Deferred 2.1–2.3 behavior remains outside the 2.0 regression scope.
 
+The [popup layout test plan](test-plan.md) covers the review changes. Browser checks verify the joined cloud, exact colors and placeholder, and row geometry/truncation with Edit visible at both tested sizes. The expanded cloud scrolls with the popup, not inside a separate filter container.
+
 ## HTML reports
 
 Every `npm test` run saves an HTML file under ignored `.local/test-results/`. The filename and document contain UTC timestamps. Reports include pass/fail status, output, Node/manifest versions, source HEAD, and whether the working tree had changes.

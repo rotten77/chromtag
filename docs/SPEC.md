@@ -19,6 +19,8 @@ This document describes implemented version 2.0 behavior and planned versions 2.
 
 The popup retains the compact toolbar, colored clouds, bookmark rows, and editor overlay. The base font is 13 px in a 540 × 540 px popup. Stable Chrome tests cover long content, keyboard focus, overflow, and CSS scaling.
 
+The search field shows `Search...` without a visible label. Folders (`#4CAF50`) and tags (`#448AFF`) share 1 wrapping cloud without internal scrolling. Large clouds use popup scrolling. Full-width bookmark articles truncate long text with CSS and keep Edit visible. See T-05-AC5 through T-05-AC8 and [the layout test plan](test-plan.md).
+
 Search matches respect grapheme boundaries. A query cannot match only part of an accented character or emoji cluster.
 
 Angular standalone components and TypeScript replace the old UI libraries. One Chrome bookmark snapshot supplies the transient model per load/refresh. Model filtering and a virtualized list with overscan address large collections, including 10,000+ synthetic bookmarks.

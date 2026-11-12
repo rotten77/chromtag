@@ -7,7 +7,7 @@ Load the built extension as described in [README](../README.md#build-run-and-tes
 1. Select a bookmark title to open the page in a new tab.
 2. Select blue tags to filter bookmarks.
 3. Select a green folder to include that folder and its descendants.
-4. Enter a phrase in **Search bookmarks** to filter titles, immediate folder names, or URLs.
+4. Enter a phrase in the **Search...** field to filter titles, immediate folder names, or URLs.
 5. Select **Reset filter** to clear the search, tags, and folder.
 
 Multiple selected tags must all match. The selected folder and search phrase must also match. Select an active tag or folder again to clear that selection.
@@ -16,7 +16,9 @@ Search treats punctuation and spaces as literal text. Matching ignores case and 
 
 Tags begin with `#` at the title start or after whitespace. Punctuation stays in the tag: `#C++` and `#work,` are valid. A lone `#` and `word#tag` are plain text. The cloud combines equivalent normalized spellings and displays the first spelling found.
 
-The list omits `javascript:` bookmarks. Long titles and URLs have tooltips. Clouds and rows have separate scroll areas. **Hide folders** gives more room to bookmarks; **Show folders** restores the cloud.
+The list omits `javascript:` bookmarks. Rows fill the available list width. Long titles and URLs truncate with tooltips; **Edit** stays visible.
+
+Folders and tags share 1 wrapping cloud. The cloud has no separate scrollbar. Scroll the popup to reach labels in large clouds. The bookmark list scrolls separately. **Hide folders** removes folders from the combined cloud; **Show folders** restores them.
 
 Filters and folder visibility last only while the popup is open in version 2.0. Folders appear again when the popup opens.
 

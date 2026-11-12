@@ -22,7 +22,7 @@ Each row has an **Edit** button. The editor changes title, URL, tags, and folder
 
 **Add bookmark** saves the active page in Chrome's default folder and opens the editor. Cancelling that editor keeps the new bookmark. If Chrome withholds required page metadata, Chromtag shows a message and creates no bookmark.
 
-The compact popup uses a 13 px base font and a 540 × 540 px layout. Clouds and the editor scroll when content exceeds the available space. Appearance settings arrive in 2.2.
+The compact popup uses a 13 px base font and a 540 × 540 px layout. The `Search...` field has no visible label. Green folders (`#4CAF50`) and blue tags (`#448AFF`) share 1 wrapping cloud without its own scrollbar. Large clouds use popup scrolling. Bookmark rows fill the list width and truncate long text while keeping **Edit** visible. The editor scrolls as needed. Appearance settings arrive in 2.2.
 
 Release scope:
 
