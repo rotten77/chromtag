@@ -6,6 +6,7 @@ Chromtag is a Chrome bookmark browser/editor. Hashtags in native bookmark titles
 
 - Jan Zatloukal — developer; provides requirements and verifies implemented stories.
 - AI agents follow `AGENTS.md`, maintain documentation, and implement at most 1 story before user verification.
+- Finished tasks that pass applicable tests and checks trigger automatic session closing, log/status updates, and a commit under the standing authorization in `AGENTS.md`. User verification remains separate.
 
 ## Sources of truth
 

@@ -23,7 +23,8 @@ Updated: 2026-11-12
 - T-01 runner, documentation, and memory updates are committed in `3fd5f06` (Complete T-01 legacy baseline and matching decisions). Session closing notes are committed in `d3fdaea`.
 - T-02 is **Ready for verification**. The manifest audit, source assets, and standalone validator are complete for review. The user selected `activeTab` with unavailable-metadata handling; the staged manifest and US-06 criteria reflect that decision.
 - T-02 checks passed: manifest source validation, 8 validator regression tests, 45 relative documentation links, preservation of all 3 icons, syntax checks, and `git diff --check`. No actual Angular build or browser loadability check is available yet.
-- At session end on 2026-11-12, T-02 changes and closing notes remain uncommitted. T-02 verification is pending; T-03 has not started.
+- T-02 and its closing notes are committed in `8c5cc5b` (Complete T-02 manifest and API audit). T-02 verification is pending; T-03 has not started.
+- The user changed the agent workflow: finished tasks that pass applicable tests/checks now end the session, update log/status, and create a commit automatically. `AGENTS.md` records the standing authorization; user verification remains separate.
 
 ## Remaining work and decisions
 

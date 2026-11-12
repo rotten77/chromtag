@@ -31,8 +31,9 @@ If a required file is still a placeholder, do not infer its contents. Ask the us
 - Implement no more than one user story at a time.
 - If a request covers multiple stories, implement at most one story, report which story was completed, and wait for the user’s verification before starting another.
 - If it is unclear which story the user wants implemented, ask before choosing.
-- After implementing a story, stop. Summarize what changed and how the user can verify it, then wait for the user to confirm verification before beginning another story.
+- After implementing a story and passing applicable tests and checks, mark it ready for verification and complete the session-ending workflow below. Summarize what changed and how the user can verify it, then wait for the user to confirm verification before beginning another story.
 - Do not treat silence, elapsed time, or a new session as verification.
+- Passing tests, ending a session, and creating a commit do not substitute for explicit user verification.
 - When the user reports that a story is verified, update its status in `.memory/plan.md` if the plan defines statuses, then proceed only with the user’s next instruction.
 
 ## Documentation and memory upkeep
@@ -49,12 +50,14 @@ If a required file is still a placeholder, do not infer its contents. Ask the us
 
 ## Session ending and logs
 
-- At a natural stopping point, especially when one user story is ready for verification, suggest that the session can end.
-- When the user ends the session or asks to wrap up, create or update that day’s log file using the `YYYY-MM-DD.md` filename format.
+- When a task is finished and applicable tests and checks pass, end the session automatically. Do not wait for a separate request to wrap up or commit.
+- Before ending a session, create or update that day's log file using the `YYYY-MM-DD.md` filename format. This also applies when the user explicitly ends the session or asks to wrap up.
 - If there is more than one session on a day, add a separate heading for each session in the same dated file. Use a short session name or ID in the heading.
 - Record a concise summary of work completed, decisions made, remaining issues, and next steps. Do not record secrets or credentials.
-- Update `.memory/project-status.md` and `.memory/project-context.md` only when the session changes information those files are meant to hold.
-- Suggest a concise commit message for the completed work. Do not create a commit unless the user asks.
+- Update `.memory/project-status.md` with the completed work, verification state, remaining issues, and next steps. Update `.memory/project-context.md` when durable project information changes.
+- Commit the completed, tested work together with its related documentation, log, and status updates. This instruction provides standing authorization; do not ask for separate commit approval.
+- Stage only changes related to the completed task. Preserve unrelated work. If required work or checks remain incomplete, report that state instead of committing the task as completed.
+- Verify the commit and report its hash, check results, and any remaining user-verification steps in the final response.
 
 ## Local files and secrets
 

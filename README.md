@@ -63,4 +63,4 @@ The [documentation index](docs/README.md) links product requirements and histori
 
 Agents implement no more than 1 story at a time. They report completed work and wait for explicit user verification before another story. Relevant README, `docs/`, and `.memory/` updates accompany changes.
 
-At session end, agents record a dated log, update current state when needed, and suggest a commit message. Agents create commits only on request.
+After a task passes applicable tests and checks, agents automatically end the session, update the dated log and project status, and commit the completed work. User verification remains required before another story starts. See `AGENTS.md` for the full workflow.
