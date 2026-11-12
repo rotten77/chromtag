@@ -7,8 +7,8 @@ Updated: 2026-11-12
 - Branch: modernizing-chromtag. T-00/T-01 are user-verified; T-02 verification remains pending (8c5cc5b).
 - Jan authorized implementing the entire E-20 sequentially, with per-task commits/logs. User verification remains pending. E-21 and later releases are outside this batch.
 - Angular 22 / TypeScript 6 / native Chrome APIs target Chrome 157+. Loadable output: dist/chromtag/browser/. No legacy runtime libraries or persisted bookmark/index data.
-- Implemented active-page bookmarking with activeTab only, required metadata checks, Chrome's default destination, and immediate editor opening. Missing/revoked/restricted metadata never calls create. Stable Chrome proved missing-grant rejection, then actual Extensions.triggerAction granting access, native creation, editor metadata, and Cancel retaining the new bookmark. Passed 41 Angular and 8 manifest tests.
-- Latest passing HTML report: .local/test-results/2026-11-12T17-52-20.492Z-5592.html. Failed reports are retained too.
+- Completed browsing with nested rows, literal title/URL/folder/tags, edit controls, and new-tab opening. Native Chrome action was triggered and its separate popup target inspected: Chromtag rendered at 540 x 540. Native javascript bookmarks and their tags are excluded. Existing model tests cover 12,000 nested folders; all 41 Angular and 8 manifest tests pass.
+- Latest passing HTML report: .local/test-results/2026-11-12T17-55-25.697Z-32324.html. Failed reports are retained too.
 - Stable Chrome 157.0.8103.51 integration uses a fresh temporary profile with synthetic bookmarks, never the user's profile. A representative real profile is unavailable.
 
 ## E-20 progress
@@ -23,7 +23,7 @@ Updated: 2026-11-12
 | T-05 | Preserve and refine the design | Retain the compact interface and improve typography, scaling, overflow, and focus. | Not started | T-05 |
 | T-06 | Document and verify | Maintain documentation/test coverage; validate the built extension in Chrome. | Not started | T-06 |
 | T-07 | Release version 2.0 | Set version 2.0, document development attribution, and remove replaced runtime code. | Not started | T-07 |
-| US-01 | Browse Chrome bookmarks | Find and open a saved page from the popup. | Not started | US-01 |
+| US-01 | Browse Chrome bookmarks | Find and open a saved page from the popup. | Ready for verification | US-01 |
 | US-02 | See and filter by tags | Find bookmarks by title hashtags. | Ready for verification | US-02 |
 | US-03 | Filter by bookmark folder | Narrow the collection by folder. | Ready for verification | US-03 |
 | US-04 | Search bookmarks | Find bookmarks across titles, folders, and URLs. | Ready for verification | US-04 |
@@ -34,7 +34,7 @@ Updated: 2026-11-12
 
 ## Next step
 
-Complete US-01 action/browsing evidence, then T-05 design and T-06/T-07 verification/release tasks.
+Continue T-05 compact design/overflow/focus checks, then T-06 documentation and T-07 version 2.0.
 
 ## Later work
 

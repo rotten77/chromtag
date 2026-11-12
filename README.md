@@ -8,6 +8,8 @@ E-20 implementation is in progress. The standalone Angular popup now builds from
 
 The current popup supports nested bookmarks and a virtualized list. Select blue tags to filter; multiple selected tags must all match. Select a tag again to clear it.
 
+Select a bookmark title to open its URL in a new tab. Rows show the URL, immediate folder, tags, and an edit control. The list excludes `javascript:` bookmarks.
+
 Select a green folder to include its descendants. Select the active folder again to clear it. Folder and tag filters combine.
 
 Search matches a literal phrase in the full title, immediate folder name, or URL after a short delay. Matching ignores case and preserves accents.

@@ -3,6 +3,26 @@ import { chromium } from 'playwright';
 import { resolve } from 'node:path';
 import { validateManifest } from './validate-manifest.mjs';
 
+let commandId = 0;
+async function targetCommand(session, sessionId, method, params = {}) {
+  const id = ++commandId;
+  let listener;
+  let timer;
+  const response = new Promise((done, reject) => {
+    timer = setTimeout(() => reject(new Error(`Popup CDP command timed out: ${method}`)), 5000);
+    listener = event => {
+      if (event.sessionId !== sessionId) return;
+      const message = JSON.parse(event.message);
+      if (message.id === id) message.error ? reject(new Error(message.error.message)) : done(message.result);
+    };
+    session.on('Target.receivedMessageFromTarget', listener);
+  });
+  try {
+    await session.send('Target.sendMessageToTarget', { sessionId, message: JSON.stringify({ id, method, params }) });
+    return await response;
+  } finally { clearTimeout(timer); session.off('Target.receivedMessageFromTarget', listener); }
+}
+
 await validateManifest(resolve('dist/chromtag/browser'), { built: true });
 // Chrome's test-only CDP loading uses a fresh temporary profile, never the user's profile.
 const context = await chromium.launchPersistentContext('', {
@@ -30,10 +50,13 @@ try {
     const folder = await chrome.bookmarks.create({ title: '<Folder> café' });
     const nested = await chrome.bookmarks.create({ parentId: folder.id, title: 'Nested' });
     await chrome.bookmarks.create({ parentId: nested.id, title: '<b>Saved page</b> #C++', url: 'https://example.invalid/test' });
+    await chrome.bookmarks.create({ title: 'Excluded javascript bookmark #excluded', url: 'javascript:alert(1)' });
   });
   await page.getByRole('button', { name: 'Refresh', exact: true }).click();
   await page.getByRole('button', { name: '<b>Saved page</b>', exact: true }).waitFor();
   assert.equal(await page.locator('article b').count(), 0, 'Bookmark markup must remain literal text');
+  assert.equal(await page.getByRole('button', { name: 'Excluded javascript bookmark', exact: true }).count(), 0);
+  assert.equal(await page.getByRole('button', { name: '#excluded', exact: true }).count(), 0);
   const opened = context.waitForEvent('page');
   await page.getByRole('button', { name: '<b>Saved page</b>', exact: true }).click();
   const tab = await opened;
@@ -132,6 +155,26 @@ try {
   assert.equal(await page.evaluate(async () => (await chrome.bookmarks.search({ url: 'https://example.invalid/current' })).length), 0, 'Missing grant must not create a bookmark');
   const { targetInfos } = await session.send('Target.getTargets', { filter: [{ type: 'tab', exclude: false }] });
   await session.send('Extensions.triggerAction', { id, targetId: targetInfos.find(target => target.url === activePage.url()).targetId });
+  const mainTarget = await (await context.newCDPSession(page)).send('Target.getTargetInfo');
+  let actionTarget;
+  for (let attempt = 0; attempt < 100 && !actionTarget; attempt++) {
+    actionTarget = (await session.send('Target.getTargets', { filter: [{}] })).targetInfos.find(target =>
+      target.type === 'page' && target.url === page.url() && target.targetId !== mainTarget.targetInfo.targetId);
+    if (!actionTarget) await new Promise(done => setTimeout(done, 50));
+  }
+  assert(actionTarget, 'The native extension action must open its registered popup');
+  // Chrome's toolbar popup is a CDP target outside Playwright's normal tab list.
+  const { sessionId } = await session.send('Target.attachToTarget', { targetId: actionTarget.targetId, flatten: false });
+  const popupResult = await targetCommand(session, sessionId, 'Runtime.evaluate', {
+    expression: `new Promise(done => { const check = () => document.querySelector('header') ? done({title: document.title, text: document.body.innerText, width: document.body.offsetWidth, height: document.body.offsetHeight}) : setTimeout(check, 10); check(); })`,
+    awaitPromise: true, returnByValue: true,
+  });
+  assert.equal(popupResult.result.value.title, 'Chromtag');
+  assert(popupResult.result.value.text.includes('Add bookmark'));
+  assert.equal(popupResult.result.value.width, 540);
+  assert.equal(popupResult.result.value.height, 540);
+  await session.send('Target.detachFromTarget', { sessionId });
+  console.log('PASS: native extension action rendered its registered 540 × 540 popup.');
   await activePage.bringToFront();
   await page.getByRole('button', { name: 'Add bookmark', exact: true }).click();
   await dialog.waitFor();
@@ -145,7 +188,7 @@ try {
   assert.equal(await page.evaluate(() => globalThis.treeReads), 4, 'Add refreshes the tree once');
   await activePage.close();
   console.log('PASS: activeTab missing-grant rejection and real action grant, default-folder creation, editor population, and cancel retaining creation.');
-  console.log(`10,001 native synthetic bookmarks: startup ${elapsed.toFixed(1)} ms, ${liveRows} live rows; last row reached.`);
+  console.log(`10,001 supported native synthetic bookmarks: startup ${elapsed.toFixed(1)} ms, ${liveRows} live rows; last row reached.`);
   assert.deepEqual(errors, [], 'No runtime or CSP errors');
   console.log('PASS: loadable extension, native bookmark snapshot, literal rendering, new-tab navigation, no runtime/CSP errors.');
 } finally {

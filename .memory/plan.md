@@ -46,7 +46,7 @@ These are the 8 supplied current-app stories, revised for the supplied moderniza
 
 | ID | Story | User goal | Status | Criteria |
 |---|---|---|---|---|
-| US-01 | Browse Chrome bookmarks | Find and open a saved page from the popup. | Not started | US-01 |
+| US-01 | Browse Chrome bookmarks | Find and open a saved page from the popup. | Ready for verification | US-01 |
 | US-02 | See and filter by tags | Find bookmarks by title hashtags. | Ready for verification | US-02 |
 | US-03 | Filter by bookmark folder | Narrow the collection by folder. | Ready for verification | US-03 |
 | US-04 | Search bookmarks | Find bookmarks across titles, folders, and URLs. | Ready for verification | US-04 |
