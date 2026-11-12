@@ -36,3 +36,26 @@ it('toggles multiple normalized tags immediately and combines them with AND', as
   fixture.detectChanges();
   expect(fixture.nativeElement.querySelector('.tag-cloud [aria-pressed="true"]').textContent).toContain('中文');
 });
+
+it('replaces or clears the active folder by ID and includes nested bookmarks', async () => {
+  TestBed.configureTestingModule({ providers: [{ provide: CHROME, useValue: {
+    bookmarks: { getTree: vi.fn().mockResolvedValue([{ id: '0', title: '', children: [
+      { id: '1', title: 'Parent', children: [{ id: '2', title: 'Same', children: [{ id: '3', title: 'Inside #x', url: 'https://a.invalid' }] }] },
+      { id: '4', title: 'Same', children: [{ id: '5', title: 'Outside #y', url: 'https://b.invalid' }] },
+    ] }]) }, tabs: { create: vi.fn() },
+  } }] });
+  const fixture = TestBed.createComponent(App);
+  await fixture.whenStable();
+  const app = fixture.componentInstance;
+  app.toggleFolder('1');
+  expect(app.filtered().map(b => b.id)).toEqual(['3']);
+  app.toggleTag('x');
+  app.toggleFolder('4');
+  expect(app.filtered()).toHaveLength(0);
+  app.toggleTag('x');
+  expect(app.filtered().map(b => b.id)).toEqual(['5']);
+  app.toggleFolder('4');
+  expect(app.filtered()).toHaveLength(2);
+  fixture.detectChanges();
+  expect(fixture.nativeElement.textContent).toContain('Parent / Same [2]');
+});

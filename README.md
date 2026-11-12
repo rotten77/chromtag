@@ -8,6 +8,8 @@ E-20 implementation is in progress. The standalone Angular popup now builds from
 
 The current popup supports nested bookmarks and a virtualized list. Select blue tags to filter; multiple selected tags must all match. Select a tag again to clear it.
 
+Select a green folder to include its descendants. Select the active folder again to clear it. Folder and tag filters combine.
+
 The planned releases are:
 
 - **2.0:** Angular popup, one transient bookmark model per refresh, virtualized rows, safe rendering, and Unicode search across titles, folders, and URLs.

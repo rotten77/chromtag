@@ -23,7 +23,8 @@ try {
   await page.getByText('No bookmarks yet.', { exact: true }).waitFor();
   await page.evaluate(async () => {
     const folder = await chrome.bookmarks.create({ title: '<Folder> café' });
-    await chrome.bookmarks.create({ parentId: folder.id, title: '<b>Saved page</b> #C++', url: 'https://example.invalid/test' });
+    const nested = await chrome.bookmarks.create({ parentId: folder.id, title: 'Nested' });
+    await chrome.bookmarks.create({ parentId: nested.id, title: '<b>Saved page</b> #C++', url: 'https://example.invalid/test' });
   });
   await page.getByRole('button', { name: 'Refresh', exact: true }).click();
   await page.getByRole('button', { name: '<b>Saved page</b>', exact: true }).waitFor();
@@ -50,6 +51,10 @@ try {
   await page.getByRole('button', { name: '#C++', exact: true }).click();
   await page.getByText('1 of 10001 bookmarks', { exact: true }).waitFor();
   await page.getByRole('button', { name: '#C++', exact: true }).click();
+  await page.getByText('10001 of 10001 bookmarks', { exact: true }).waitFor();
+  await page.getByRole('button', { name: '<Folder> café', exact: true }).click();
+  await page.getByText('1 of 10001 bookmarks', { exact: true }).waitFor();
+  await page.getByRole('button', { name: '<Folder> café', exact: true }).click();
   await page.getByText('10001 of 10001 bookmarks', { exact: true }).waitFor();
   await page.locator('cdk-virtual-scroll-viewport').evaluate(element => { element.scrollTop = element.scrollHeight; element.dispatchEvent(new Event('scroll')); });
   await page.getByRole('button', { name: 'Scale bookmark 9999', exact: true }).waitFor();

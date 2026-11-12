@@ -7,8 +7,8 @@ Updated: 2026-11-12
 - Branch: modernizing-chromtag. T-00/T-01 are user-verified; T-02 verification remains pending (8c5cc5b).
 - Jan authorized implementing the entire E-20 sequentially, with per-task commits/logs. User verification remains pending. E-21 and later releases are outside this batch.
 - Angular 22 / TypeScript 6 / native Chrome APIs target Chrome 157+. Loadable output: dist/chromtag/browser/. No legacy runtime libraries or persisted bookmark/index data.
-- Implemented the sorted normalized tag cloud, first-spelling display, multiple AND-combined tag toggles, active button state, and immediate model filtering. Passed 24 Angular tests, 8 manifest tests, and native Chrome tag-filter checks across 10,001 records.
-- Latest passing HTML report: .local/test-results/2026-11-12T17-41-47.061Z-20504.html. Failed reports are retained too.
+- Implemented ID-based folder-cloud selection, ancestor/descendant filtering, disambiguated duplicate labels, active toggles, and combination with tags. Passed 25 Angular tests, 8 manifest tests, and stable Chrome ancestor-filter checks.
+- Latest passing HTML report: .local/test-results/2026-11-12T17-42-33.245Z-33192.html. Failed reports are retained too.
 - Stable Chrome 157.0.8103.51 integration uses a fresh temporary profile with synthetic bookmarks, never the user's profile. A representative real profile is unavailable.
 
 ## E-20 progress
@@ -25,7 +25,7 @@ Updated: 2026-11-12
 | T-07 | Release version 2.0 | Set version 2.0, document development attribution, and remove replaced runtime code. | Not started | T-07 |
 | US-01 | Browse Chrome bookmarks | Find and open a saved page from the popup. | Not started | US-01 |
 | US-02 | See and filter by tags | Find bookmarks by title hashtags. | Ready for verification | US-02 |
-| US-03 | Filter by bookmark folder | Narrow the collection by folder. | Not started | US-03 |
+| US-03 | Filter by bookmark folder | Narrow the collection by folder. | Ready for verification | US-03 |
 | US-04 | Search bookmarks | Find bookmarks across titles, folders, and URLs. | Not started | US-04 |
 | US-05 | Reset filters | Return to the full supported collection with 1 action. | Not started | US-05 |
 | US-06 | Add the current page | Save the active tab and edit the new bookmark. | Not started | US-06 |
@@ -34,7 +34,7 @@ Updated: 2026-11-12
 
 ## Next step
 
-Continue US-03 folder filtering under the E-20 batch authorization.
+Continue US-04 literal Unicode search.
 
 ## Later work
 
