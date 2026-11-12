@@ -26,15 +26,17 @@ These tasks retain the supplied steps 1–7 and support the feature stories belo
 
 | ID | Task | Goal | Status | Criteria |
 |---|---|---|---|---|
-| T-01 | Define and baseline behavior | Establish behavior, resolve semantics, and measure legacy large-library failure. | Ready for verification | T-01 |
-| T-02 | Audit the manifest | Retain MV3; verify metadata, assets, permissions, and compatibility. | Not started | T-02 |
+| T-01 | Define and baseline behavior | Establish behavior, resolve semantics, and measure legacy large-library failure. | Verified | T-01 |
+| T-02 | Audit the manifest | Retain MV3; verify metadata, assets, permissions, and compatibility. | Ready for verification | T-02 |
 | T-03 | Rebuild the popup with Angular | Establish the standalone TypeScript popup, build, safe bindings, and transient model. | Not started | T-03 |
 | T-04 | Fix scale and search | Filter the model, virtualize rows with overscan, and support Unicode safely. | Not started | T-04 |
 | T-05 | Preserve and refine the design | Retain the compact interface and improve typography, scaling, overflow, and focus. | Not started | T-05 |
 | T-06 | Document and verify | Maintain documentation/test coverage; validate the built extension in Chrome. | Not started | T-06 |
 | T-07 | Release version 2.0 | Set version 2.0, document development attribution, and remove replaced runtime code. | Not started | T-07 |
 
-T-01 has a reproducible diagnostic runner and [synthetic measurements](../docs/legacy-measurements.md), including the 10,000-bookmark readiness timeout. The user approved hashtag, Unicode phrase-search, grapheme-boundary, and folder-filter semantics in the technical specification. T-01 awaits user verification. Real-profile measurements and target timing budgets remain future work.
+The user verified T-01 on 2026-11-12. It has a reproducible diagnostic runner and [synthetic measurements](../docs/legacy-measurements.md), including the 10,000-bookmark readiness timeout. The user approved hashtag, Unicode phrase-search, grapheme-boundary, and folder-filter semantics in the technical specification. Real-profile measurements and target timing budgets remain future work.
+
+T-02 provides the [manifest audit](../docs/manifest-audit.md), source manifest/icons in `public/`, and standalone source/package validation. The user selected `activeTab` with unavailable-metadata handling for US-06. T-02 awaits user verification. T-03 must finalize Angular compatibility and verify actual output copying, generated `index.html`, and runtime loadability.
 
 ### Feature stories
 
@@ -79,4 +81,4 @@ Follow version 2.2. Include lifecycle verification, version update, documentatio
 
 ## Next step
 
-Verify T-01. After user verification, the recommended next task is T-02: audit manifest metadata, assets, permissions, and API compatibility before Angular setup. Further work requires the user's next instruction.
+Verify T-02. After user verification, the recommended next task is T-03: set up the Angular popup workspace and validate the built package. Further work requires the user's next instruction.

@@ -86,16 +86,24 @@ Do not use `localStorage`, a separate bookmark store, an account, or a backend. 
 ### Manifest and packaging
 
 - Retain `manifest_version: 3`; audit metadata, icons, permissions, APIs, and Chrome compatibility.
-- Keep `bookmarks`. Confirm the least-privilege active-tab route before retaining or replacing `tabs`.
-- Add `storage` for versions 2.1–2.3 preferences. Set `minimum_chrome_version` to match selected APIs.
+- Keep `bookmarks` and replace broad `tabs` access with `activeTab`. The user approved this permission policy during T-02 on 2026-11-12.
+- Read current-page metadata only when Chrome exposes it under the action's temporary grant. If required metadata is unavailable, report that the page cannot be saved and create no incomplete bookmark. US-06 owns implementation and regression coverage.
+- Add `storage` for versions 2.1–2.3 preferences. Session storage requires Chrome 102 or a higher framework floor.
+- The staged `public/manifest.json` sets `minimum_chrome_version` to `90`, covering selected bookmark Promise APIs. T-03 must finalize or raise this API floor against the chosen Angular release and browser target before claiming release support.
+- Use native `chrome.*` Promise APIs. Use `Intl.Segmenter` with grapheme granularity for the approved search-boundary policy; its Chrome 87 floor is below the selected extension API floor.
 - Add no background service worker without a demonstrated need.
-- Put `manifest.json` and icons in `public/`; copy them into the production output.
+- Keep `manifest.json` and the preserved 16/48/128 px PNG icons in `public/`; copy them into the production output. Keep extension version `1.8` during preparation; T-07 sets `2.0` after applicable verification.
 - Set `action.default_popup` to built `index.html`. The loadable extension root is `dist/chromtag/browser/`.
 - Bundle local scripts/styles only. Comply with extension Content Security Policy (CSP), without remote code, inline scripts, or `eval`.
+- Declare `script-src 'self'; object-src 'none';` for extension pages. Do not add host permissions, content scripts, or a sandbox.
+
+The [manifest audit](../docs/manifest-audit.md) records sources, compatibility limits, and the handoff to Angular setup.
+Source checks use `node tools/validate-manifest.mjs --source`; validator tests use `node --test tools/validate-manifest.test.mjs`.
+Built validation uses `node tools/validate-manifest.mjs --built` after T-03 creates the production artifact. Source validation does not imply that artifact exists or is loadable.
 
 ### Planned tooling
 
-This configuration does not exist yet. Commands become available only after workspace setup.
+Application configuration does not exist yet. The commands below become available only after workspace setup. Standalone manifest checks already exist.
 
 | Operation | Required command or configuration |
 |---|---|
@@ -151,9 +159,10 @@ This configuration does not exist yet. Commands become available only after work
 
 ### US-06 — Add the current page
 
-- **US-06-AC1:** **Add bookmark** creates a Chrome bookmark with the active tab's title and URL.
+- **US-06-AC1:** **Add bookmark** creates a Chrome bookmark with the active tab's title and URL when Chrome exposes the required metadata under `activeTab`.
 - **US-06-AC2:** Without a specified destination, use Chrome's default bookmark folder.
 - **US-06-AC3:** Open the editor for the newly created bookmark.
+- **US-06-AC4:** If the active tab or required title/URL metadata is unavailable, show a clear unavailable-page message and make no bookmark-creation call. Cover restricted pages and an unavailable or revoked action grant without requesting broad `tabs` or host permissions.
 
 ### US-07 — Edit or delete a bookmark
 
@@ -224,7 +233,7 @@ The analysis suggests iterative traversal; adoption is not a separate confirmed 
 - **T-06-AC6:** Verify 10,000+ synthetic bookmarks and a representative real profile when available. Record baseline measurements and remaining limits.
 - **T-06-AC7:** Cover literal rendering of markup-significant titles/folders/URLs/tags, all filter combinations, and international-text cases.
 
-Regression tests are explicit supplied requirements. No tests or completed criterion-to-test mapping exist yet.
+Regression tests are explicit supplied requirements. Standalone manifest-validator regression checks exist. Application tests and their criterion-to-test mapping remain pending workspace setup.
 
 ### T-07 — Release version 2.0
 
@@ -287,7 +296,7 @@ These steps apply after the relevant implementation and tooling exist.
 ## Open decisions and evidence gaps
 
 - Real-profile performance, timing targets, additional fixture shapes, debounce duration, and rendered-row bound. T-01 records the initial synthetic fixture and baseline.
-- Angular/Node versions, test runner, permission strategy, and minimum Chrome version.
+- Angular/Node versions, application test runner, and the final framework/browser floor. T-02 stages Chrome 90 as an API floor; it is not yet a tested Angular compatibility claim.
 - Initial folder visibility, v2.0 typography/dimensions, and v2.2 defaults/bounds/palettes.
 - The v2.3 popup-close default and verified lifecycle limits.
 

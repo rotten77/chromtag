@@ -4,7 +4,7 @@ Chromtag is a Chrome extension for browsing and editing Chrome bookmarks. Hashta
 
 ## Project state
 
-The repository is prepared for modernization. The version 1.8 implementation is archived locally in ignored `.local/legacy/`. No Angular workspace or modernized extension exists yet.
+The repository is prepared for modernization. The version 1.8 implementation is archived locally in ignored `.local/legacy/`. Manifest source and preserved icons are staged in `public/`. No Angular workspace or modernized extension exists yet.
 
 The planned releases are:
 
@@ -21,13 +21,24 @@ Chrome's native bookmark tree remains the source of truth. Tags remain hashtags 
 
 Version 2.1 uses `chrome.storage.session` only for the query and selected tags/folder. Versions 2.2/2.3 use `chrome.storage.local` only for appearance/layout and bookmark-click preferences. Folder visibility remains popup-only.
 
-Version 1.8 already uses Manifest V3 with `bookmarks` and `tabs`. Modernization retains MV3, reviews the active-tab permission, and adds `storage` for preferences. The minimum supported Chrome version remains to be selected against the chosen APIs.
+Version 1.8 uses Manifest V3 with `bookmarks` and `tabs`. The staged manifest replaces `tabs` with `activeTab` and defers `storage` until preferences use it. The planned add feature will report unavailable current-page metadata without creating an incomplete bookmark. See the [manifest audit](docs/manifest-audit.md).
+
+The staged manifest retains MV3 and sets the selected API floor to Chrome 90. Angular setup must finalize the framework's browser floor; Chrome 90 is not a tested release-support claim.
 
 ## Build, run, and test
 
 Git ignores `node_modules/`, `dist/`, and `.angular/`, along with private files in `.local/`.
 
-Application build and test commands are not available yet. The following workflow is planned for Angular setup:
+Application build and test commands are not available yet. Standalone manifest checks are available:
+
+```powershell
+node tools/validate-manifest.mjs --source
+node --test tools/validate-manifest.test.mjs
+```
+
+The [manifest audit](docs/manifest-audit.md#validation) describes built-package checks and their limits. Do not load `public/` as an unpacked extension.
+
+The following workflow is planned for Angular setup:
 
 | Operation | Planned command | Description |
 |---|---|---|

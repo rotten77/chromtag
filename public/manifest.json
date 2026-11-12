@@ -1,0 +1,29 @@
+{
+  "manifest_version": 3,
+  "name": "ChromTag - tag your bookmarks",
+  "short_name": "ChromTag",
+  "description": "Tag your bookmarks with #hashtag!",
+  "version": "1.8",
+  "minimum_chrome_version": "90",
+  "icons": {
+    "16": "icon.png",
+    "48": "icon48.png",
+    "128": "icon128.png"
+  },
+  "action": {
+    "default_icon": {
+      "16": "icon.png",
+      "48": "icon48.png",
+      "128": "icon128.png"
+    },
+    "default_popup": "index.html",
+    "default_title": "Chromtag"
+  },
+  "permissions": [
+    "bookmarks",
+    "activeTab"
+  ],
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'none';"
+  }
+}

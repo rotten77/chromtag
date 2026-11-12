@@ -13,7 +13,7 @@ This document describes the intended versions 2.0–2.3. The modernization is no
 | Folders | Show a sorted flattened cloud. Select at most 1 folder by ID, including its descendants, and combine it with tags/search. Distinguish duplicate names with parent paths. | US-03 |
 | Search | Match 1 literal phrase within a full title, immediate folder name, or URL. Use NFC normalization and locale-independent lowercasing while preserving diacritic distinctions. | US-04 |
 | Reset | Clear the query and all tag/folder filters. | US-05 |
-| Add | Create a bookmark from the active tab and open its editor. | US-06 |
+| Add | Create a bookmark from the active tab and open its editor when required metadata is available. Otherwise show an unavailable-page message and create no bookmark. | US-06 |
 | Edit/delete | Edit title/URL, toggle or create tags, move folders, save, delete, or cancel unsaved fields. | US-07 |
 | Folder visibility | Show/hide the folder cloud for the current popup session only. | US-08 |
 
@@ -41,7 +41,11 @@ Bookmarks, folder relationships, and title hashtags remain in Chrome's native tr
 
 The extension uses no separate bookmark database, backend, account, or `localStorage`. Session/persistent preferences never contain bookmark records or indexes.
 
-Manifest V3 remains in use. The modernization audits metadata, icons, permissions, and compatibility. It retains `bookmarks`, reviews the least-privilege active-tab permission, and adds `storage` for preference releases. The minimum Chrome version follows the selected APIs; no value is set yet. No service worker is required without a demonstrated need.
+Manifest V3 remains in use. The staged manifest retains `bookmarks` and replaces broad `tabs` access with temporary `activeTab` access. Current-page bookmarking depends on Chrome exposing the required metadata; restricted pages or revoked access can prevent adding a page. Preference releases add `storage` when needed.
+
+The staged manifest sets a Chrome 90 API floor; Angular setup must finalize its framework/browser requirements. Version 2.1 needs at least Chrome 102 for session storage, retaining any higher framework floor. No service worker is required without a demonstrated need.
+
+The [manifest audit](manifest-audit.md) describes the staged source, permission rationale, and checks. The generated popup and loadable build remain pending Angular setup.
 
 ## Verification and unresolved decisions
 
