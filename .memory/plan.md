@@ -79,6 +79,18 @@ Follow version 2.1. Include default/bounds decisions, version update, documentat
 
 Follow version 2.2. Include lifecycle verification, version update, documentation, and regression tests.
 
+## After E-23 — Cleanup and final manual verification
+
+These tasks follow completion of all implementation work in E-00 through E-23. Criteria are in the technical specification under matching IDs.
+
+| ID | Task | Owner | Goal | Status | Criteria |
+|---|---|---|---|---|---|
+| T-08 | Remove automatic logging and commit instructions | Jan Zatloukal | Remove the automatic log and commit requirements from agent guidance. | Not started | T-08 |
+| T-09 | Prepare manual test materials | AI agent | Create a simple manual test case and a reusable test-report file/template for final verification and extended use. | Not started | T-09 |
+| T-10 | Perform final manual verification | Jan Zatloukal | Manually test all implemented features and report issues while using the extension for a user-chosen period. | Not started | T-10 |
+
+T-10 uses the materials from T-09. Jan performs the final overall verification. Existing story-by-story verification remains part of implementation.
+
 ## Next step
 
 Verify T-02. After user verification, the recommended next task is T-03: set up the Angular popup workspace and validate the built package. Further work requires the user's next instruction.

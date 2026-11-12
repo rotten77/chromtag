@@ -278,6 +278,25 @@ Exact defaults, supported bounds, and palette values remain undefined.
 
 The popup-close default remains undefined.
 
+## Post-implementation task acceptance criteria
+
+These tasks follow completion of the implementation epics E-00 through E-23.
+
+### T-08 — Remove automatic logging and commit instructions
+
+- **T-08-AC1:** Jan Zatloukal removes the automatic logging and commit requirements from `AGENTS.md` after implementation is complete.
+- **T-08-AC2:** Related workflow summaries in README and current project memory match the revised instructions.
+
+### T-09 — Prepare manual test materials
+
+- **T-09-AC1:** After implementation is complete, create a simple manual test case covering all implemented features, with actions and expected results.
+- **T-09-AC2:** Create a reusable test-report file/template that Jan can use to record manual results and report issues during extended use.
+
+### T-10 — Perform final manual verification
+
+- **T-10-AC1:** Jan manually tests all implemented features as the final overall verification, using the materials from T-09.
+- **T-10-AC2:** Jan uses the extension for a period he chooses and records discovered issues in the prepared test report.
+
 ## Verification procedure
 
 These steps apply after the relevant implementation and tooling exist.
