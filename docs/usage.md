@@ -18,7 +18,7 @@ Tags begin with `#` at the title start or after whitespace. Punctuation stays in
 
 The list omits `javascript:` bookmarks. Rows fill the available list width. Long titles and URLs truncate with tooltips; **Edit** stays visible.
 
-Folders and tags share 1 wrapping cloud. The cloud has no separate scrollbar. Scroll the popup to reach labels in large clouds. The bookmark list scrolls separately. **Hide folders** removes folders from the combined cloud; **Show folders** restores them.
+Folders and tags share 1 wrapping cloud. Selected labels are red (`#F44336`); hovered cloud buttons are dark (`#212121`). The cloud stays fixed without a scrollbar. Use **More filters**, **Previous filters**, and **First filters** to reach collapsed labels. Only the bookmark-list area scrolls in the main popup. **Hide folders** removes folders from the combined cloud; **Show folders** restores them.
 
 Filters and folder visibility last only while the popup is open in version 2.0. Folders appear again when the popup opens.
 

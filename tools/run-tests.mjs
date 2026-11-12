@@ -29,7 +29,7 @@ for (const [name, args] of commands) {
 const success = runs.every(run => run.code === 0);
 const report = resolve('.local/test-results', `${runId}.html`);
 let screenshots = '';
-for (const [suffix, label] of [['popup', 'Popup with one combined cloud'], ['crowded', 'Crowded cloud with popup scrolling'], ['editor', 'Editor'], ['scaled', '380 × 500 px with 16 px font']]) {
+for (const [suffix, label] of [['popup', 'Popup with one combined cloud'], ['crowded', 'Collapsed cloud with fixed controls and list-only scrolling'], ['editor', 'Editor'], ['scaled', '380 × 500 px with 16 px font']]) {
   try {
     const png = await readFile(resolve('.local/test-results', `${runId}-${suffix}.png`));
     screenshots += `<figure><figcaption>${escape(label)}</figcaption><img style="max-width:100%;border:1px solid #ccd" alt="${escape(label)}" src="data:image/png;base64,${png.toString('base64')}"></figure>`;

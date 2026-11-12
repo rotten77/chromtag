@@ -27,7 +27,7 @@ The actual toolbar popup is a separate Chrome debugging target. The test inspect
 
 See the [criterion mapping](test-coverage.md). Deferred 2.1–2.3 behavior remains outside the 2.0 regression scope.
 
-The [popup layout test plan](test-plan.md) covers the review changes. Browser checks verify the joined cloud, exact colors and placeholder, and row geometry/truncation with Edit visible at both tested sizes. The expanded cloud scrolls with the popup, not inside a separate filter container.
+The [popup layout test plan](test-plan.md) covers the review changes. Browser checks verify the joined cloud, exact colors and placeholder, and row geometry/truncation with Edit visible at both tested sizes. The cloud stays fixed with collapsed choices reachable through pagination. Browser tests check all 116 folders/130 tags, exact selected/hover colors, and list-only scrolling with stationary controls at both sizes.
 
 ## HTML reports
 

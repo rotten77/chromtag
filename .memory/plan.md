@@ -42,6 +42,8 @@ T-02 provides the [manifest audit](../docs/manifest-audit.md), source manifest/i
 
 T-05 review follow-up on 2026-11-12: apply Jan's search-field, combined wrapping cloud, full-width/truncated bookmark row, and palette changes. Matching criteria are T-05-AC5 through T-05-AC8; [the layout test plan](../docs/test-plan.md) covers manual review. T-05 remains ready for verification after the follow-up; this request does not verify E-20.
 
+Additional T-05 review: apply selected/hover colors and increase the popup height to 580 px. Jan chose a fixed cloud with collapsed excess labels; pagination keeps all filters reachable while only the bookmark-list area scrolls. Criteria T-05-AC6/AC8/AC9 and the layout test plan record this change. Verification remains pending.
+
 ### Feature stories
 
 These are the 8 supplied current-app stories, revised for the supplied modernization changes.

@@ -3,10 +3,11 @@ import { BookmarkStore } from './bookmark-store';
 import { BookmarkList } from './bookmark-list';
 import { Bookmark, filterBookmarks, Filters } from './model';
 import { BookmarkEditor } from './bookmark-editor';
+import { FilterCloud } from './filter-cloud';
 
 @Component({
   selector: 'app-root',
-  imports: [BookmarkList, BookmarkEditor],
+  imports: [BookmarkList, BookmarkEditor, FilterCloud],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="popup-content" [inert]="!!editing()">
@@ -14,16 +15,8 @@ import { BookmarkEditor } from './bookmark-editor';
     <input #search class="search-field" type="search" aria-label="Search bookmarks" [value]="queryInput()" (input)="onQuery(search.value)" placeholder="Search..." autocomplete="off">
     @if (store.error()) { <p role="alert">{{ store.error() }}</p> }
     @if (store.loading()) { <p role="status">Loading bookmarks…</p> }
-    <div id="filter-cloud" class="cloud filter-cloud" role="group" aria-label="Bookmark filters">
-      @if (foldersVisible()) {
-      @for (folder of store.model().folders; track folder.id) {
-        <button type="button" class="folder" [attr.aria-pressed]="filters().folderId === folder.id" [class.active]="filters().folderId === folder.id" (click)="toggleFolder(folder.id)">{{ folder.label }}</button>
-      }
-      }
-      @for (tag of store.model().tags; track tag.key) {
-        <button type="button" class="tag" [class.active]="filters().tags.has(tag.key)" [attr.aria-pressed]="filters().tags.has(tag.key)" (click)="toggleTag(tag.key)">#{{ tag.label }}</button>
-      }
-    </div>
+    <app-filter-cloud [folders]="store.model().folders" [tags]="store.model().tags" [showFolders]="foldersVisible()"
+      [selectedFolder]="filters().folderId" [selectedTags]="filters().tags" (folderSelected)="toggleFolder($event)" (tagSelected)="toggleTag($event)" />
     <app-bookmark-list [rows]="filtered()" (open)="store.open($event)" (edit)="openEditor($event)" />
     <p class="result-count" role="status">{{ filtered().length }} of {{ store.model().bookmarks.length }} bookmarks</p>
     @if (!store.loading() && !filtered().length) { <p>{{ store.model().bookmarks.length ? 'No matching bookmarks.' : 'No bookmarks yet.' }}</p> }

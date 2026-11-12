@@ -10,6 +10,45 @@ await mkdir(resolve('.local/test-results'), { recursive: true });
 async function screenshot(page, name) {
   await page.locator('body').screenshot({ path: resolve('.local/test-results', `${screenshotId}-${name}.png`) });
 }
+async function filterPage(page, name) {
+  const status = page.locator('.cloud-paging span');
+  const previous = await status.textContent();
+  await page.getByRole('button', { name, exact: true }).click();
+  await page.waitForFunction(text => document.querySelector('.cloud-paging span')?.textContent !== text, previous);
+  await page.locator('.filter-cloud[aria-busy="false"]').waitFor();
+}
+async function findFilter(page, name) {
+  const choice = page.locator('.filter-cloud').getByRole('button', { name, exact: true });
+  await page.locator('.filter-cloud[aria-busy="false"]').waitFor();
+  if (await choice.isVisible()) return choice;
+  const first = page.getByRole('button', { name: 'First filters', exact: true });
+  if (await first.isVisible() && await first.isEnabled()) await filterPage(page, 'First filters');
+  for (let attempt = 0; attempt < 1000; attempt++) {
+    if (await choice.isVisible()) return choice;
+    const more = page.getByRole('button', { name: 'More filters', exact: true });
+    assert(await more.isVisible() && await more.isEnabled(), `Filter must remain reachable: ${name}`);
+    await filterPage(page, 'More filters');
+  }
+  throw new Error(`Filter paging did not finish: ${name}`);
+}
+async function checkFixedLayout(page) {
+  const fixedBounds = () => page.evaluate(() => ['header', '.search-field', 'app-filter-cloud', 'footer'].map(selector => {
+    const rect = document.querySelector(selector).getBoundingClientRect();
+    return { top: rect.top, bottom: rect.bottom };
+  }));
+  const viewport = page.locator('cdk-virtual-scroll-viewport');
+  await viewport.evaluate(element => { element.scrollTop = 0; element.dispatchEvent(new Event('scroll')); });
+  const before = await fixedBounds();
+  await viewport.hover();
+  await page.mouse.wheel(0, 900);
+  await page.waitForFunction(() => document.querySelector('cdk-virtual-scroll-viewport').scrollTop > 0);
+  assert.deepEqual(await fixedBounds(), before, 'Search, cloud, header, and toolbar stay stationary when the list scrolls');
+  const scrollable = await page.evaluate(() => [...document.querySelectorAll('body, .popup-content, .filter-cloud, cdk-virtual-scroll-viewport')]
+    .filter(element => /auto|scroll/u.test(getComputedStyle(element).overflowY) && element.scrollHeight > element.clientHeight + 1)
+    .map(element => element.tagName));
+  assert.deepEqual(scrollable, ['CDK-VIRTUAL-SCROLL-VIEWPORT'], 'Only the bookmark-list area scrolls');
+  assert(await page.locator('.popup-content').evaluate(element => element.scrollHeight <= element.clientHeight + 1), 'The popup content fits its fixed height');
+}
 async function checkBookmarkWidth(page) {
   const viewport = page.locator('cdk-virtual-scroll-viewport');
   await viewport.scrollIntoViewIfNeeded();
@@ -92,6 +131,17 @@ try {
   assert(cloudLayout.adjacent && cloudLayout.sameLine, 'Last folder and first tag share a wrapping flow and available line');
   assert.equal(cloudLayout.folderColor, 'rgb(76, 175, 80)');
   assert.equal(cloudLayout.tagColor, 'rgb(68, 138, 255)');
+  for (const label of ['#C++', '<Folder> café']) {
+    const choice = await findFilter(page, label);
+    await choice.click();
+    await page.locator('.filter-cloud .active').waitFor();
+    await page.mouse.move(20, 20);
+    assert.equal(await choice.evaluate(element => getComputedStyle(element).backgroundColor), 'rgb(244, 67, 54)', 'Selected cloud label uses #F44336');
+    await choice.hover();
+    assert.equal(await choice.evaluate(element => getComputedStyle(element).backgroundColor), 'rgb(33, 33, 33)', 'Hovered cloud label uses #212121');
+    await choice.click();
+    await page.mouse.move(20, 20);
+  }
   await screenshot(page, 'popup');
   assert.equal(await page.locator('article b').count(), 0, 'Bookmark markup must remain literal text');
   assert.equal(await page.getByRole('button', { name: 'Excluded javascript bookmark', exact: true }).count(), 0);
@@ -116,13 +166,13 @@ try {
   const elapsed = performance.now() - started;
   const liveRows = await page.locator('article.bookmark').count();
   assert(liveRows > 0 && liveRows <= 24, `10,001 records must have bounded live rows, saw ${liveRows}`);
-  await page.getByRole('button', { name: '#C++', exact: true }).click();
+  await (await findFilter(page, '#C++')).click();
   await page.getByText('1 of 10001 bookmarks', { exact: true }).waitFor();
-  await page.getByRole('button', { name: '#C++', exact: true }).click();
+  await (await findFilter(page, '#C++')).click();
   await page.getByText('10001 of 10001 bookmarks', { exact: true }).waitFor();
-  await page.getByRole('button', { name: '<Folder> café', exact: true }).click();
+  await (await findFilter(page, '<Folder> café')).click();
   await page.getByText('1 of 10001 bookmarks', { exact: true }).waitFor();
-  await page.getByRole('button', { name: '<Folder> café', exact: true }).click();
+  await (await findFilter(page, '<Folder> café')).click();
   await page.getByText('10001 of 10001 bookmarks', { exact: true }).waitFor();
   await page.locator('cdk-virtual-scroll-viewport').evaluate(element => { element.scrollTop = element.scrollHeight; element.dispatchEvent(new Event('scroll')); });
   await page.getByRole('button', { name: 'Scale bookmark 9999', exact: true }).waitFor();
@@ -141,8 +191,8 @@ try {
   await checkBookmarkWidth(page);
   await search.fill('<b>Saved');
   await page.getByText('1 of 10001 bookmarks', { exact: true }).waitFor();
-  await page.getByRole('button', { name: '#C++', exact: true }).click();
-  await page.getByRole('button', { name: '<Folder> café', exact: true }).click();
+  await (await findFilter(page, '#C++')).click();
+  await (await findFilter(page, '<Folder> café')).click();
   await page.getByRole('button', { name: 'Reset filter', exact: true }).click();
   await page.getByText('10001 of 10001 bookmarks', { exact: true }).waitFor();
   assert.equal(await search.inputValue(), '');
@@ -154,6 +204,7 @@ try {
   await page.reload();
   await page.getByRole('button', { name: 'Hide folders', exact: true }).waitFor();
   assert(await page.locator('.filter-cloud > .folder').count() > 1);
+  await page.locator('.filter-cloud[aria-busy="false"]').waitFor();
   const fullCloud = await page.locator('.filter-cloud').evaluate(cloud => ({
     height: cloud.clientHeight, scrollHeight: cloud.scrollHeight,
     overflow: getComputedStyle(cloud).overflowY, tags: cloud.querySelectorAll(':scope > .tag').length,
@@ -161,10 +212,20 @@ try {
   }));
   assert.equal(fullCloud.tags, 130);
   assert.equal(fullCloud.sections, 0);
-  assert.equal(fullCloud.overflow, 'visible');
-  assert(fullCloud.scrollHeight <= fullCloud.height + 1, 'The entire cloud wraps without internal scrolling or clipping');
-  await page.locator('.filter-cloud > .tag').last().scrollIntoViewIfNeeded();
-  assert(await page.locator('.filter-cloud > .tag').last().isVisible(), 'All tags remain reachable through popup scrolling');
+  assert.equal(fullCloud.overflow, 'hidden');
+  assert(fullCloud.scrollHeight > fullCloud.height, 'Excess cloud labels collapse without a scrollbar');
+  const reached = new Set();
+  do {
+    for (const label of await page.locator('.filter-cloud button:not([inert])').allTextContents()) reached.add(label);
+    const more = page.getByRole('button', { name: 'More filters', exact: true });
+    if (!await more.isEnabled()) break;
+    await filterPage(page, 'More filters');
+  } while (true);
+  assert.equal([...reached].filter(label => label.startsWith('#')).length, 130, 'All 130 collapsed tags remain reachable by pagination');
+  assert.equal(reached.size, 246, 'All 116 folders and 130 tags remain reachable');
+  await filterPage(page, 'Previous filters');
+  await filterPage(page, 'First filters');
+  await checkFixedLayout(page);
   await screenshot(page, 'crowded');
   await page.locator('cdk-virtual-scroll-viewport').evaluate(element => { element.scrollTop = element.scrollHeight; element.dispatchEvent(new Event('scroll')); });
   await page.getByRole('button', { name: 'Edit Scale bookmark 9999', exact: true }).click();
@@ -204,7 +265,7 @@ try {
   const saved = await page.evaluate(async () => (await chrome.bookmarks.search({ url: 'https://example.invalid/edited' }))[0]);
   assert.equal(saved.title, 'Edited <b>literal</b> #C++ #中文');
   assert.equal(saved.parentId, folderId);
-  await page.locator('.filter-cloud').getByRole('button', { name: '#中文', exact: true }).waitFor();
+  await (await findFilter(page, '#中文')).waitFor();
   const manager = await context.newPage();
   await manager.goto(`chrome://bookmarks/?id=${folderId}`);
   await manager.getByText(saved.title, { exact: true }).waitFor();
@@ -245,9 +306,9 @@ try {
   assert.equal(popupResult.result.value.title, 'Chromtag');
   assert(popupResult.result.value.text.includes('Add bookmark'));
   assert.equal(popupResult.result.value.width, 540);
-  assert.equal(popupResult.result.value.height, 540);
+  assert.equal(popupResult.result.value.height, 580);
   await session.send('Target.detachFromTarget', { sessionId });
-  console.log('PASS: native extension action rendered its registered 540 × 540 popup.');
+  console.log('PASS: native extension action rendered its registered 540 × 580 popup.');
   await activePage.bringToFront();
   await page.getByRole('button', { name: 'Add bookmark', exact: true }).click();
   await dialog.waitFor();
@@ -274,6 +335,7 @@ try {
     document.documentElement.style.setProperty('--popup-height', '500px');
   });
   await page.waitForFunction(() => Math.abs(document.querySelector('article.bookmark')?.getBoundingClientRect().height - 112) < 1);
+  await checkFixedLayout(page);
   await search.fill('example.invalid/scale/5000');
   await page.getByText('1 of 10001 bookmarks', { exact: true }).waitFor();
   await checkBookmarkWidth(page);
@@ -287,7 +349,7 @@ try {
   await dialog.waitFor({ state: 'detached' });
   assert(await page.locator('article.bookmark').count() <= 24, 'Font scaling keeps virtual rows bounded');
   console.log('PASS: crowded 112-folder/130-tag clouds, long title/URL, keyboard trap/restore/Escape, CSS font/dimension scaling, and editor overflow.');
-  console.log('PASS: label-free Search... input, joined flowing cloud without internal scrolling, requested green/blue colors, full-width CSS-truncated articles, and always-visible Edit at both sizes.');
+  console.log('PASS: label-free Search... input, fixed cloud with reachable collapsed pages, requested default/selected/hover colors, full-width CSS-truncated articles, and always-visible Edit at both sizes.');
   console.log('PASS: activeTab missing-grant rejection and real action grant, default-folder creation, editor population, and cancel retaining creation.');
   console.log(`10,001 supported native synthetic bookmarks: startup ${elapsed.toFixed(1)} ms, ${liveRows} live rows; last row reached.`);
   assert.deepEqual(errors, [], 'No runtime or CSP errors');

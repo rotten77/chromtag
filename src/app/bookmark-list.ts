@@ -19,7 +19,7 @@ import { Bookmark } from './model';
       </article>
     </cdk-virtual-scroll-viewport>
   `,
-  styles: `:host { display: block; flex: 1 0 14rem; min-height: 14rem; min-width: 0; width: 100%; } cdk-virtual-scroll-viewport { height: 100%; width: 100%; } .bookmark { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-content: start; column-gap: .5rem; width: 100%; max-width: 100%; min-width: 0; overflow: hidden; } .title, .url, .labels { grid-column: 1; min-width: 0; overflow: hidden; white-space: nowrap; } .title, .url { display: block; max-width: 100%; text-overflow: ellipsis; } .labels { flex-wrap: nowrap; } .folder { max-width: 45%; overflow: hidden; text-overflow: ellipsis; flex-shrink: 0; } .tag { flex-shrink: 0; } .edit { grid-column: 2; grid-row: 1 / span 3; align-self: start; }`,
+  styles: `:host { display: block; flex: 1 1 0; min-height: 0; min-width: 0; width: 100%; } cdk-virtual-scroll-viewport { height: 100%; width: 100%; } .bookmark { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-content: start; column-gap: .5rem; width: 100%; max-width: 100%; min-width: 0; overflow: hidden; } .title, .url, .labels { grid-column: 1; min-width: 0; overflow: hidden; white-space: nowrap; } .title, .url { display: block; max-width: 100%; text-overflow: ellipsis; } .labels { flex-wrap: nowrap; } .folder { max-width: 45%; overflow: hidden; text-overflow: ellipsis; flex-shrink: 0; } .tag { flex-shrink: 0; } .edit { grid-column: 2; grid-row: 1 / span 3; align-self: start; }`,
 })
 export class BookmarkList implements AfterViewInit, OnDestroy {
   readonly rows = input.required<Bookmark[]>();
