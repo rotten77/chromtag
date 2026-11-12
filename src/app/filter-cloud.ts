@@ -23,7 +23,7 @@ interface FilterChoice { key: string; id: string; label: string; kind: 'folder' 
       }
     </div>
   `,
-  styles: `:host { display: flex; flex-direction: column; flex-shrink: 0; min-width: 0; max-height: min(16rem, calc(100% - 20rem)); } .filter-cloud { min-height: 0; max-height: 14rem; overflow: hidden; align-content: flex-start; } .filter-cloud > button { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; } .cloud-paging { display: flex; align-items: center; gap: .3rem; padding: .4rem .65rem 0; font-size: .85em; flex-shrink: 0; } .cloud-paging button { padding: .15em .35em; } .cloud-paging span { margin-left: auto; white-space: nowrap; }`,
+  styles: `:host { display: flex; flex-direction: column; flex-shrink: 0; min-width: 0; max-height: min(16rem, calc(100% - 20rem)); } .filter-cloud { min-height: 0; max-height: 14rem; overflow: hidden; align-content: flex-start; } .filter-cloud > button { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; } .cloud-paging { display: flex; align-items: center; gap: .3rem; padding: .4rem .65rem 0; font-size: .85em; flex-shrink: 0; } .cloud-paging button { padding: .15em .35em; } .cloud-paging button:disabled { cursor: default; } .cloud-paging span { margin-left: auto; white-space: nowrap; }`,
 })
 export class FilterCloud implements AfterViewInit, OnDestroy {
   readonly folders = input.required<Folder[]>();

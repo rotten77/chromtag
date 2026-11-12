@@ -260,6 +260,11 @@ try {
     return { navBottom: nav.bottom, cloudTop: cloud.top };
   });
   assert(pagingPosition.navBottom <= pagingPosition.cloudTop + 1, 'Paging controls stay above the filter choices');
+  for (const name of ['First filters', 'Previous filters']) {
+    const button = page.getByRole('button', { name, exact: true });
+    assert.equal(await button.isDisabled(), true, `${name} is disabled on the first page`);
+    assert.equal(await button.evaluate(element => getComputedStyle(element).cursor), 'default', `${name} keeps the standard cursor when disabled`);
+  }
   const reached = new Set();
   do {
     for (const label of await page.locator('.filter-cloud button:not([inert])').allTextContents()) reached.add(label);

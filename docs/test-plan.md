@@ -29,7 +29,7 @@ Expected: green folders and blue tags form 1 wrapping cloud. The first tag follo
 5. Select **Hide folders**.
 6. Select **Show folders**.
 
-Expected: pagination controls appear above the cloud. The cloud stays fixed with a 14rem height limit (182 px at the default 13 px font), constrained further at narrow/larger-font sizes to keep the bookmark list visible. The first page has no large empty area below its visible labels. Excess labels collapse without a scrollbar and remain reachable through pagination. Selected filters stay active when their page changes. Hiding folders keeps tags available. Criterion: T-05-AC6.
+Expected: pagination controls appear above the cloud; disabled controls keep the standard pointer cursor, not a loading cursor. The cloud stays fixed with a 14rem height limit (182 px at the default 13 px font), constrained further at narrow/larger-font sizes to keep the bookmark list visible. The first page has no large empty area below its visible labels. Excess labels collapse without a scrollbar and remain reachable through pagination. Selected filters stay active when their page changes. Hiding folders keeps tags available. Criterion: T-05-AC6.
 
 ## UI-04 — Long bookmark content
 
