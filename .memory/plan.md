@@ -103,7 +103,7 @@ Follow version 2.2. Include lifecycle verification, version update, documentatio
 
 Jan moved T-08 forward on 2026-11-12 and requested a final log and commit for this change. Future logs and commits require an explicit request. Jan verified T-08 on 2026-11-12.
 
-## After E-23 — Verification, cleanup, and plan archival
+## After E-23 — Verification, cleanup, plan archival, and issue review
 
 These tasks follow completion of all implementation work in E-00 through E-23. Criteria are in the technical specification under matching IDs.
 
@@ -113,8 +113,9 @@ These tasks follow completion of all implementation work in E-00 through E-23. C
 | T-10 | Perform final manual verification | Jan Zatloukal | Manually test all implemented features and report issues while using the extension for a user-chosen period. | Not started | T-10 |
 | T-11 | Clean the repository for the current version | AI agent | Remove obsolete legacy/work files, review user documentation, and update screenshots after final testing. | Not started | T-11 |
 | T-12 | Archive the completed plan | AI agent | Archive the modernization plan after repository cleanup and update references to it. | Not started | T-12 |
+| T-14 | Review open GitHub issues | Jan Zatloukal and AI agent | Check open issues on GitHub and decide what to do with each. | Not started | T-14 |
 
-T-10 uses the materials from T-09. Jan performs the final overall verification. T-11 follows that testing; T-12 follows cleanup. The final working repository contains the current version and its required supporting files. Existing story-by-story verification remains part of implementation.
+T-10 uses the materials from T-09. Jan performs the final overall verification. T-11 follows that testing; T-12 follows cleanup. T-14 follows plan archival. The final working repository contains the current version and its required supporting files. Existing story-by-story verification remains part of implementation.
 
 ## Next step
 

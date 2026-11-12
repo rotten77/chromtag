@@ -9,7 +9,7 @@ Chromtag is a Chrome bookmark browser/editor. Hashtags in native bookmark titles
 - The completed E-20 batch used Jan's explicit whole-epic authorization with sequential task commits/logs. Jan explicitly verified E-20 on 2026-11-12. The exception does not extend into E-21; future work follows the normal stopping rule unless Jan directs otherwise.
 - Jan moved T-08 ahead of T-13 on 2026-11-12 and asked the agent to remove automatic session-ending, logging, and commit requirements. Keep status/context current; write dated logs and commit only on request. User verification remains separate.
 - After E-23 implementation, Jan owns final manual verification of all features. An agent prepares a simple manual test case and report template for that verification and extended use; see T-09/T-10 in the plan.
-- After final testing, T-11 removes obsolete legacy/work files and refreshes documentation/screenshots so the working repository represents the current version. T-12 then archives the completed plan and updates references.
+- After final testing, T-11 removes obsolete legacy/work files and refreshes documentation/screenshots so the working repository represents the current version. T-12 then archives the completed plan and updates references. T-14 follows: review open GitHub issues with Jan and decide what to do with each.
 
 ## Sources of truth
 

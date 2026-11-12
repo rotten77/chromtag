@@ -333,6 +333,11 @@ These tasks follow completion of the implementation epics E-00 through E-23.
 - **T-12-AC1:** After final testing and repository cleanup are complete, archive the modernization plan with its recorded completion and verification states.
 - **T-12-AC2:** Update README, repository instructions, and current memory references so the archived plan remains findable and session startup does not depend on a missing active-plan file.
 
+### T-14 — Review open GitHub issues
+
+- **T-14-AC1:** After plan archival, check the repository's open GitHub issues.
+- **T-14-AC2:** Decide with Jan what to do with each open issue and record the outcome.
+
 ## Verification procedure
 
 These steps apply after the relevant implementation and tooling exist.
