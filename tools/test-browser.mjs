@@ -1,9 +1,15 @@
 import assert from 'node:assert/strict';
 import { chromium } from 'playwright';
 import { resolve } from 'node:path';
+import { mkdir } from 'node:fs/promises';
 import { validateManifest } from './validate-manifest.mjs';
 
 let commandId = 0;
+const screenshotId = process.env['CHROMTAG_TEST_RUN'] ?? new Date().toISOString().replaceAll(':', '-');
+await mkdir(resolve('.local/test-results'), { recursive: true });
+async function screenshot(page, name) {
+  await page.locator('body').screenshot({ path: resolve('.local/test-results', `${screenshotId}-${name}.png`) });
+}
 async function targetCommand(session, sessionId, method, params = {}) {
   const id = ++commandId;
   let listener;
@@ -29,6 +35,8 @@ const context = await chromium.launchPersistentContext('', {
   channel: 'chrome', headless: true, ignoreDefaultArgs: ['--disable-extensions'],
   args: ['--enable-unsafe-extension-debugging'],
 });
+context.setDefaultTimeout(10000);
+context.setDefaultNavigationTimeout(10000);
 try {
   const browser = context.browser();
   await context.route('https://example.invalid/**', route => route.fulfill({ contentType: 'text/html', body: '<title>Test destination</title>' }));
@@ -63,10 +71,11 @@ try {
   await tab.waitForURL('https://example.invalid/test');
   await tab.close();
   await page.evaluate(async () => {
+    await Promise.all(Array.from({ length: 112 }, (_, index) => chrome.bookmarks.create({ title: `Folder ${index} — long Unicode 中文 café` })));
     for (let batch = 0; batch < 40; batch++) {
       await Promise.all(Array.from({ length: 250 }, (_, index) => {
         const number = batch * 250 + index;
-        return chrome.bookmarks.create({ title: `Scale bookmark ${number} #scale`, url: `https://example.invalid/scale/${number}` });
+        return chrome.bookmarks.create({ title: `Scale bookmark ${number}${number === 5000 ? ' Long title <script> 中文 café '.repeat(20) : ''} #scale #tag${number % 128}`, url: `https://example.invalid/scale/${number}${number === 5000 ? '/long'.repeat(200) : ''}` });
       }));
     }
   });
@@ -111,14 +120,27 @@ try {
   await page.reload();
   await page.getByRole('button', { name: 'Hide folders', exact: true }).waitFor();
   assert.equal(await page.locator('.folder-cloud').count(), 1);
+  await screenshot(page, 'popup');
   await page.locator('cdk-virtual-scroll-viewport').evaluate(element => { element.scrollTop = element.scrollHeight; element.dispatchEvent(new Event('scroll')); });
   await page.getByRole('button', { name: 'Edit Scale bookmark 9999', exact: true }).click();
   const dialog = page.getByRole('dialog', { name: 'Edit bookmark' });
-  assert.equal(await dialog.getByLabel('Title', { exact: true }).inputValue(), 'Scale bookmark 9999 #scale');
+  assert.equal(await dialog.getByLabel('Title', { exact: true }).inputValue(), 'Scale bookmark 9999 #scale #tag15');
+  await page.waitForFunction(() => document.activeElement?.id === 'edit-title');
+  for (let index = 0; index < 8; index++) {
+    await page.keyboard.press('Tab');
+    assert(await dialog.evaluate(element => element.contains(document.activeElement)), 'Tab focus stays in the editor');
+  }
+  await screenshot(page, 'editor');
   await dialog.getByLabel('Title', { exact: true }).fill('Unsaved change');
   await dialog.getByRole('button', { name: 'Cancel', exact: true }).click();
   await dialog.waitFor({ state: 'detached' });
+  await page.waitForFunction(() => document.activeElement?.getAttribute('aria-label') === 'Edit Scale bookmark 9999');
   assert.equal(await page.evaluate(() => globalThis.treeReads), 1);
+  await page.getByRole('button', { name: 'Edit Scale bookmark 9999', exact: true }).click();
+  await dialog.waitFor();
+  await dialog.getByLabel('Title', { exact: true }).focus();
+  await page.keyboard.press('Escape');
+  await dialog.waitFor({ state: 'detached' });
   await page.getByRole('button', { name: 'Edit Scale bookmark 9999', exact: true }).click();
   await dialog.getByLabel('Title', { exact: true }).fill('Discard through overlay');
   await page.locator('.overlay').click({ position: { x: 5, y: 5 } });
@@ -187,6 +209,24 @@ try {
   assert.equal(added.title, 'Test destination', 'Cancel must retain the already created bookmark');
   assert.equal(await page.evaluate(() => globalThis.treeReads), 4, 'Add refreshes the tree once');
   await activePage.close();
+  await page.getByRole('button', { name: 'Reset filter', exact: true }).click();
+  await page.getByText('10001 of 10001 bookmarks', { exact: true }).waitFor();
+  await page.evaluate(() => {
+    document.documentElement.style.setProperty('--base-font-size', '16px');
+    document.documentElement.style.setProperty('--popup-width', '380px');
+    document.documentElement.style.setProperty('--popup-height', '500px');
+  });
+  await page.waitForFunction(() => Math.abs(document.querySelector('article.bookmark')?.getBoundingClientRect().height - 112) < 1);
+  await page.getByRole('button', { name: 'Edit <b>Saved page</b>', exact: true }).click();
+  await dialog.waitFor();
+  await dialog.getByLabel('Title', { exact: true }).fill('Long editable title 中文 café <b>literal</b> '.repeat(20));
+  await screenshot(page, 'scaled');
+  assert(await page.evaluate(() => document.body.scrollWidth <= document.body.clientWidth), 'No horizontal body overflow at scaled dimensions');
+  assert(await dialog.evaluate(element => element.scrollWidth <= element.clientWidth), 'Editor content must fit its width');
+  await dialog.getByRole('button', { name: 'Cancel', exact: true }).click();
+  await dialog.waitFor({ state: 'detached' });
+  assert(await page.locator('article.bookmark').count() <= 24, 'Font scaling keeps virtual rows bounded');
+  console.log('PASS: crowded 112-folder/130-tag clouds, long title/URL, keyboard trap/restore/Escape, CSS font/dimension scaling, and editor overflow.');
   console.log('PASS: activeTab missing-grant rejection and real action grant, default-folder creation, editor population, and cancel retaining creation.');
   console.log(`10,001 supported native synthetic bookmarks: startup ${elapsed.toFixed(1)} ms, ${liveRows} live rows; last row reached.`);
   assert.deepEqual(errors, [], 'No runtime or CSP errors');

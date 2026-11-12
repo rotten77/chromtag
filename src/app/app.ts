@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, inject, OnDestroy, signal, viewChild } from '@angular/core';
+import { afterNextRender, ChangeDetectionStrategy, Component, computed, inject, Injector, OnDestroy, signal, viewChild } from '@angular/core';
 import { BookmarkStore } from './bookmark-store';
 import { BookmarkList } from './bookmark-list';
 import { filterBookmarks, Filters } from './model';
@@ -11,7 +11,7 @@ import { BookmarkEditor } from './bookmark-editor';
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="popup-content" [inert]="!!editing()">
-    <header><strong>Chromtag</strong><button type="button" (click)="store.refresh()" [disabled]="store.loading() || store.busy()">Refresh</button></header>
+    <header><strong class="brand"><img src="icon.png" alt="">Chromtag</strong><button type="button" (click)="store.refresh()" [disabled]="store.loading() || store.busy()">Refresh</button></header>
     <label class="search">Search bookmarks<input #search type="search" [value]="queryInput()" (input)="onQuery(search.value)" placeholder="Title, folder, or URL" autocomplete="off"></label>
     @if (store.error()) { <p role="alert">{{ store.error() }}</p> }
     @if (store.loading()) { <p role="status">Loading bookmarks…</p> }
@@ -33,9 +33,10 @@ import { BookmarkEditor } from './bookmark-editor';
     <footer><button type="button" class="primary" [disabled]="store.busy() || store.loading()" (click)="addCurrentPage()">Add bookmark</button>
       <button type="button" (click)="resetFilters()">Reset filter</button>
       <button type="button" aria-controls="folder-cloud" [attr.aria-expanded]="foldersVisible()" (click)="foldersVisible.set(!foldersVisible())">{{ foldersVisible() ? 'Hide folders' : 'Show folders' }}</button>
+      <button type="button" class="close-popup" aria-label="Close popup" (click)="closePopup()">×</button>
     </footer>
     </div>
-    @if (editing(); as bookmark) { <app-bookmark-editor [bookmark]="bookmark" [model]="store.model()" (closed)="editing.set(null)" /> }
+    @if (editing(); as bookmark) { <app-bookmark-editor [bookmark]="bookmark" [model]="store.model()" (closed)="closeEditor()" /> }
   `,
 })
 export class App implements OnDestroy {
@@ -47,9 +48,23 @@ export class App implements OnDestroy {
   readonly foldersVisible = signal(true);
   readonly editing = signal<Bookmark | null>(null);
   private queryTimer?: ReturnType<typeof setTimeout>;
+  private readonly injector = inject(Injector);
+  private previousFocus?: HTMLElement;
   constructor() { void this.store.refresh(); }
-  openEditor(bookmark: Bookmark): void { this.store.error.set(''); this.editing.set(bookmark); }
+  openEditor(bookmark: Bookmark): void {
+    this.previousFocus = document.activeElement instanceof HTMLElement ? document.activeElement : undefined;
+    this.store.error.set(''); this.editing.set(bookmark);
+  }
+  closeEditor(): void {
+    this.editing.set(null);
+    afterNextRender(() => {
+      const focus = this.previousFocus?.isConnected ? this.previousFocus : document.querySelector<HTMLElement>('input[type="search"]');
+      focus?.focus();
+    }, { injector: this.injector });
+  }
+  closePopup(): void { window.close(); }
   async addCurrentPage(): Promise<void> {
+    this.previousFocus = document.activeElement instanceof HTMLElement ? document.activeElement : undefined;
     const bookmark = await this.store.addCurrentPage();
     if (bookmark) this.editing.set(bookmark);
   }

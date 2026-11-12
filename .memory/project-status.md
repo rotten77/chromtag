@@ -7,8 +7,8 @@ Updated: 2026-11-12
 - Branch: modernizing-chromtag. T-00/T-01 are user-verified; T-02 verification remains pending (8c5cc5b).
 - Jan authorized implementing the entire E-20 sequentially, with per-task commits/logs. User verification remains pending. E-21 and later releases are outside this batch.
 - Angular 22 / TypeScript 6 / native Chrome APIs target Chrome 157+. Loadable output: dist/chromtag/browser/. No legacy runtime libraries or persisted bookmark/index data.
-- Completed browsing with nested rows, literal title/URL/folder/tags, edit controls, and new-tab opening. Native Chrome action was triggered and its separate popup target inspected: Chromtag rendered at 540 x 540. Native javascript bookmarks and their tags are excluded. Existing model tests cover 12,000 nested folders; all 41 Angular and 8 manifest tests pass.
-- Latest passing HTML report: .local/test-results/2026-11-12T17-55-25.697Z-32324.html. Failed reports are retained too.
+- Refined the compact toolbar/cloud/row/editor design with 13 px typography, 540 x 540 layout, palette/layout CSS properties, proportional row sizing, visible keyboard focus, and restored editor focus. Stable Chrome checked 112 added folders, 130 tags, long content, default and 380 x 500 / 16 px scaling, scrolling, trap/restore/Escape, and overflow. Reviewed screenshots embedded in timestamped HTML. All 41 Angular and 8 manifest tests pass.
+- Latest passing HTML report: .local/test-results/2026-11-12T18-01-00.012Z-36152.html. Failed reports are retained too.
 - Stable Chrome 157.0.8103.51 integration uses a fresh temporary profile with synthetic bookmarks, never the user's profile. A representative real profile is unavailable.
 
 ## E-20 progress
@@ -20,7 +20,7 @@ Updated: 2026-11-12
 | T-02 | Audit the manifest | Retain MV3; verify metadata, assets, permissions, and compatibility. | Ready for verification | T-02 |
 | T-03 | Rebuild the popup with Angular | Establish the standalone TypeScript popup, build, safe bindings, and transient model. | Ready for verification | T-03 |
 | T-04 | Fix scale and search | Filter the model, virtualize rows with overscan, and support Unicode safely. | Ready for verification | T-04 |
-| T-05 | Preserve and refine the design | Retain the compact interface and improve typography, scaling, overflow, and focus. | Not started | T-05 |
+| T-05 | Preserve and refine the design | Retain the compact interface and improve typography, scaling, overflow, and focus. | Ready for verification | T-05 |
 | T-06 | Document and verify | Maintain documentation/test coverage; validate the built extension in Chrome. | Not started | T-06 |
 | T-07 | Release version 2.0 | Set version 2.0, document development attribution, and remove replaced runtime code. | Not started | T-07 |
 | US-01 | Browse Chrome bookmarks | Find and open a saved page from the popup. | Ready for verification | US-01 |
@@ -34,7 +34,7 @@ Updated: 2026-11-12
 
 ## Next step
 
-Continue T-05 compact design/overflow/focus checks, then T-06 documentation and T-07 version 2.0.
+Continue T-06 documentation, criterion coverage mapping, reproducible install, and full verification.
 
 ## Later work
 

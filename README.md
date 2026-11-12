@@ -22,6 +22,8 @@ Each row has an **Edit** button. The editor changes title, URL, tags, and folder
 
 **Add bookmark** saves the active page in Chrome's default folder and opens the editor. Cancelling that editor keeps the new bookmark. If Chrome withholds required page metadata, Chromtag shows a message and creates no bookmark.
 
+The compact popup uses a 13 px base font and a 540 × 540 px layout. Clouds and the editor scroll when content exceeds the available space. Appearance settings arrive in 2.2.
+
 The planned releases are:
 
 - **2.0:** Angular popup, one transient bookmark model per refresh, virtualized rows, safe rendering, and Unicode search across titles, folders, and URLs.

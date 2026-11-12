@@ -12,7 +12,7 @@ it('renders user text literally and loads only once on popup creation', async ()
   fixture.detectChanges();
   const root: HTMLElement = fixture.nativeElement;
   expect(getTree).toHaveBeenCalledTimes(1);
-  expect(root.querySelector('img')).toBeNull();
+  expect(root.querySelector('article img')).toBeNull();
   expect(root.textContent).toContain('<img');
   root.querySelector<HTMLButtonElement>('.title')!.click();
   expect(create).toHaveBeenCalledWith({ url: 'https://example.org/<script>' });

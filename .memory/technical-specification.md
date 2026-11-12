@@ -214,7 +214,7 @@ T-03 establishes the Angular CLI workspace and Vitest unit/component runner. `np
 - **T-04-AC3:** Scrolling and open/edit actions work across virtualized rows. A refresh does not trigger repeated tree reads.
 - **T-04-AC4:** Test large/deep trees, many folders/tags, Unicode, and literal rendering. Distinguish inferred recursion risk from reproduced failures.
 
-Implementation uses iterative traversal, 84 px rows, 168/336 px CDK scroll buffers, and a 150 ms text debounce. These are tuning values, not performance guarantees. Timing targets remain undefined; record measured results without inventing a release budget.
+Implementation uses iterative traversal, rows sized to 7 times the base font (91 px at 13 px), 2/4-row CDK scroll buffers, and a 150 ms text debounce. These are tuning values, not performance guarantees. Timing targets remain undefined; record measured results without inventing a release budget.
 
 ### T-05 — Preserve and refine the design
 
