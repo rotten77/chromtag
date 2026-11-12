@@ -34,12 +34,13 @@ Expected: the cloud stays fixed and collapses excess labels without a scrollbar.
 ## UI-04 — Long bookmark content
 
 1. Find a bookmark with a long title and URL.
-2. Check the row width and **Edit** button.
-3. Select **Edit**.
-4. Check the full title and URL in the editor.
-5. Select **Cancel**.
+2. Hover over the bookmark row.
+3. Check the row width and **Edit** button.
+4. Select **Edit**.
+5. Check the full title and URL in the editor.
+6. Select **Cancel**.
 
-Expected: the article fills the available list width. CSS truncates long text. **Edit** stays visible without text overlap or horizontal list scrolling. Criterion: T-05-AC7.
+Expected: the article fills the available list width. CSS truncates long text. Hover reveals **Edit** without text overlap, layout shift, or horizontal list scrolling. Criterion: T-05-AC7.
 
 Automated Chrome checks repeat this case at 540 × 580 px with a 13 px font and 380 × 500 px with a 16 px font. These CSS checks do not add appearance settings to version 2.0.
 
@@ -61,6 +62,18 @@ Expected: default folder green is `#4CAF50`; default tag blue is `#448AFF`. Sele
 4. Check the search field, cloud, and toolbar positions.
 
 Expected: only the bookmark-list area scrolls. Other main-popup controls stay visible and stationary. The outer popup has no scrollbar. Criterion: T-05-AC9.
+
+## UI-07 — Title and Edit hover
+
+1. Move the pointer outside bookmark rows.
+2. Check that titles are underlined and Edit buttons are hidden.
+3. Hover over a title.
+4. Check the title color and the Edit button.
+5. Move the pointer outside the row.
+6. Use Tab to focus a title, then its Edit button.
+7. Press Enter to open the editor.
+
+Expected: title hover uses the tag blue (`#448AFF` by default). Row hover reveals **Edit** without moving content. Leaving hides **Edit** unless it has visible keyboard focus. Keyboard focus reveals Edit and Enter opens the editor. Criterion: T-05-AC10.
 
 ## Record results
 

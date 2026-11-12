@@ -44,6 +44,8 @@ T-05 review follow-up on 2026-11-12: apply Jan's search-field, combined wrapping
 
 Additional T-05 review: apply selected/hover colors and increase the popup height to 580 px. Jan chose a fixed cloud with collapsed excess labels; pagination keeps all filters reachable while only the bookmark-list area scrolls. Criteria T-05-AC6/AC8/AC9 and the layout test plan record this change. Verification remains pending.
 
+Further T-05 review: underline bookmark titles, use the tag color for title hover, and reveal Edit on article hover while preserving keyboard access. Criteria T-05-AC7/AC10 and manual case UI-07 cover this refinement; verification remains pending.
+
 ### Feature stories
 
 These are the 8 supplied current-app stories, revised for the supplied modernization changes.

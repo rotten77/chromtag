@@ -10,6 +10,10 @@ await mkdir(resolve('.local/test-results'), { recursive: true });
 async function screenshot(page, name) {
   await page.locator('body').screenshot({ path: resolve('.local/test-results', `${screenshotId}-${name}.png`) });
 }
+async function clickEdit(button) {
+  await button.locator('..').hover();
+  await button.click();
+}
 async function filterPage(page, name) {
   const status = page.locator('.cloud-paging span');
   const previous = await status.textContent();
@@ -52,6 +56,7 @@ async function checkFixedLayout(page) {
 async function checkBookmarkWidth(page) {
   const viewport = page.locator('cdk-virtual-scroll-viewport');
   await viewport.scrollIntoViewIfNeeded();
+  await viewport.locator('article').first().hover();
   const layout = await viewport.evaluate(element => {
     const row = element.querySelector('article');
     const edit = row.querySelector('.edit');
@@ -131,6 +136,27 @@ try {
   assert(cloudLayout.adjacent && cloudLayout.sameLine, 'Last folder and first tag share a wrapping flow and available line');
   assert.equal(cloudLayout.folderColor, 'rgb(76, 175, 80)');
   assert.equal(cloudLayout.tagColor, 'rgb(68, 138, 255)');
+  const title = page.getByRole('button', { name: '<b>Saved page</b>', exact: true });
+  const edit = page.getByRole('button', { name: 'Edit <b>Saved page</b>', exact: true });
+  await page.mouse.move(20, 20);
+  assert.equal(await edit.evaluate(element => getComputedStyle(element).opacity), '0', 'Edit is hidden when its row is not hovered or focused');
+  const rowBounds = await title.locator('..').boundingBox();
+  await title.hover();
+  assert(await title.evaluate(element => getComputedStyle(element).textDecorationLine.includes('underline')));
+  assert.equal(await title.evaluate(element => getComputedStyle(element).color), 'rgb(68, 138, 255)', 'Hovered title uses the tag color');
+  assert.equal(await title.evaluate(element => getComputedStyle(element).filter), 'none', 'Title hover preserves the exact tag color');
+  assert.equal(await edit.evaluate(element => getComputedStyle(element).opacity), '1', 'Row hover reveals Edit');
+  assert.deepEqual(await title.locator('..').boundingBox(), rowBounds, 'Revealing Edit does not shift the row');
+  await page.mouse.move(20, 20);
+  await title.focus();
+  await page.keyboard.press('Tab');
+  assert(await edit.evaluate(element => document.activeElement === element && getComputedStyle(element).opacity === '1'), 'Tab focus reveals Edit without mouse hover');
+  await page.keyboard.press('Enter');
+  await page.getByRole('dialog', { name: 'Edit bookmark' }).waitFor();
+  await page.getByRole('dialog').getByLabel('Title', { exact: true }).focus();
+  await page.keyboard.press('Escape');
+  await page.getByRole('dialog').waitFor({ state: 'detached' });
+  await page.getByRole('searchbox', { name: 'Search bookmarks' }).focus();
   for (const label of ['#C++', '<Folder> café']) {
     const choice = await findFilter(page, label);
     await choice.click();
@@ -228,7 +254,7 @@ try {
   await checkFixedLayout(page);
   await screenshot(page, 'crowded');
   await page.locator('cdk-virtual-scroll-viewport').evaluate(element => { element.scrollTop = element.scrollHeight; element.dispatchEvent(new Event('scroll')); });
-  await page.getByRole('button', { name: 'Edit Scale bookmark 9999', exact: true }).click();
+  await clickEdit(page.getByRole('button', { name: 'Edit Scale bookmark 9999', exact: true }));
   const dialog = page.getByRole('dialog', { name: 'Edit bookmark' });
   assert.equal(await dialog.getByLabel('Title', { exact: true }).inputValue(), 'Scale bookmark 9999 #scale #tag15');
   await page.waitForFunction(() => document.activeElement?.id === 'edit-title');
@@ -242,17 +268,17 @@ try {
   await dialog.waitFor({ state: 'detached' });
   await page.waitForFunction(() => document.activeElement?.getAttribute('aria-label') === 'Edit Scale bookmark 9999');
   assert.equal(await page.evaluate(() => globalThis.treeReads), 1);
-  await page.getByRole('button', { name: 'Edit Scale bookmark 9999', exact: true }).click();
+  await clickEdit(page.getByRole('button', { name: 'Edit Scale bookmark 9999', exact: true }));
   await dialog.waitFor();
   await dialog.getByLabel('Title', { exact: true }).focus();
   await page.keyboard.press('Escape');
   await dialog.waitFor({ state: 'detached' });
-  await page.getByRole('button', { name: 'Edit Scale bookmark 9999', exact: true }).click();
+  await clickEdit(page.getByRole('button', { name: 'Edit Scale bookmark 9999', exact: true }));
   await dialog.getByLabel('Title', { exact: true }).fill('Discard through overlay');
   await page.locator('.overlay').click({ position: { x: 5, y: 5 } });
   await dialog.waitFor({ state: 'detached' });
   assert.equal(await page.evaluate(() => globalThis.treeReads), 1);
-  await page.getByRole('button', { name: 'Edit Scale bookmark 9999', exact: true }).click();
+  await clickEdit(page.getByRole('button', { name: 'Edit Scale bookmark 9999', exact: true }));
   await dialog.getByLabel('Title', { exact: true }).fill('Edited <b>literal</b> #C++');
   await dialog.getByLabel('New tag', { exact: true }).fill('#中文');
   await dialog.getByRole('button', { name: 'Add tag', exact: true }).click();
@@ -274,7 +300,7 @@ try {
   console.log('PASS: saved and moved bookmark appears in Chrome Bookmark Manager.');
   await search.fill('example.invalid/edited');
   await page.getByText('1 of 10001 bookmarks', { exact: true }).waitFor();
-  await page.getByRole('button', { name: 'Edit Edited <b>literal</b>', exact: true }).click();
+  await clickEdit(page.getByRole('button', { name: 'Edit Edited <b>literal</b>', exact: true }));
   await dialog.getByRole('button', { name: 'Delete', exact: true }).click();
   await dialog.waitFor({ state: 'detached' });
   await page.getByText('0 of 10000 bookmarks', { exact: true }).waitFor();
@@ -339,7 +365,7 @@ try {
   await search.fill('example.invalid/scale/5000');
   await page.getByText('1 of 10001 bookmarks', { exact: true }).waitFor();
   await checkBookmarkWidth(page);
-  await page.locator('article.bookmark .edit').click();
+  await clickEdit(page.locator('article.bookmark .edit'));
   await dialog.waitFor();
   await dialog.getByLabel('Title', { exact: true }).fill('Long editable title 中文 café <b>literal</b> '.repeat(20));
   await screenshot(page, 'scaled');
@@ -349,7 +375,7 @@ try {
   await dialog.waitFor({ state: 'detached' });
   assert(await page.locator('article.bookmark').count() <= 24, 'Font scaling keeps virtual rows bounded');
   console.log('PASS: crowded 112-folder/130-tag clouds, long title/URL, keyboard trap/restore/Escape, CSS font/dimension scaling, and editor overflow.');
-  console.log('PASS: label-free Search... input, fixed cloud with reachable collapsed pages, requested default/selected/hover colors, full-width CSS-truncated articles, and always-visible Edit at both sizes.');
+  console.log('PASS: label-free Search... input, fixed cloud with reachable collapsed pages, requested default/selected/hover colors, full-width CSS-truncated articles, and Edit revealed by row hover or keyboard focus without layout shift.');
   console.log('PASS: activeTab missing-grant rejection and real action grant, default-folder creation, editor population, and cancel retaining creation.');
   console.log(`10,001 supported native synthetic bookmarks: startup ${elapsed.toFixed(1)} ms, ${liveRows} live rows; last row reached.`);
   assert.deepEqual(errors, [], 'No runtime or CSP errors');

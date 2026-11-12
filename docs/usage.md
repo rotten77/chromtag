@@ -16,7 +16,7 @@ Search treats punctuation and spaces as literal text. Matching ignores case and 
 
 Tags begin with `#` at the title start or after whitespace. Punctuation stays in the tag: `#C++` and `#work,` are valid. A lone `#` and `word#tag` are plain text. The cloud combines equivalent normalized spellings and displays the first spelling found.
 
-The list omits `javascript:` bookmarks. Rows fill the available list width. Long titles and URLs truncate with tooltips; **Edit** stays visible.
+The list omits `javascript:` bookmarks. Rows fill the available list width. Long titles and URLs truncate with tooltips. Titles are underlined and turn tag-blue on hover. Hover the row to reveal **Edit**, or use Tab to focus that button.
 
 Folders and tags share 1 wrapping cloud. Selected labels are red (`#F44336`); hovered cloud buttons are dark (`#212121`). The cloud stays fixed without a scrollbar. Use **More filters**, **Previous filters**, and **First filters** to reach collapsed labels. Only the bookmark-list area scrolls in the main popup. **Hide folders** removes folders from the combined cloud; **Show folders** restores them.
 
@@ -36,12 +36,13 @@ Chrome can withhold page metadata on restricted pages or after access expires. C
 
 ## Edit or delete
 
-1. Select the row's **Edit** button.
-2. Change **Title**, **URL**, or **Folder** as necessary.
-3. Select a discovered tag to add or remove that title hashtag.
-4. Enter a new tag in **New tag** if necessary.
-5. Select **Add tag** to put the new tag in the title.
-6. Select **Save** to update the bookmark.
+1. Hover over the row or use Tab to reveal **Edit**.
+2. Select **Edit**.
+3. Change **Title**, **URL**, or **Folder** as necessary.
+4. Select a discovered tag to add or remove that title hashtag.
+5. Enter a new tag in **New tag** if necessary.
+6. Select **Add tag** to put the new tag in the title.
+7. Select **Save** to update the bookmark.
 
 New tags accept 1 optional leading `#`. Spaces and additional `#` characters are invalid. Chromtag preserves Unicode spelling in the title.
 

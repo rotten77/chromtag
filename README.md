@@ -18,11 +18,11 @@ Select **Reset filter** to clear search, tags, and folder together.
 
 Folders appear when the popup opens. **Hide folders** and **Show folders** change visibility for that popup only.
 
-Each row has an **Edit** button. The editor changes title, URL, tags, and folder. **Save** and **Delete** update Chrome bookmarks. **Cancel**, Escape, or the overlay discards unsaved fields.
+Hover a bookmark row to reveal **Edit**. Keyboard focus also reveals that button. The editor changes title, URL, tags, and folder. **Save** and **Delete** update Chrome bookmarks. **Cancel**, Escape, or the overlay discards unsaved fields.
 
 **Add bookmark** saves the active page in Chrome's default folder and opens the editor. Cancelling that editor keeps the new bookmark. If Chrome withholds required page metadata, Chromtag shows a message and creates no bookmark.
 
-The compact popup uses a 13 px base font and a 540 × 580 px layout. The `Search...` field has no visible label. Green folders (`#4CAF50`) and blue tags (`#448AFF`) share 1 fixed wrapping cloud without its own scrollbar. First/Previous/More filters reveal collapsed labels. Selected labels use `#F44336`; hover uses `#212121`. Only the bookmark list scrolls in the main popup. Bookmark rows fill the list width and truncate long text while keeping **Edit** visible. The editor scrolls as needed. Appearance settings arrive in 2.2.
+The compact popup uses a 13 px base font and a 540 × 580 px layout. The `Search...` field has no visible label. Green folders (`#4CAF50`) and blue tags (`#448AFF`) share 1 fixed wrapping cloud without its own scrollbar. First/Previous/More filters reveal collapsed labels. Selected labels use `#F44336`; hover uses `#212121`. Only the bookmark list scrolls in the main popup. Bookmark rows fill the list width and truncate long text while reserving space for **Edit**. Titles are underlined and use the tag blue on hover. The editor scrolls as needed. Appearance settings arrive in 2.2.
 
 Release scope:
 

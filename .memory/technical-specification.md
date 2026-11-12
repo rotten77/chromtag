@@ -224,11 +224,12 @@ Implementation uses iterative traversal, rows sized to 7 times the base font (91
 - **T-05-AC4:** Verify natural dimensions, overflow, keyboard focus, and editor/cloud layout in Chrome.
 - **T-05-AC5:** Show the search field without its visible label. Use the exact placeholder `Search...` and retain an accessible name.
 - **T-05-AC6:** Render folders followed by tags in 1 wrapping filter group, without separate sections or internal cloud scrolling. The first tag can follow the last folder on the same line. Keep the cloud stationary and collapse excess labels. First/Previous/More filter controls must make every label reachable without scrolling the popup or cloud.
-- **T-05-AC7:** Bookmark articles fill the available viewport width. Use CSS truncation for long content and keep Edit visible without overlap or horizontal list scrolling, including when font size or popup width changes.
+- **T-05-AC7:** Bookmark articles fill the available viewport width. Use CSS truncation for long content and reserve Edit space without overlap or horizontal list scrolling, including when font size or popup width changes. Revealing Edit must not shift the row layout.
 - **T-05-AC8:** Use folder green `#4CAF50` and tag blue `#448AFF` as the default colors. Selected cloud labels use `#F44336`. Hovered cloud buttons use `#212121`, including when selected; leaving hover restores their selected/default color.
 - **T-05-AC9:** Increase the default popup height from 540 to 580 px, retaining its 540 px width. Keep the main popup, search field, cloud, and toolbar stationary; only the app-bookmark-list area scrolls. Preserve usable list space with large clouds and at narrower/larger-font test sizes.
+- **T-05-AC10:** Underline bookmark title buttons. On hover, use the current tag color without darkening it. Hide Edit when its article is not hovered; reveal it on article hover. Keep Edit keyboard-focusable and reveal it on visible keyboard focus so keyboard users can open the editor.
 
-T-05-AC5 through T-05-AC9 record Jan's 2026-11-12 review changes to the 2.0 candidate. Jan selected a fixed cloud with excess labels collapsed instead of scrolling the cloud with bookmarks. Pagination keeps the hidden choices reachable and outside keyboard focus until displayed. The existing editor overlay/tag picker can still scroll independently when open.
+T-05-AC5 through T-05-AC10 record Jan's 2026-11-12 review changes to the 2.0 candidate. Jan selected a fixed cloud with excess labels collapsed instead of scrolling the cloud with bookmarks. Pagination keeps the hidden choices reachable and outside keyboard focus until displayed. The existing editor overlay/tag picker can still scroll independently when open.
 
 ### T-06 — Document and verify
 
