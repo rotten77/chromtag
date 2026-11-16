@@ -4,7 +4,7 @@ Updated: 2026-11-16
 
 ## Current state
 
-- Branch: modernizing-chromtag. Jan explicitly verified T-00/T-01 earlier and E-20, including T-02 through T-07 and US-01 through US-08, on 2026-11-12.
+- `modernizing-chromtag` was fast-forward merged into local `master` at `c05c0fe` on Jan's request; no push occurred. Current workflow update is on `chore/per-change-branches`. Each future feature, change, or bug fix requires a fresh dedicated branch; `AGENTS.md`, context, and specification now reflect this rule. Jan explicitly verified T-00/T-01 earlier and E-20, including T-02 through T-07 and US-01 through US-08, on 2026-11-12.
 - Jan authorized implementing the entire E-20 sequentially, with per-task commits/logs. That batch is now user-verified; E-21 and later releases are outside the authorization.
 - Angular 22 / TypeScript 6 / native Chrome APIs target Chrome 157+. Loadable output: dist/chromtag/browser/. No legacy runtime libraries or persisted bookmark/index data.
 - Completed E-20 as version 2.0 release candidate: manifest 2.0 / package and lockfile 2.0.0, machine-assisted development under human guidance documented in CHANGELOG, no replaced legacy runtime dependencies, and generated dependency notices included inside the loadable extension root. Final production build, 54 Angular tests, 8 manifest tests, stable Chrome native integration with 10,001 supported bookmarks, 164 documentation links / 75 mappings, package checks, and static checks passed. User verification is complete; representative-profile testing remains pending and nothing was published.

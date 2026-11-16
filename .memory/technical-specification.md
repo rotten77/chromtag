@@ -184,7 +184,7 @@ T-03 establishes the Angular CLI workspace and Vitest unit/component runner. `np
 
 ### T-00 — Prepare the repository
 
-- **T-00-AC1:** Use the user-created `modernizing-chromtag` branch. Verify its presence before implementation; request user creation if absent.
+- **T-00-AC1:** Repository preparation used the user-created `modernizing-chromtag` branch. After its merge into master, create a fresh dedicated branch for each feature, change, or bug fix, as required by `AGENTS.md`.
 - **T-00-AC2:** Preserve the old README under `.memory/` and images under `docs/img/`, with working relative links.
 - **T-00-AC3:** Ignore `node_modules/`, `dist/`, and `.angular/`. Keep `.local/` ignored.
 

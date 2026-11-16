@@ -26,6 +26,14 @@ If a required file is still a placeholder, do not infer its contents. Ask the us
 - Keep the plan and technical specification consistent. The plan may refer to acceptance criteria in the specification but should not duplicate their full text.
 - Do not invent requirements, stories, acceptance criteria, or technical decisions.
 
+## Branch workflow
+
+- Create a new, dedicated branch before starting each feature, change, or bug fix, including documentation and workflow changes.
+- Do not implement changes directly on `master` or `main`, or reuse a branch from a previous task.
+- Keep each branch scoped to its requested work. Preserve unrelated changes when switching branches.
+- This replaces the earlier requirement to use the `modernizing-chromtag` branch.
+- Branch creation does not authorize commits, merges, or pushes; perform those only when the user asks.
+
 ## Implementation limits and user verification
 
 - Implement no more than one user story at a time.
