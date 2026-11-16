@@ -8,19 +8,22 @@ Chromtag is a Chrome bookmark browser/editor. Hashtags in native bookmark titles
 - AI agents follow `AGENTS.md`, maintain documentation, and implement at most 1 story before user verification.
 - The completed E-20 batch used Jan's explicit whole-epic authorization with sequential task commits/logs. Jan explicitly verified E-20 on 2026-11-12. The exception does not extend into E-21; future work follows the normal stopping rule unless Jan directs otherwise.
 - Jan moved T-08 ahead of T-13 on 2026-11-12 and asked the agent to remove automatic session-ending, logging, and commit requirements. Keep status/context current; write dated logs and commit only on request. User verification remains separate.
-- After E-23 implementation, Jan owns final manual verification of all features. An agent prepares a simple manual test case and report template for that verification and extended use; see T-09/T-10 in the plan.
-- After final testing, T-11 removes obsolete legacy/work files and refreshes documentation/screenshots so the working repository represents the current version. T-12 then archives the completed plan and updates references. T-14 follows: review open GitHub issues with Jan and decide what to do with each.
+- Freeze the current release scope at version 2.0; versions 2.1–2.3 are future updates. Jan brought T-11 documentation cleanup forward for this release. T-15 packaging/publication is the next planned issue under E-MAINT; its draft procedure is `.memory/distribution.md`. Publication requires a separate manual action.
+- T-09 maintains `.memory/test-cases.md` and its report template with each new feature. Verification occurs per feature/epic. Clarification of the request to remove E-23 versus T-10 is pending; E-23 currently denotes click preferences.
+- Do not archive the active plan: T-12 is removed. T-14 belongs to E-MAINT and reviews open GitHub issues with Jan independently of future releases.
 
 ## Sources of truth
 
 - `AGENTS.md`: repository workflow and agent instructions.
 - `.memory/plan.md`: epics, stories, supporting tasks, and statuses.
 - `.memory/technical-specification.md`: target architecture, acceptance criteria, decisions, and open choices.
-- `docs/SPEC.md`: intended behavior/release scope, linked to authoritative criteria.
-- `docs/legacy-baseline.md` and `docs/legacy-analysis.md`: supplied historical 1.8 behavior and root-cause analysis.
-- `docs/legacy-measurements.md`: T-01 synthetic browser measurements and diagnostic reproduction instructions.
-- `docs/manifest-audit.md`: T-02 metadata, permissions, API floors, and packaging handoff to Angular setup.
-- `docs/legacy-readme.md` and `docs/img/`: preserved README and visual references.
+- `.memory/technical-specification.md` is the sole specification; the duplicate `docs/SPEC.md` is removed.
+- `.memory/legacy-baseline.md` and `.memory/legacy-analysis.md`: supplied historical 1.8 behavior and root-cause analysis.
+- `.memory/legacy-measurements.md`: T-01 synthetic browser measurements and diagnostic reproduction instructions.
+- `.memory/manifest-audit.md`: T-02 metadata, permissions, API floors, and packaging handoff to Angular setup.
+- `docs/index.md`: detailed current extension guide; `docs/changelog.md`: complete release history; `.memory/distribution.md`: planned build, ZIP, and store-submission procedure for T-15.
+- `.memory/legacy-readme.md` and `docs/img/`: preserved historical README and visual references, not current store screenshots.
+- `docs/` contains `README.md`, `index.md`, and `changelog.md` for users, plus images in `docs/img/`. Internal testing, coverage, audits, and historical references live in `.memory/`.
 
 Do not duplicate target acceptance criteria in the plan or user documentation. Separate historical limitations from target behavior.
 
@@ -52,5 +55,5 @@ Do not duplicate target acceptance criteria in the plan or user documentation. S
 - Version 2.0 uses Angular 22 / TypeScript 6 targeting Chrome 157+. `npm test` retains timestamped HTML reports in ignored `.local/test-results/`. Show the folder cloud initially; visibility remains popup-only.
 - The standalone legacy diagnostic lives in `tools/legacy-baseline.mjs`. Its dependencies and raw measurements remain under ignored `.local/`; it does not create application tooling.
 - Private/local references stay in ignored `.local/`. Shared documentation and memory remain tracked.
-- Preserve the ignored archive during implementation and final testing. T-11 handles obsolete legacy/work files after testing; its cleanup does not include unrelated private files.
-- Every target feature/criterion requires repository regression coverage. docs/test-coverage.md maps E-20 criteria; npm test includes native Chrome integration and self-contained timestamped HTML reports with screenshots.
+- Preserve referenced historical evidence and unrelated private files during release cleanup. Do not present historical screenshots as version 2.0 screenshots.
+- Every target feature/criterion requires repository regression coverage. .memory/test-coverage.md maps E-20 criteria; npm test includes native Chrome integration and self-contained timestamped HTML reports with screenshots.

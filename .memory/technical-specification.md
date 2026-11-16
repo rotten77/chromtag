@@ -6,7 +6,7 @@ Updated: 2026-11-12
 
 Chromtag is a Chrome extension for browsing and editing Chrome bookmarks through a popup. Hashtags in bookmark titles provide tags.
 
-This specification defines implemented E-20 behavior and planned versions 2.1–2.3. The plan distinguishes automated readiness from user verification. Acceptance criteria live here. The plan tracks matching IDs. `docs/SPEC.md` describes the intended product. Historical 1.8 behavior and analysis remain in `docs/legacy-baseline.md` and `docs/legacy-analysis.md`.
+This specification defines implemented E-20 behavior and planned versions 2.1–2.3. The plan distinguishes automated readiness from user verification. Acceptance criteria live here. The plan tracks matching IDs. This is the sole specification. `docs/` contains only user documentation and images. Historical 1.8 behavior and analysis remain in `.memory/legacy-baseline.md` and `.memory/legacy-analysis.md`.
 
 ## Historical implementation
 
@@ -14,7 +14,7 @@ The local reference is `.local/legacy/chromtag/`. Version 1.8 already uses Manif
 
 Confirmed structural issues include 3 tree reads per refresh, DOM-based folder lookup, filtering after each inserted row, unbounded rendering, limited slug normalization, generated selectors, dynamic tag regexes, and HTML-string interpolation. Deep recursive traversal is an inferred risk.
 
-T-01 recorded a synthetic timing baseline and behavior probes in [legacy measurements](../docs/legacy-measurements.md).
+T-01 recorded a synthetic timing baseline and behavior probes in [legacy measurements](legacy-measurements.md).
 At 5,000 bookmarks, median startup was 24.736 seconds. A 10,000-bookmark trial reached the 120-second readiness timeout.
 These measurements do not establish a universal failure threshold or measure a real user profile.
 
@@ -97,7 +97,7 @@ Do not use `localStorage`, a separate bookmark store, an account, or a backend. 
 - Bundle local scripts/styles only. Comply with extension Content Security Policy (CSP), without remote code, inline scripts, or `eval`.
 - Declare `script-src 'self'; object-src 'none';` for extension pages. Do not add host permissions, content scripts, or a sandbox.
 
-The [manifest audit](../docs/manifest-audit.md) records sources, compatibility limits, and the handoff to Angular setup.
+The [manifest audit](manifest-audit.md) records sources, compatibility limits, and the handoff to Angular setup.
 Source checks use `node tools/validate-manifest.mjs --source`; validator tests use `node --test tools/validate-manifest.test.mjs`.
 Built validation uses `node tools/validate-manifest.mjs --built` after T-03 creates the production artifact. Source validation does not imply that artifact exists or is loadable.
 
@@ -185,7 +185,7 @@ T-03 establishes the Angular CLI workspace and Vitest unit/component runner. `np
 ### T-00 — Prepare the repository
 
 - **T-00-AC1:** Use the user-created `modernizing-chromtag` branch. Verify its presence before implementation; request user creation if absent.
-- **T-00-AC2:** Preserve the old README/images under `docs/`, with working relative links.
+- **T-00-AC2:** Preserve the old README under `.memory/` and images under `docs/img/`, with working relative links.
 - **T-00-AC3:** Ignore `node_modules/`, `dist/`, and `.angular/`. Keep `.local/` ignored.
 
 ### T-01 — Define and baseline behavior
@@ -233,7 +233,7 @@ T-05-AC5 through T-05-AC10 record Jan's 2026-11-12 review changes to the 2.0 can
 
 ### T-06 — Document and verify
 
-- **T-06-AC1:** Keep README features, permissions, compatibility, storage, commands, and `docs/SPEC.md` consistent with implemented releases.
+- **T-06-AC1:** Keep README features, permissions, compatibility, storage, commands, and `docs/index.md` consistent with implemented releases.
 - **T-06-AC2:** Map every applicable target feature/criterion to repository regression tests. Update tests/mapping when criteria change.
 - **T-06-AC3:** Use unit/component tests with mocked Chrome APIs and integration coverage across popup/API boundaries. Include tests in `npm test`.
 - **T-06-AC4:** Run `npm ci`, `npm run build`, `npm test`, manifest validation, and static checks after tooling exists. Required checks pass.
@@ -241,7 +241,7 @@ T-05-AC5 through T-05-AC10 record Jan's 2026-11-12 review changes to the 2.0 can
 - **T-06-AC6:** Verify 10,000+ synthetic bookmarks and a representative real profile when available. Record baseline measurements and remaining limits.
 - **T-06-AC7:** Cover literal rendering of markup-significant titles/folders/URLs/tags, all filter combinations, and international-text cases.
 
-Regression tests are explicit supplied requirements. `npm test` runs manifest, Angular/Vitest unit/component, production build, project/package, and native stable Chrome checks. [Criterion mapping](../docs/test-coverage.md) links every E-20/preparation criterion to evidence. [Testing documentation](../docs/testing.md) records limits and timestamped HTML reports.
+Regression tests are explicit supplied requirements. `npm test` runs manifest, Angular/Vitest unit/component, production build, project/package, and native stable Chrome checks. [Criterion mapping](test-coverage.md) links every E-20/preparation criterion to evidence. [Testing documentation](testing.md) records limits and timestamped HTML reports.
 
 ### T-07 — Release version 2.0
 
@@ -309,12 +309,12 @@ Jan moved T-08 ahead of T-13 on 2026-11-12 and requested that the agent perform 
 
 ## Post-implementation task acceptance criteria
 
-These tasks follow completion of the implementation epics E-00 through E-23.
+Jan brought T-11 forward for the frozen version 2.0 release. Future features remain planned. T-12 (plan archival) is removed; the plan remains active. E-MAINT contains T-14 independently of future releases. T-09 maintains per-feature test cases now; T-10's separate testing role remains pending clarification.
 
 ### T-09 — Prepare manual test materials
 
-- **T-09-AC1:** After implementation is complete, create a simple manual test case covering all implemented features, with actions and expected results.
-- **T-09-AC2:** Create a reusable test-report file/template that Jan can use to record manual results and report issues during extended use.
+- **T-09-AC1:** Maintain `.memory/test-cases.md` with actions and expected results for implemented features. Update the file with each new feature or changed behavior and use affected cases during feature/epic verification.
+- **T-09-AC2:** Include a reusable report template for Jan's results and issues. Distinguish test definitions from executed tests and explicit user verification.
 
 ### T-10 — Perform final manual verification
 
@@ -323,19 +323,20 @@ These tasks follow completion of the implementation epics E-00 through E-23.
 
 ### T-11 — Clean the repository for the current version
 
-- **T-11-AC1:** After Jan completes final manual verification under T-10, identify and remove obsolete legacy files and temporary work artifacts. Retain the current version's source, required assets, build/test tooling, and supporting documentation.
-- **T-11-AC2:** Review user documentation for the actual implemented version. Remove obsolete instructions and references, and keep setup, usage, and commands accurate.
-- **T-11-AC3:** Replace outdated screenshots with screenshots of the final version. Update image references and remove unused superseded images.
+- **T-11-AC1:** Prepare the frozen version 2.0 release now, before future feature updates. Consolidate redundant user documentation without deleting referenced historical evidence or unrelated private files.
+- **T-11-AC2:** Keep README to a simple project description and development instructions. Provide detailed extension documentation in `docs/index.md` and complete version 1.0–2.0 history in `docs/changelog.md`.
+- **T-11-AC3:** Identify historical screenshots as historical. Keep distribution preparation in `.memory/distribution.md` for the next planned issue, T-15, rather than in published user documentation.
 - **T-11-AC4:** After cleanup, the current version's required build, test, and package checks pass, and documentation links resolve.
 
-### T-12 — Archive the completed plan
+### T-15 — Package and publish version 2.0
 
-- **T-12-AC1:** After final testing and repository cleanup are complete, archive the modernization plan with its recorded completion and verification states.
-- **T-12-AC2:** Update README, repository instructions, and current memory references so the archived plan remains findable and session startup does not depend on a missing active-plan file.
+- **T-15-AC1:** Follow and verify `.memory/distribution.md` to build, test, and create an upload ZIP with `manifest.json` at the root and no private files.
+- **T-15-AC2:** Prepare current store screenshots, release notes, and accurate privacy/permission declarations. Jan controls account access and submission/publication.
+- **T-15-AC3:** Record actual submission/publication state and verify the installed store release after publication. Do not equate a built ZIP with a published release.
 
 ### T-14 — Review open GitHub issues
 
-- **T-14-AC1:** After plan archival, check the repository's open GitHub issues.
+- **T-14-AC1:** Under E-MAINT, check the repository's open GitHub issues without depending on plan archival.
 - **T-14-AC2:** Decide with Jan what to do with each open issue and record the outcome.
 
 ## Verification procedure

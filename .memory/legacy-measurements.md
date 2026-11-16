@@ -91,7 +91,7 @@ Both raw reports include hashes for all 6 archived runtime files used by the har
 The user approved hashtag boundaries/identity, literal phrase search, and folder-ID/descendant matching during T-01.
 The user also approved grapheme boundaries for search matches, preserving combining-mark and Turkish-diacritic distinctions.
 The [technical specification](../.memory/technical-specification.md#matching-and-hashtag-decisions) owns these rules and their acceptance criteria.
-The [historical baseline](legacy-baseline.md) retains the old behavior; the [product specification](SPEC.md) describes intended changes.
+The [historical baseline](legacy-baseline.md) retains the old behavior; the [technical specification](technical-specification.md) describes intended changes.
 
 These timings exclude real Chrome bookmark API latency, extension-page CSP, actual popup lifecycle, and first-paint measurement.
 Headless execution, instrumentation, fixture distribution, and host load can affect results. Search durations are not complete input-to-paint latencies.

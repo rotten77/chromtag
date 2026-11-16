@@ -18,7 +18,7 @@ Completed E-20 batch exception: the user explicitly authorized sequential implem
 |---|---|---|---|---|
 | T-00 | Prepare the repository | Use the modernization branch, preserve documentation/images, and prepare ignore rules. | Verified | T-00 |
 
-The user verified T-00 on 2026-11-12. Repository preparation is committed in `e600c02`. Historical documentation/images are preserved under `docs/`, with working relative links. Dependency, build-output, and Angular-cache ignore rules are in place.
+The user verified T-00 on 2026-11-12. Repository preparation is committed in `e600c02`. Historical documentation is now preserved under `.memory/`, with images in `docs/img/`, with working relative links. Dependency, build-output, and Angular-cache ignore rules are in place.
 
 ## E-20 — Version 2.0 modernization
 
@@ -36,11 +36,11 @@ These tasks retain the supplied steps 1–7 and support the feature stories belo
 | T-06 | Document and verify | Maintain documentation/test coverage; validate the built extension in Chrome. | Verified | T-06 |
 | T-07 | Release version 2.0 | Set version 2.0, document development attribution, and remove replaced runtime code. | Verified | T-07 |
 
-The user verified T-01 on 2026-11-12. It has a reproducible diagnostic runner and [synthetic measurements](../docs/legacy-measurements.md), including the 10,000-bookmark readiness timeout. The user approved hashtag, Unicode phrase-search, grapheme-boundary, and folder-filter semantics in the technical specification. Real-profile measurements and target timing budgets remain future work.
+The user verified T-01 on 2026-11-12. It has a reproducible diagnostic runner and [synthetic measurements](legacy-measurements.md), including the 10,000-bookmark readiness timeout. The user approved hashtag, Unicode phrase-search, grapheme-boundary, and folder-filter semantics in the technical specification. Real-profile measurements and target timing budgets remain future work.
 
-T-02 provides the [manifest audit](../docs/manifest-audit.md), source manifest/icons in `public/`, and standalone source/package validation. The user selected `activeTab` with unavailable-metadata handling for US-06. Jan verified T-02 as part of E-20 on 2026-11-12. T-03 selected Angular 22 / TypeScript 6 / Chrome 157+ and verified asset copying, generated `index.html`, and native Chrome loadability.
+T-02 provides the [manifest audit](manifest-audit.md), source manifest/icons in `public/`, and standalone source/package validation. The user selected `activeTab` with unavailable-metadata handling for US-06. Jan verified T-02 as part of E-20 on 2026-11-12. T-03 selected Angular 22 / TypeScript 6 / Chrome 157+ and verified asset copying, generated `index.html`, and native Chrome loadability.
 
-T-05 review follow-up on 2026-11-12: apply Jan's search-field, combined wrapping cloud, full-width/truncated bookmark row, and palette changes. Matching criteria are T-05-AC5 through T-05-AC8; [the layout test plan](../docs/test-plan.md) covers manual review. Jan verified E-20 and its T-05 follow-ups on 2026-11-12.
+T-05 review follow-up on 2026-11-12: apply Jan's search-field, combined wrapping cloud, full-width/truncated bookmark row, and palette changes. Matching criteria are T-05-AC5 through T-05-AC8; [the layout test plan](test-plan.md) covers manual review. Jan verified E-20 and its T-05 follow-ups on 2026-11-12.
 
 Additional T-05 review: apply selected/hover colors and increase the popup height to 580 px. Jan chose a fixed cloud with collapsed excess labels; pagination keeps all filters reachable while only the bookmark-list area scrolls. Cloud-height follow-up: double its limit from 7rem to 14rem, move pagination above the cloud, avoid first-page blank space, and cap the cloud at smaller sizes to leave list space. Criteria T-05-AC6/AC8/AC9 and the layout test plan record these changes. Jan verified E-20 on 2026-11-12.
 
@@ -103,20 +103,27 @@ Follow version 2.2. Include lifecycle verification, version update, documentatio
 
 Jan moved T-08 forward on 2026-11-12 and requested a final log and commit for this change. Future logs and commits require an explicit request. Jan verified T-08 on 2026-11-12.
 
-## After E-23 — Verification, cleanup, plan archival, and issue review
+## Release 2.0 cleanup and remaining verification tasks
 
-These tasks follow completion of all implementation work in E-00 through E-23. Criteria are in the technical specification under matching IDs.
+Jan brought T-11 forward to prepare the frozen version 2.0 release. Versions 2.1–2.3 remain future updates. The plan stays active; T-12 (plan archival) is removed at Jan's request. T-09 now maintains `.memory/test-cases.md` for per-feature verification, at Jan's request. The request concerning E-23 versus T-10 awaits clarification. Criteria are in the technical specification under matching IDs.
 
 | ID | Task | Owner | Goal | Status | Criteria |
 |---|---|---|---|---|---|
-| T-09 | Prepare manual test materials | AI agent | Create a simple manual test case and a reusable test-report file/template for final verification and extended use. | Not started | T-09 |
+| T-09 | Maintain manual test cases | AI agent | Maintain `.memory/test-cases.md` and its report template with each new feature. | Ready for verification | T-09 |
 | T-10 | Perform final manual verification | Jan Zatloukal | Manually test all implemented features and report issues while using the extension for a user-chosen period. | Not started | T-10 |
-| T-11 | Clean the repository for the current version | AI agent | Remove obsolete legacy/work files, review user documentation, and update screenshots after final testing. | Not started | T-11 |
-| T-12 | Archive the completed plan | AI agent | Archive the modernization plan after repository cleanup and update references to it. | Not started | T-12 |
-| T-14 | Review open GitHub issues | Jan Zatloukal and AI agent | Check open issues on GitHub and decide what to do with each. | Not started | T-14 |
+| T-11 | Clean the repository for the current version | AI agent | Simplify README, consolidate extension documentation and full changelog, for frozen version 2.0. | Ready for verification | T-11 |
 
-T-10 uses the materials from T-09. Jan performs the final overall verification. T-11 follows that testing; T-12 follows cleanup. T-14 follows plan archival. The final working repository contains the current version and its required supporting files. Existing story-by-story verification remains part of implementation.
+T-09 supplies cases for each feature/epic and release; it does not wait for E-23. T-10's separate final-testing role awaits clarification. T-11 now precedes future feature updates by Jan's authorization. Retain historical evidence where referenced; do not delete unrelated private files. Publication remains a separate manual action. Existing story-by-story verification remains part of implementation.
+
+## E-MAINT — Maintenance and issue review
+
+This epic is independent of future feature releases and plan archival.
+
+| ID | Task | Owner | Goal | Status | Criteria |
+|---|---|---|---|---|---|
+| T-15 | Package and publish version 2.0 | Jan Zatloukal and AI agent | Follow [distribution procedure](distribution.md), prepare the store package and listing, and submit the release. Upload ZIP created and inspected; Jan submitted 2026-11-16. Awaiting store approval; publication verification pending. | In progress | T-15 |
+| T-14 | Review open GitHub issues | Jan Zatloukal and AI agent | Check open issues on GitHub and decide what to do with each. | Not started | T-14 |
 
 ## Next step
 
-Jan verified E-20, T-08, and T-13. E-21 still requires a separate instruction.
+Obtain Jan's verification of T-11/T-09. T-15 upload ZIP is prepared at `.local/releases/chromtag-2.0.zip`; Jan submitted on 2026-11-16; await store approval and confirm publication before post-publication verification. Instructions are in `.memory/distribution.md`. Jan verified E-20, T-08, and T-13. E-21 still requires a separate instruction. No plan archival is scheduled.

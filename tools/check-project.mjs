@@ -23,7 +23,7 @@ for (const file of documents) {
 }
 const spec = await read('.memory/technical-specification.md');
 const criteria = [...spec.matchAll(/\*\*((?:US-0[1-8]|T-0[0-7])-AC\d+):\*\*/gu)].map(match => match[1]);
-const coverage = await read('docs/test-coverage.md');
+const coverage = await read('.memory/test-coverage.md');
 const mapped = new Set([...coverage.matchAll(/\b(?:US-0[1-8]|T-0[0-7])-AC\d+\b/gu)].map(match => match[0]));
 assert.equal(criteria.length, new Set(criteria).size, 'Criteria must be unique');
 assert.deepEqual(new Set(criteria), mapped, 'Every E-20/preparation criterion needs an evidence mapping');
@@ -44,7 +44,7 @@ async function checkSource(directory) {
 }
 await checkSource('src');
 if (manifest.version === '2.0') {
-  const changelog = await read('docs/CHANGELOG.md');
+  const changelog = await read('docs/changelog.md');
   assert(changelog.includes('## 2.0') && /machine-assisted/iu.test(changelog) && /human guidance/iu.test(changelog), 'Version 2.0 needs the required development attribution');
 }
 await validateManifest(resolve('public'));

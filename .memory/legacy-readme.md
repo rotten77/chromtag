@@ -13,13 +13,13 @@ You don't have to worry about your data loss or privacy because Chromtag uses th
 
 ----
 
-![Chromtag](./img/bookmarks-chromtag-filtering.png)
+![Chromtag](../docs/img/bookmarks-chromtag-filtering.png)
 
 ## Features
 
 | Add #hashtag | Tags and folders filtering | Search  |
 |---|---|---|
-|  [![Chromtag](./img/bookmarks-chromtag_t.png)](./img/bookmarks-chromtag.png)  |  [![Filtering](./img/bookmarks-chromtag-filtering_t.png)](./img/bookmarks-chromtag-filtering.png) |  [![Search](./img/bookmarks-chromtag-search_t.png)](./img/bookmarks-chromtag-search.png) |
+|  [![Chromtag](../docs/img/bookmarks-chromtag_t.png)](../docs/img/bookmarks-chromtag.png)  |  [![Filtering](../docs/img/bookmarks-chromtag-filtering_t.png)](../docs/img/bookmarks-chromtag-filtering.png) |  [![Search](../docs/img/bookmarks-chromtag-search_t.png)](../docs/img/bookmarks-chromtag-search.png) |
 
 
 ## Why Chromtag?
