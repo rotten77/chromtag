@@ -1,8 +1,8 @@
 # Modernization plan
 
-Updated: 2026-11-12
+Updated: 2026-11-16
 
-This plan derives from the supplied baseline and modernization steps. Acceptance criteria are in [technical-specification.md](technical-specification.md), under matching IDs.
+This plan derives from the supplied baseline and modernization steps. Acceptance criteria are in [technical-specification.md](technical-specification.md), under matching IDs. Feature order does not assign features to specific release versions.
 
 ## Status and implementation rule
 
@@ -10,7 +10,7 @@ Statuses: **Not started**, **In progress**, **Ready for verification**, **Verifi
 
 Implement no more than 1 user story at a time. Supporting tasks do not authorize implementing several stories together. Stop when a story is ready for verification. Start another only after user verification and the user's next instruction.
 
-Completed E-20 batch exception: the user explicitly authorized sequential implementation of the whole epic with task commits/logs. Jan explicitly verified E-20, including T-02 through T-07 and US-01 through US-08, on 2026-11-12. This exception did not authorize E-21 or later releases.
+Completed E-20 batch exception: the user explicitly authorized sequential implementation of the whole epic with task commits/logs. Jan explicitly verified E-20, including T-02 through T-07 and US-01 through US-08, on 2026-11-12. This exception did not authorize later epics.
 
 ## E-00 — Repository preparation
 
@@ -20,7 +20,7 @@ Completed E-20 batch exception: the user explicitly authorized sequential implem
 
 The user verified T-00 on 2026-11-12. Repository preparation is committed in `e600c02`. Historical documentation is now preserved under `.memory/`, with images in `docs/img/`, with working relative links. Dependency, build-output, and Angular-cache ignore rules are in place.
 
-## E-20 — Version 2.0 modernization
+## E-20 — Modernization
 
 ### Supporting tasks
 
@@ -71,29 +71,45 @@ Statuses describe the new implementation. Behavior in the ignored 1.8 reference 
 
 Jan verified T-08 and requested T-13 implementation on 2026-11-12. The existing generic loading message is not counted as completion. The count covers all URL-bearing tree nodes, including unsupported `javascript:` bookmarks. Chunked processing yields for large snapshots; a 10,000-node threshold triggers evidence-based guidance. Jan tested with an imported 50,000-bookmark synthetic collection and approved the result on 2026-11-12. Do not claim a supported bookmark limit from synthetic tests.
 
-## E-21 — Version 2.1 session filters
+## E-21 — Session filters
 
 | ID | Story | User goal | Status | Criteria |
 |---|---|---|---|---|
 | US-09 | Restore popup filters | Resume the query and selected tags/folder during the browser session. | Not started | US-09 |
 
-Depends on version 2.0 filters. Include version/permission updates, documentation, and regression tests in this story.
+Depends on the current filters. Include permission updates, documentation, and regression tests in this story.
 
-## E-22 — Version 2.2 appearance
+## E-22 — Appearance
 
 | ID | Story | User goal | Status | Criteria |
 |---|---|---|---|---|
 | US-10 | Configure appearance | Set typography, popup and combined folder/tag cloud height, and independent light/dark Material palette colors that persist across restarts; theme backgrounds are fixed. | Not started | US-10 |
 
-Follow version 2.1. Include default/bounds decisions, version update, documentation, and regression tests.
+Include default/bounds decisions, documentation, and regression tests.
 
-## E-23 — Version 2.3 bookmark clicks
+## E-23 — Bookmark clicks
 
 | ID | Story | User goal | Status | Criteria |
 |---|---|---|---|---|
 | US-11 | Configure bookmark-click behavior | Choose tab target and popup-close behavior, with preferences retained across restarts. | Not started | US-11 |
 
-Follow version 2.2. Include lifecycle verification, version update, documentation, and regression tests.
+Include lifecycle verification, documentation, and regression tests.
+
+## E-24 — UI redesign
+
+| ID | Story | User goal | Status | Criteria |
+|---|---|---|---|---|
+| US-12 | Redesign the popup layout | Use filters, search, pagination, and reset actions in a clearer and more compact layout. | Not started | US-12 |
+
+Review the full interaction layout before implementation. Current concerns include the reset action being separated from the filters in a bottom panel, an oversized search control, and the new Previous/More pagination controls. Exact placement, sizing, labels, and behavior require design clarification.
+
+## E-25 — Filter-selector exclusions
+
+| ID | Story | User goal | Status | Criteria |
+|---|---|---|---|---|
+| US-13 | Exclude folders or tags from filter choices | Hide selected folders or tags from the filter selector without hiding their bookmarks from results. | Not started | US-13 |
+
+This can keep special-purpose folders, such as `Quick access`, out of the selector when users normally open them from Chrome's bookmark menu. The exclusion scope, configuration UI, tag behavior, persistence, interaction with active filters, and treatment of descendant folders require clarification before acceptance criteria are defined.
 
 ## Workflow update before T-13
 
@@ -105,7 +121,7 @@ Jan moved T-08 forward on 2026-11-12 and requested a final log and commit for th
 
 ## Release 2.0 cleanup and remaining verification tasks
 
-Jan brought T-11 forward to prepare the frozen version 2.0 release. Versions 2.1–2.3 remain future updates. The plan stays active; T-12 (plan archival) is removed at Jan's request. T-09 now maintains `.memory/test-cases.md` for per-feature verification, at Jan's request. The request concerning E-23 versus T-10 awaits clarification. Criteria are in the technical specification under matching IDs.
+Jan brought T-11 forward to prepare the frozen version 2.0 release. Planned features are not assigned to specific future versions. The plan stays active; T-12 (plan archival) is removed at Jan's request. T-09 now maintains `.memory/test-cases.md` for per-feature verification, at Jan's request. The request concerning E-23 versus T-10 awaits clarification. Criteria are in the technical specification under matching IDs.
 
 | ID | Task | Owner | Goal | Status | Criteria |
 |---|---|---|---|---|---|
@@ -126,4 +142,4 @@ This epic is independent of future feature releases and plan archival.
 
 ## Next step
 
-Obtain Jan's verification of T-11/T-09. T-15 upload ZIP is prepared at `.local/releases/chromtag-2.0.zip`; Jan submitted on 2026-11-16; await store approval and confirm publication before post-publication verification. Instructions are in `.memory/distribution.md`. Jan verified E-20, T-08, and T-13. E-21 still requires a separate instruction. No plan archival is scheduled.
+Obtain Jan's verification of T-11/T-09. T-15 upload ZIP is prepared at `.local/releases/chromtag-2.0.zip`; Jan submitted on 2026-11-16; await store approval and confirm publication before post-publication verification. Instructions are in `.memory/distribution.md`. Jan verified E-20, T-08, and T-13. Every planned feature requires a separate instruction. Clarify US-12 layout decisions and US-13 exclusion behavior before implementation. No plan archival is scheduled.
