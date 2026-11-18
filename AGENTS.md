@@ -28,10 +28,10 @@ If a required file is still a placeholder, do not infer its contents. Ask the us
 
 ## Branch workflow
 
-- Create a new, dedicated branch before starting each feature, change, or bug fix, including documentation and workflow changes.
-- Do not implement changes directly on `master` or `main`, or reuse a branch from a previous task.
-- Keep each branch scoped to its requested work. Preserve unrelated changes when switching branches.
-- This replaces the earlier requirement to use the `modernizing-chromtag` branch.
+- Before starting a feature or bug fix, tell the user which branch is currently checked out and ask whether to create or switch to a dedicated branch. The user decides; do not create or switch branches without confirmation.
+- Documentation, planning, workflow, and other `.memory/`-only updates do not require a new branch unless the user requests one.
+- If the user chooses a dedicated branch, keep it scoped to the requested work and preserve unrelated changes when switching.
+- Do not assume that work may proceed on `master` or `main`; identify the branch and get the user's decision before feature or bug-fix implementation.
 - Branch creation does not authorize commits, merges, or pushes; perform those only when the user asks.
 
 ## Implementation limits and user verification

@@ -47,7 +47,7 @@ Do not duplicate target acceptance criteria in the plan or user documentation. S
 
 ## Repository conventions
 
-- Create a fresh dedicated branch for each feature, change, or bug fix, including documentation/workflow changes. Do not implement directly on master/main or reuse previous task branches. This supersedes the modernization-only branch rule. Commits, merges, and pushes require a user request.
+- Before implementing a feature or bug fix, report the current branch and ask Jan whether to create or switch to a dedicated branch. Jan makes and verifies the branch decision; do not switch automatically. Documentation, planning, workflow, and other `.memory/`-only updates do not require a new branch unless Jan requests one. Commits, merges, and pushes require a user request.
 - Application code: `src/`; manifest source and preserved static icons: `public/`.
 - Loadable output: `dist/chromtag/browser/`. Do not load source as an unpacked extension.
 - Build, test, and static commands are defined in package.json. Production finalization copies generated dependency notices into the loadable extension root. `ng serve` is not the extension runtime.
