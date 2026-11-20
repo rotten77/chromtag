@@ -22,11 +22,11 @@ for (const file of documents) {
   }
 }
 const spec = await read('.memory/technical-specification.md');
-const criteria = [...spec.matchAll(/\*\*((?:US-0[1-8]|T-0[0-7])-AC\d+):\*\*/gu)].map(match => match[1]);
+const criteria = [...spec.matchAll(/\*\*((?:US-0[1-8]|US-12|T-0[0-7])-AC\d+):\*\*/gu)].map(match => match[1]);
 const coverage = await read('.memory/test-coverage.md');
-const mapped = new Set([...coverage.matchAll(/\b(?:US-0[1-8]|T-0[0-7])-AC\d+\b/gu)].map(match => match[0]));
+const mapped = new Set([...coverage.matchAll(/\b(?:US-0[1-8]|US-12|T-0[0-7])-AC\d+\b/gu)].map(match => match[0]));
 assert.equal(criteria.length, new Set(criteria).size, 'Criteria must be unique');
-assert.deepEqual(new Set(criteria), mapped, 'Every E-20/preparation criterion needs an evidence mapping');
+assert.deepEqual(new Set(criteria), mapped, 'Every E-20/preparation and US-12 criterion needs an evidence mapping');
 const manifest = JSON.parse(await read('public/manifest.json'));
 const pkg = JSON.parse(await read('package.json'));
 assert.equal(pkg.version.split('.').slice(0, 2).join('.'), manifest.version, 'Package and manifest release versions must agree');

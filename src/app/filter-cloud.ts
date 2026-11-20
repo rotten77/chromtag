@@ -8,10 +8,10 @@ interface FilterChoice { key: string; id: string; label: string; kind: 'folder' 
   template: `
     @if (hasMore() || history().length) {
       <nav class="cloud-paging" aria-label="Filter pages">
-        <button type="button" (click)="first()" [disabled]="!history().length">First filters</button>
-        <button type="button" (click)="previous()" [disabled]="!history().length">Previous filters</button>
+        <button type="button" aria-label="First filters" (click)="first()" [disabled]="!history().length">First</button>
+        <button type="button" aria-label="Previous filters" (click)="previous()" [disabled]="!history().length">Previous</button>
         <span role="status">{{ start() + 1 }}–{{ start() + visibleCount() }} of {{ choices().length }}</span>
-        <button type="button" (click)="next()" [disabled]="!hasMore() || !pageReady()">More filters</button>
+        <button type="button" aria-label="Next filters" (click)="next()" [disabled]="!hasMore() || !pageReady()">Next</button>
       </nav>
     }
     <div #cloud id="filter-cloud" class="cloud filter-cloud" role="group" aria-label="Bookmark filters" [attr.aria-busy]="!pageReady()">

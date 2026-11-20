@@ -27,6 +27,12 @@ Folders and tags share a fixed cloud. Use **First filters**, **Previous filters*
 
 **Hide folders** hides folder choices; **Show folders** restores them. Filters and folder visibility reset when the popup closes in version 2.0.
 
+### Unreleased popup redesign (US-12)
+
+In the development build, green folders come first and blue tags follow in the same cloud. Folder and tag labels use white semibold text. Select a chip to filter the list; its background turns red without moving the chip. When not all choices fit, **First**, **Previous**, and **Next** appear above the cloud. Use **Search bookmarks…** beside the result count to narrow the list further. **Clear filters** beside the cloud clears the folder, tags, and search together.
+
+**Add bookmark** is in the top row. **Options** contains **Refresh** and a **Show folders** checkbox that applies only to the current popup. Click outside the popup to dismiss it; there is no separate close button.
+
 ## Hashtags
 
 A tag starts with `#` at the beginning of a title or after whitespace. It ends at whitespace, another `#`, or the title end.

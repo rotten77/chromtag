@@ -40,7 +40,7 @@ it('shows reading, then processing and large-library guidance, and clears progre
   fixture.detectChanges();
   expect(root.querySelector('.loading-progress')).toBeNull();
   getTree.mockRejectedValueOnce(new Error('Denied'));
-  root.querySelector<HTMLButtonElement>('header button')!.click();
+  root.querySelector<HTMLButtonElement>('#popup-options button')!.click();
   await fixture.whenStable(); fixture.detectChanges();
   expect(root.querySelector('.loading-progress')).toBeNull();
   expect(root.querySelector('[role="alert"]')?.textContent).toContain('could not be loaded');

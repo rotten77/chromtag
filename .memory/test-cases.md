@@ -1,6 +1,6 @@
 # Manual test cases
 
-Maintain this file with each new feature or changed behavior. These cases cover implemented version 2.0 only; add future-release cases when those features are implemented.
+Maintain this file with each new feature or changed behavior. These cases cover version 2.0 and the unreleased US-12 layout.
 
 Run affected cases during each feature/epic verification. Use the full set when preparing a release. Passing automated tests does not replace Jan's explicit verification.
 
@@ -44,6 +44,8 @@ Run affected cases during each feature/epic verification. Use the full set when 
 | M-22 | T-03 Literal rendering | Add title/folder/tag text containing markup-significant characters; refresh and edit. | Text appears literally. No markup executes or breaks controls. |
 | M-23 | Error handling | Review automated error-path results; reproduce API failures only in a controlled test environment. | Load/mutation errors are visible. A failed load keeps an existing snapshot. Partial save/move failures identify the partial result. |
 | M-24 | T-15 Package (planned) | Follow .memory/distribution.md during T-15; inspect the upload ZIP. | Manifest is at ZIP root. Built popup, assets, and dependency notices are present. No private files or source repository are included. |
+| M-25 | US-12 Layout (development build) | With few choices, check that paging is hidden. With a crowded cloud, use Next, select a chip, return with Previous or First, type a search, then use Clear filters. | Folders precede tags above search. Labels are white and semibold. After the pointer leaves a selected chip, only its red background indicates selection. The chip keeps its page and position. The result count updates; Clear filters restores the full list. Rows retain their compact layout. |
+| M-26 | US-12 Popup actions | Use Add bookmark in the top row. Cancel the editor, open Options, uncheck Show folders, then select Refresh. Reopen the popup. | No branded header, footer, or close button. Adding still opens the editor. Folder choices hide for this popup only; refresh works and the next popup shows folders. |
 
 Numeric snapshot/read-count boundaries and forced Chrome API failures are covered by the automated suite. Do not claim manual proof of those internals from appearance alone.
 

@@ -1,4 +1,4 @@
-:root { --base-font-size: 13px; --popup-width: 540px; --popup-height: 580px; --background: #ffffff; --foreground: #222b38; --tag-color: #448AFF; --folder-color: #4CAF50; --border-color: #d7dee7; --surface: #f2f5fa; --muted: #596579; --active-color: #F44336; --cloud-hover-color: #212121; --focus-color: #215bb4; --danger-color: #a52020; font-size: var(--base-font-size); color-scheme: light; }
+:root { --base-font-size: 13px; --popup-width: 540px; --popup-height: 580px; --background: #ffffff; --foreground: #222b38; --tag-color: #1976D2; --folder-color: #388E3C; --border-color: #d7dee7; --surface: #f2f5fa; --muted: #596579; --active-color: #D32F2F; --cloud-hover-color: #212121; --focus-color: #215bb4; --danger-color: #a52020; font-size: var(--base-font-size); color-scheme: light; }
 * { box-sizing: border-box; }
 body { margin: 0; width: var(--popup-width); height: var(--popup-height); overflow: hidden; font: 1rem/1.4 system-ui, sans-serif; color: var(--foreground); background: var(--background); }
 button, input, textarea, select { font: inherit; }
@@ -6,10 +6,6 @@ button { cursor: pointer; border: 1px solid var(--border-color); border-radius: 
 button:hover:not(:disabled) { filter: brightness(.94); }
 button:focus-visible, input:focus-visible, textarea:focus-visible, select:focus-visible { outline: 2px solid var(--focus-color); outline-offset: 2px; }
 app-root { position: relative; display: flex; flex-direction: column; height: 100%; }
-header { display: flex; justify-content: space-between; padding: .5rem; border-bottom: 1px solid var(--border-color); }
-.brand { display: inline-flex; align-items: center; gap: .4rem; font-size: 1.1em; }.brand img { width: 18px; height: 18px; }
-footer { display: flex; flex-wrap: wrap; align-items: center; gap: .35rem; padding: .5rem; background: var(--surface); border-top: 1px solid var(--border-color); flex-shrink: 0; }
-.close-popup { margin-left: auto; font-size: 1.2em; line-height: 1; }
 main { overflow: auto; min-height: 0; }
 .bookmark { --title-font-size: 1.08em; padding: .5rem; border-bottom: 1px solid var(--border-color); }
 .title { border: 0; padding: 0; text-align: start; background: transparent; color: inherit; font-size: var(--title-font-size); font-weight: 650; text-decoration: underline; text-underline-offset: .12em; }
@@ -22,12 +18,20 @@ button.title:hover { color: var(--tag-color); filter: none; }
 .folder { background: var(--folder-color); }
 .cloud { display: flex; flex-wrap: wrap; gap: .3rem; padding: .5rem .65rem; flex-shrink: 0; }
 .filter-cloud { overflow: hidden; }
-.filter-cloud > button { max-width: 100%; min-width: 0; }
+.filter-cloud > button { max-width: 100%; min-width: 0; font-weight: 600; }
 .cloud:empty { display: none; }
 .cloud .active { background: var(--active-color); }
 .cloud button:hover:not(:disabled) { background: var(--cloud-hover-color); filter: none; }
-.result-count { margin: 0; padding: .25rem .5rem; border-top: 1px solid var(--border-color); font-size: .85em; }
-.search-field { min-width: 0; flex-shrink: 0; margin: .4rem .5rem; padding: .35rem; border: 1px solid var(--border-color); border-radius: .25rem; }
+.filter-heading, .results-tools { display: flex; align-items: center; justify-content: space-between; gap: .5rem; padding: .25rem .65rem; }
+.filter-heading { justify-content: flex-start; flex-wrap: wrap; }
+.filter-heading h1 { margin: 0; font-size: 1rem; }
+.clear-filters { background: transparent; border: 0; min-height: 24px; padding: 0 .25rem; font-size: .85em; color: var(--muted); text-decoration: underline; }
+.add-bookmark { margin-inline-start: auto; }
+#popup-options { inset: auto; top: calc(anchor(bottom) + .25rem); right: anchor(right); margin: 0; padding: .55rem; border: 1px solid var(--border-color); border-radius: .3rem; background: var(--background); color: var(--foreground); }
+#popup-options:popover-open { display: grid; gap: .5rem; }
+#popup-options label { display: flex; align-items: center; gap: .25rem; cursor: pointer; }
+.result-count { margin: 0; font-size: .85em; }
+.search-field { min-width: 0; width: min(13rem, 48%); padding: .25rem .4rem; border: 1px solid var(--border-color); border-radius: .25rem; }
 .popup-content { display: flex; flex-direction: column; height: 100%; min-height: 0; overflow: hidden; }
 app-bookmark-list { border-top: 1px solid var(--border-color); }
 app-bookmark-list .cdk-virtual-scroll-content-wrapper { width: 100%; max-width: 100%; }

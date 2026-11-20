@@ -265,6 +265,15 @@ T-13 counts all URL-bearing tree nodes, including unsupported `javascript:` book
 
 ## Later release acceptance criteria
 
+### US-12 — Redesign the popup layout (unreleased)
+
+These criteria supersede the 2.0 control placement and labels in US-05, US-08, and T-05 for the development build.
+
+- **US-12-AC1:** Place the wrapping cloud above search, with folders before tags. Use folder green `#388E3C` and tag blue `#1976D2`, both with white semibold text. Selecting a visible chip updates results directly and keeps its position and page. Show selection with a red `#D32F2F` background only; retain the existing hover, keyboard focus, and pressed-state behavior.
+- **US-12-AC2:** Show First, Previous, and Next directly above the choices when paging is needed; hide pagination when all choices fit.
+- **US-12-AC3:** Put Clear filters by the cloud and compact bookmark search beside the result count above the list. Clearing restores unfiltered results in one action. Retain compact bookmark rows and list-only scrolling.
+- **US-12-AC4:** Use one top row for Filters, compact Clear filters, Add bookmark, and Options. Remove the branded header, footer, and explicit close button. Keep Refresh and the popup-only Show folders setting available in Options. Do not change bookmark-click or popup-close preferences.
+
 ### US-09 — Restore popup filters (version 2.1)
 
 - **US-09-AC1:** Save only query, selected tags, and selected folder in `chrome.storage.session` as filters change.

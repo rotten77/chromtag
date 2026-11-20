@@ -29,14 +29,14 @@ async function findFilter(page, name) {
   if (await first.isVisible() && await first.isEnabled()) await filterPage(page, 'First filters');
   for (let attempt = 0; attempt < 1000; attempt++) {
     if (await choice.isVisible()) return choice;
-    const more = page.getByRole('button', { name: 'More filters', exact: true });
+    const more = page.getByRole('button', { name: 'Next filters', exact: true });
     assert(await more.isVisible() && await more.isEnabled(), `Filter must remain reachable: ${name}`);
-    await filterPage(page, 'More filters');
+    await filterPage(page, 'Next filters');
   }
   throw new Error(`Filter paging did not finish: ${name}`);
 }
 async function checkFixedLayout(page) {
-  const fixedBounds = () => page.evaluate(() => ['header', '.search-field', 'app-filter-cloud', 'footer'].map(selector => {
+  const fixedBounds = () => page.evaluate(() => ['.filter-heading', '.search-field', 'app-filter-cloud'].map(selector => {
     const rect = document.querySelector(selector).getBoundingClientRect();
     return { top: rect.top, bottom: rect.bottom };
   }));
@@ -53,7 +53,7 @@ async function checkFixedLayout(page) {
   await viewport.hover();
   await page.mouse.wheel(0, 900);
   await page.waitForFunction(() => document.querySelector('cdk-virtual-scroll-viewport').scrollTop > 0);
-  assert.deepEqual(await fixedBounds(), before, 'Search, cloud, header, and toolbar stay stationary when the list scrolls');
+  assert.deepEqual(await fixedBounds(), before, 'Search, cloud, and top actions stay stationary when the list scrolls');
   const scrollable = await page.evaluate(() => [...document.querySelectorAll('body, .popup-content, .filter-cloud, cdk-virtual-scroll-viewport')]
     .filter(element => /auto|scroll/u.test(getComputedStyle(element).overflowY) && element.scrollHeight > element.clientHeight + 1)
     .map(element => element.tagName));
@@ -153,11 +153,18 @@ try {
     await chrome.bookmarks.create({ parentId: nested.id, title: '<b>Saved page</b> #C++', url: 'https://example.invalid/test' });
     await chrome.bookmarks.create({ title: 'Excluded javascript bookmark #excluded', url: 'javascript:alert(1)' });
   });
+  assert.equal(await page.locator('.popup-content header, .popup-content footer, [aria-label="Close popup"]').count(), 0);
+  assert(await page.locator('.filter-heading').getByRole('button', { name: 'Add bookmark' }).isVisible());
+  const options = page.getByRole('button', { name: 'Options', exact: true });
+  const showFolders = page.getByRole('checkbox', { name: 'Show folders', exact: true });
+  assert.equal(await showFolders.isVisible(), false);
+  await options.click();
   await page.getByRole('button', { name: 'Refresh', exact: true }).click();
   await page.getByRole('button', { name: '<b>Saved page</b>', exact: true }).waitFor();
   await checkRowSpacing(page);
   assert.equal(await page.locator('label.search').count(), 0);
-  assert.equal(await page.getByRole('searchbox', { name: 'Search bookmarks' }).getAttribute('placeholder'), 'Search...');
+  assert.equal(await page.getByRole('searchbox', { name: 'Search bookmarks' }).getAttribute('placeholder'), 'Search bookmarks…');
+  assert(await page.locator('.filter-cloud').evaluate(cloud => cloud.getBoundingClientRect().bottom <= document.querySelector('.search-field').getBoundingClientRect().top), 'Cloud precedes secondary search');
   const cloudLayout = await page.locator('.filter-cloud').evaluate(cloud => {
     const folders = cloud.querySelectorAll(':scope > .folder');
     const lastFolder = folders[folders.length - 1];
@@ -166,8 +173,9 @@ try {
       folderColor: getComputedStyle(lastFolder).backgroundColor, tagColor: getComputedStyle(firstTag).backgroundColor };
   });
   assert(cloudLayout.adjacent && cloudLayout.sameLine, 'Last folder and first tag share a wrapping flow and available line');
-  assert.equal(cloudLayout.folderColor, 'rgb(76, 175, 80)');
-  assert.equal(cloudLayout.tagColor, 'rgb(68, 138, 255)');
+  assert.equal(cloudLayout.folderColor, 'rgb(56, 142, 60)');
+  assert.equal(cloudLayout.tagColor, 'rgb(25, 118, 210)');
+  assert.equal(await page.getByRole('navigation', { name: 'Filter pages' }).count(), 0, 'Hide pagination when every filter fits');
   const title = page.getByRole('button', { name: '<b>Saved page</b>', exact: true });
   const edit = page.getByRole('button', { name: 'Edit <b>Saved page</b>', exact: true });
   await page.mouse.move(20, 20);
@@ -175,7 +183,7 @@ try {
   const rowBounds = await title.locator('..').boundingBox();
   await title.hover();
   assert(await title.evaluate(element => getComputedStyle(element).textDecorationLine.includes('underline')));
-  assert.equal(await title.evaluate(element => getComputedStyle(element).color), 'rgb(68, 138, 255)', 'Hovered title uses the tag color');
+  assert.equal(await title.evaluate(element => getComputedStyle(element).color), cloudLayout.tagColor, 'Hovered title uses the tag color');
   assert.equal(await title.evaluate(element => getComputedStyle(element).filter), 'none', 'Title hover preserves the exact tag color');
   assert.equal(await edit.evaluate(element => getComputedStyle(element).opacity), '1', 'Row hover reveals Edit');
   assert.deepEqual(await title.locator('..').boundingBox(), rowBounds, 'Revealing Edit does not shift the row');
@@ -195,7 +203,11 @@ try {
     await choice.click();
     await page.locator('.filter-cloud .active').waitFor();
     await page.mouse.move(20, 20);
-    assert.equal(await choice.evaluate(element => getComputedStyle(element).backgroundColor), 'rgb(244, 67, 54)', 'Selected cloud label uses #F44336');
+    assert.equal(await choice.evaluate(element => getComputedStyle(element).backgroundColor), 'rgb(211, 47, 47)', 'Selected cloud label uses #D32F2F');
+    assert.equal(await choice.getAttribute('aria-pressed'), 'true');
+    assert.equal(await choice.evaluate(element => getComputedStyle(element).color), 'rgb(255, 255, 255)');
+    assert.equal(await choice.evaluate(element => getComputedStyle(element).fontWeight), '600');
+    assert.equal(await choice.evaluate(element => getComputedStyle(element, '::before').content), 'none', 'Selected cloud label has no tick');
     assert.equal(await choice.evaluate(element => getComputedStyle(element).boxShadow), 'none', 'Selected cloud label has no shadow');
     await choice.hover();
     assert.equal(await choice.evaluate(element => getComputedStyle(element).backgroundColor), 'rgb(33, 33, 33)', 'Hovered cloud label uses #212121');
@@ -247,9 +259,15 @@ try {
   const elapsed = performance.now() - started;
   const liveRows = await page.locator('article.bookmark').count();
   assert(liveRows > 0 && liveRows <= 24, `10,001 records must have bounded live rows, saw ${liveRows}`);
-  await (await findFilter(page, '#C++')).click();
+  const tagOnLaterPage = await findFilter(page, '#C++');
+  const pageRange = page.locator('.cloud-paging [role="status"]');
+  const rangeBefore = await pageRange.innerText();
+  const boundsBefore = await tagOnLaterPage.boundingBox();
+  await tagOnLaterPage.click();
   await page.getByText('1 of 10001 bookmarks', { exact: true }).waitFor();
-  await (await findFilter(page, '#C++')).click();
+  assert.equal(await pageRange.innerText(), rangeBefore, 'Selecting a tag keeps the current filter page');
+  assert.deepEqual(await tagOnLaterPage.boundingBox(), boundsBefore, 'Selected chip keeps its position');
+  await tagOnLaterPage.click();
   await page.getByText('10001 of 10001 bookmarks', { exact: true }).waitFor();
   await (await findFilter(page, '<Folder> café')).click();
   await page.getByText('1 of 10001 bookmarks', { exact: true }).waitFor();
@@ -274,16 +292,21 @@ try {
   await page.getByText('1 of 10001 bookmarks', { exact: true }).waitFor();
   await (await findFilter(page, '#C++')).click();
   await (await findFilter(page, '<Folder> café')).click();
-  await page.getByRole('button', { name: 'Reset filter', exact: true }).click();
+  await page.getByRole('button', { name: 'Clear filters', exact: true }).click();
   await page.getByText('10001 of 10001 bookmarks', { exact: true }).waitFor();
   assert.equal(await search.inputValue(), '');
   assert.equal(await page.locator('.cloud [aria-pressed="true"]').count(), 0);
-  await page.getByRole('button', { name: 'Hide folders', exact: true }).click();
+  await options.click();
+  await showFolders.uncheck();
+  await page.keyboard.press('Escape');
+  await showFolders.waitFor({ state: 'hidden' });
   await page.locator('.filter-cloud > .folder').first().waitFor({ state: 'detached' });
   assert.equal(await page.locator('.filter-cloud > .folder').count(), 0);
   assert.equal(await page.evaluate(() => localStorage.length), 0);
   await page.reload();
-  await page.getByRole('button', { name: 'Hide folders', exact: true }).waitFor();
+  await options.click();
+  assert(await showFolders.isChecked(), 'Folder visibility resets on reopen');
+  await options.click();
   await page.getByText('10001 of 10001 bookmarks', { exact: true }).waitFor();
   assert(await page.locator('.filter-cloud > .folder').count() > 1);
   await page.locator('.filter-cloud[aria-busy="false"]').waitFor();
@@ -310,9 +333,9 @@ try {
   const reached = new Set();
   do {
     for (const label of await page.locator('.filter-cloud button:not([inert])').allTextContents()) reached.add(label);
-    const more = page.getByRole('button', { name: 'More filters', exact: true });
+    const more = page.getByRole('button', { name: 'Next filters', exact: true });
     if (!await more.isEnabled()) break;
-    await filterPage(page, 'More filters');
+    await filterPage(page, 'Next filters');
   } while (true);
   assert.equal([...reached].filter(label => label.startsWith('#')).length, 130, 'All 130 collapsed tags remain reachable by pagination');
   assert.equal(reached.size, 246, 'All 116 folders and 130 tags remain reachable');
@@ -402,7 +425,7 @@ try {
   // Chrome's toolbar popup is a CDP target outside Playwright's normal tab list.
   const { sessionId } = await session.send('Target.attachToTarget', { targetId: actionTarget.targetId, flatten: false });
   const popupResult = await targetCommand(session, sessionId, 'Runtime.evaluate', {
-    expression: `new Promise(done => { const check = () => document.querySelector('header') ? done({title: document.title, text: document.body.innerText, width: document.body.offsetWidth, height: document.body.offsetHeight}) : setTimeout(check, 10); check(); })`,
+    expression: `new Promise(done => { const check = () => document.querySelector('.filter-heading') ? done({title: document.title, text: document.body.innerText, width: document.body.offsetWidth, height: document.body.offsetHeight}) : setTimeout(check, 10); check(); })`,
     awaitPromise: true, returnByValue: true,
   });
   assert.equal(popupResult.result.value.title, 'Chromtag');
@@ -429,7 +452,7 @@ try {
   assert.equal(await page.evaluate(async () => (await chrome.bookmarks.search({ url: 'https://other.invalid/revoked' })).length), 0);
   assert.equal(await page.evaluate(() => globalThis.treeReads), 4, 'Revoked grant must not mutate or refresh');
   await activePage.close();
-  await page.getByRole('button', { name: 'Reset filter', exact: true }).click();
+  await page.getByRole('button', { name: 'Clear filters', exact: true }).click();
   await page.getByText('10001 of 10001 bookmarks', { exact: true }).waitFor();
   await page.evaluate(() => {
     document.documentElement.style.setProperty('--base-font-size', '16px');
@@ -456,7 +479,7 @@ try {
   await dialog.waitFor({ state: 'detached' });
   assert(await page.locator('article.bookmark').count() <= 24, 'Font scaling keeps virtual rows bounded');
   console.log('PASS: crowded 112-folder/130-tag clouds, long title/URL, keyboard trap/restore/Escape, CSS font/dimension scaling, and editor overflow.');
-  console.log('PASS: label-free Search... input, fixed cloud with reachable collapsed pages, requested default/selected/hover colors, full-width CSS-truncated articles, and Edit revealed by row hover or keyboard focus without layout shift.');
+  console.log('PASS: cloud-first layout, compact secondary search, fixed cloud with reachable collapsed pages, requested default/selected/hover colors, full-width CSS-truncated articles, and Edit revealed by row hover or keyboard focus without layout shift.');
   console.log('PASS: activeTab missing-grant rejection and real action grant, default-folder creation, editor population, and cancel retaining creation.');
   console.log(`10,001 supported native synthetic bookmarks: startup ${elapsed.toFixed(1)} ms, ${liveRows} live rows; last row reached.`);
   assert.deepEqual(errors, [], 'No runtime or CSP errors');

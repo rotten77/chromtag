@@ -99,9 +99,9 @@ Include lifecycle verification, documentation, and regression tests.
 
 | ID | Story | User goal | Status | Criteria |
 |---|---|---|---|---|
-| US-12 | Redesign the popup layout | Use filters, search, pagination, and reset actions in a clearer and more compact layout. | Not started | US-12 |
+| US-12 | Redesign the popup layout | Use filters, search, pagination, and reset actions in a clearer and more compact layout. | Verified | US-12 |
 
-Review the full interaction layout before implementation. Current concerns include the reset action being separated from the filters in a bottom panel, an oversized search control, and the new Previous/More pagination controls. Exact placement, sizing, labels, and behavior require design clarification.
+Jan verified the cloud-first redesign on 2026-11-20.
 
 ## E-25 — Filter-selector exclusions
 
@@ -142,4 +142,4 @@ This epic is independent of future feature releases and plan archival.
 
 ## Next step
 
-Obtain Jan's verification of T-11/T-09. T-15 upload ZIP is prepared at `.local/releases/chromtag-2.0.zip`; Jan submitted on 2026-11-16; await store approval and confirm publication before post-publication verification. Instructions are in `.memory/distribution.md`. Jan verified E-20, T-08, and T-13. Every planned feature requires a separate instruction. Clarify US-12 layout decisions and US-13 exclusion behavior before implementation. No plan archival is scheduled.
+Obtain Jan's verification of T-11/T-09. T-15 upload ZIP is prepared at `.local/releases/chromtag-2.0.zip`; Jan submitted on 2026-11-16; await store approval and confirm publication before post-publication verification. Instructions are in `.memory/distribution.md`. Jan verified E-20, T-08, and T-13. Every planned feature requires a separate instruction. US-12 is verified. Clarify US-13 exclusion behavior before implementation. No plan archival is scheduled.

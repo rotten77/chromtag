@@ -4,6 +4,8 @@ Criteria remain authoritative in [the technical specification](../.memory/techni
 
 | Criteria | Repository evidence |
 |---|---|
+| US-12-AC4 (unreleased) | [Chrome integration](../tools/test-browser.mjs): top actions, no header/footer/close button, refresh via Options, folder toggle and reset on reopen. |
+| US-12-AC1, US-12-AC2, US-12-AC3 (unreleased) | [Chrome integration](../tools/test-browser.mjs): cloud/search order, same-line folder/tag flow, stable selected chip on a later page, hidden or reachable paging, combined clear and list scrolling. |
 | US-01-AC1 | [Chrome integration](../tools/test-browser.mjs): native action renders the registered popup target and natural dimensions. |
 | US-01-AC2 | [Model tests](../src/app/model.spec.ts): nested parents and 12,000 levels; [Chrome integration](../tools/test-browser.mjs): nested fixture. |
 | US-01-AC3 | [Component tests](../src/app/app.spec.ts): literal fields; [Chrome integration](../tools/test-browser.mjs): row/edit/tooltip rendering. |

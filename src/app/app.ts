@@ -11,8 +11,16 @@ import { FilterCloud } from './filter-cloud';
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="popup-content" [inert]="!!editing()">
-    <header><strong class="brand"><img src="icon.png" alt="">Chromtag</strong><button type="button" (click)="store.refresh()" [disabled]="store.loading() || store.busy()">Refresh</button></header>
-    <input #search class="search-field" type="search" aria-label="Search bookmarks" [value]="queryInput()" (input)="onQuery(search.value)" placeholder="Search..." autocomplete="off">
+    <div class="filter-heading">
+      <h1>Filters</h1>
+      <button type="button" class="clear-filters" (click)="resetFilters()">Clear filters</button>
+      <button type="button" class="primary add-bookmark" [disabled]="store.busy() || store.loading()" (click)="addCurrentPage()">Add bookmark</button>
+      <button type="button" popovertarget="popup-options">Options</button>
+      <div id="popup-options" popover role="group" aria-label="Popup options">
+        <label><input type="checkbox" #showFolders aria-controls="filter-cloud" [checked]="foldersVisible()" (change)="foldersVisible.set(showFolders.checked)"> Show folders</label>
+        <button type="button" popovertarget="popup-options" popovertargetaction="hide" (click)="store.refresh()" [disabled]="store.loading() || store.busy()">Refresh</button>
+      </div>
+    </div>
     @if (store.error()) { <p role="alert">{{ store.error() }}</p> }
     <span class="sr-only" role="status" aria-live="polite">{{ store.phase() === 'reading' ? 'Reading bookmarks from Chrome' : store.phase() === 'processing' ? 'Processing bookmarks' : '' }}</span>
     @if (store.loading()) {
@@ -26,14 +34,11 @@ import { FilterCloud } from './filter-cloud';
     }
     <app-filter-cloud [folders]="store.model().folders" [tags]="store.model().tags" [showFolders]="foldersVisible()"
       [selectedFolder]="filters().folderId" [selectedTags]="filters().tags" (folderSelected)="toggleFolder($event)" (tagSelected)="toggleTag($event)" />
+    <div class="results-tools"><p class="result-count" role="status">{{ filtered().length }} of {{ store.model().bookmarks.length }} bookmarks</p>
+      <input #search class="search-field" type="search" aria-label="Search bookmarks" [value]="queryInput()" (input)="onQuery(search.value)" placeholder="Search bookmarks…" autocomplete="off">
+    </div>
     <app-bookmark-list [rows]="filtered()" (open)="store.open($event)" (edit)="openEditor($event)" />
-    <p class="result-count" role="status">{{ filtered().length }} of {{ store.model().bookmarks.length }} bookmarks</p>
     @if (!store.loading() && !filtered().length) { <p>{{ store.model().bookmarks.length ? 'No matching bookmarks.' : 'No bookmarks yet.' }}</p> }
-    <footer><button type="button" class="primary" [disabled]="store.busy() || store.loading()" (click)="addCurrentPage()">Add bookmark</button>
-      <button type="button" (click)="resetFilters()">Reset filter</button>
-      <button type="button" aria-controls="filter-cloud" [attr.aria-expanded]="foldersVisible()" (click)="foldersVisible.set(!foldersVisible())">{{ foldersVisible() ? 'Hide folders' : 'Show folders' }}</button>
-      <button type="button" class="close-popup" aria-label="Close popup" (click)="closePopup()">×</button>
-    </footer>
     </div>
     @if (editing(); as bookmark) { <app-bookmark-editor [bookmark]="bookmark" [model]="store.model()" (closed)="closeEditor()" /> }
   `,
@@ -61,7 +66,6 @@ export class App implements OnDestroy {
       focus?.focus();
     }, { injector: this.injector });
   }
-  closePopup(): void { window.close(); }
   async addCurrentPage(): Promise<void> {
     this.previousFocus = document.activeElement instanceof HTMLElement ? document.activeElement : undefined;
     const bookmark = await this.store.addCurrentPage();
