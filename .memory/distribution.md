@@ -1,6 +1,6 @@
 # T-15 — Package and publish version 2.0
 
-Status: **In progress**. At Jan's request, created `.local/releases/chromtag-2.0.zip` (95,365 bytes) from the production build on 2026-11-16. Inspected the archive: manifest, popup, generated scripts/styles, icons, and dependency notices are at the root; no private or repository files are included. Jan submitted version 2.0 to the Chrome Web Store on 2026-11-16. Approval is pending; publication and post-publication verification are not yet confirmed.
+Status: **In progress**. At Jan's request, created `.local/releases/chromtag-2.0.zip` (95,365 bytes) from the production build on 2026-11-16. Inspected the archive: manifest, popup, generated scripts/styles, icons, and dependency notices are at the root; no private or repository files are included. Jan submitted version 2.0 on 2026-11-16 and reported Chrome Web Store approval and publication on 2026-11-20. Installed-store verification remains pending.
 
 Validation: `npm run check`, `npm test`, production build, and built-package checks passed. The first test run failed while capturing transient processing progress; the complete rerun passed without source changes. Passing report: `.local/test-results/2026-11-16T16-53-23.842Z-93900.html`.
 
@@ -87,7 +87,7 @@ The implementation has no backend, analytics, remote code, or separate bookmark 
 10. Verify the installed version and core bookmark workflows.
 11. Record the actual publication date in `docs/changelog.md` and project status.
 
-The dashboard controls the exact submission steps and available options. Store review and publication are separate from creating a ZIP. Jan confirmed package submission on 2026-11-16. Store approval and publication remain pending.
+The dashboard controls the exact submission steps and available options. Store review and publication are separate from creating a ZIP. Jan confirmed package submission on 2026-11-16 and approval/publication on 2026-11-20. Install the store version in a test profile and verify its version and core workflows to complete T-15.
 
 Keep version 2.0 frozen for this release. Later updates require a higher manifest version; Chrome does not accept reusing a published version number.
 

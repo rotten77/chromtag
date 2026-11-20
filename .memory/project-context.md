@@ -8,8 +8,8 @@ Chromtag is a Chrome bookmark browser/editor. Hashtags in native bookmark titles
 - AI agents follow `AGENTS.md`, maintain documentation, and implement at most 1 story before user verification.
 - The completed E-20 batch used Jan's explicit whole-epic authorization with sequential task commits/logs. Jan explicitly verified E-20 on 2026-11-12. The exception does not extend into E-21; future work follows the normal stopping rule unless Jan directs otherwise.
 - Jan moved T-08 ahead of T-13 on 2026-11-12 and asked the agent to remove automatic session-ending, logging, and commit requirements. Keep status/context current; write dated logs and commit only on request. User verification remains separate.
-- Freeze the current release scope at version 2.0; versions 2.1–2.3 are future updates. Jan brought T-11 documentation cleanup forward for this release. T-15 packaging/publication is the next planned issue under E-MAINT; its draft procedure is `.memory/distribution.md`. Publication requires a separate manual action.
-- T-09 maintains `.memory/test-cases.md` and its report template with each new feature. Verification occurs per feature/epic. Clarification of the request to remove E-23 versus T-10 is pending; E-23 currently denotes click preferences.
+- Freeze the current release scope at version 2.0; versions 2.1–2.3 are future updates. Jan brought T-11 documentation cleanup forward for this release. T-15 packaging/publication is under E-MAINT; Jan reported Chrome Web Store approval and publication on 2026-11-20. Installed-store verification remains pending.
+- T-09 is verified and maintains `.memory/test-cases.md` and its report template with each new feature. Verification occurs per feature/epic. Clarification of the request to remove E-23 versus T-10 is pending; E-23 currently denotes click preferences.
 - Do not archive the active plan: T-12 is removed. T-14 belongs to E-MAINT and reviews open GitHub issues with Jan independently of future releases.
 
 ## Sources of truth

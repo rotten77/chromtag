@@ -125,9 +125,9 @@ Jan brought T-11 forward to prepare the frozen version 2.0 release. Planned feat
 
 | ID | Task | Owner | Goal | Status | Criteria |
 |---|---|---|---|---|---|
-| T-09 | Maintain manual test cases | AI agent | Maintain `.memory/test-cases.md` and its report template with each new feature. | Ready for verification | T-09 |
+| T-09 | Maintain manual test cases | AI agent | Maintain `.memory/test-cases.md` and its report template with each new feature. | Verified | T-09 |
 | T-10 | Perform final manual verification | Jan Zatloukal | Manually test all implemented features and report issues while using the extension for a user-chosen period. | Not started | T-10 |
-| T-11 | Clean the repository for the current version | AI agent | Simplify README, consolidate extension documentation and full changelog, for frozen version 2.0. | Ready for verification | T-11 |
+| T-11 | Clean the repository for the current version | AI agent | Simplify README, consolidate extension documentation and full changelog, for frozen version 2.0. | Verified | T-11 |
 
 T-09 supplies cases for each feature/epic and release; it does not wait for E-23. T-10's separate final-testing role awaits clarification. T-11 now precedes future feature updates by Jan's authorization. Retain historical evidence where referenced; do not delete unrelated private files. Publication remains a separate manual action. Existing story-by-story verification remains part of implementation.
 
@@ -137,9 +137,9 @@ This epic is independent of future feature releases and plan archival.
 
 | ID | Task | Owner | Goal | Status | Criteria |
 |---|---|---|---|---|---|
-| T-15 | Package and publish version 2.0 | Jan Zatloukal and AI agent | Follow [distribution procedure](distribution.md), prepare the store package and listing, and submit the release. Upload ZIP created and inspected; Jan submitted 2026-11-16. Awaiting store approval; publication verification pending. | In progress | T-15 |
+| T-15 | Package and publish version 2.0 | Jan Zatloukal and AI agent | Follow [distribution procedure](distribution.md), prepare the store package and listing, and submit the release. Jan reported approval and publication on 2026-11-20; installed-store verification remains pending. | In progress | T-15 |
 | T-14 | Review open GitHub issues | Jan Zatloukal and AI agent | Check open issues on GitHub and decide what to do with each. | Not started | T-14 |
 
 ## Next step
 
-Obtain Jan's verification of T-11/T-09. T-15 upload ZIP is prepared at `.local/releases/chromtag-2.0.zip`; Jan submitted on 2026-11-16; await store approval and confirm publication before post-publication verification. Instructions are in `.memory/distribution.md`. Jan verified E-20, T-08, and T-13. Every planned feature requires a separate instruction. US-12 is verified. Clarify US-13 exclusion behavior before implementation. No plan archival is scheduled.
+T-09 and T-11 are verified. Jan reported Chrome Web Store approval and publication on 2026-11-20; verify the installed store version to complete T-15. Instructions are in `.memory/distribution.md`. Jan verified E-20, T-08, and T-13. Every planned feature requires a separate instruction. US-12 is verified. Clarify US-13 exclusion behavior before implementation. No plan archival is scheduled.

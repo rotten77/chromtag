@@ -2,7 +2,7 @@
 
 ## 2.0
 
-Implemented and user-verified on 2026-11-12. Submitted to the Chrome Web Store on 2026-11-16; approval and publication are pending.
+Implemented and user-verified on 2026-11-12. Submitted to the Chrome Web Store on 2026-11-16 and published on 2026-11-20.
 
 - Rebuilt the popup with standalone Angular and TypeScript. Removed jQuery, NanoScroller, and the YUI reset from the shipped runtime.
 - Added 1 transient bookmark snapshot per refresh, iterative tree processing, and virtualized rows for large collections.
