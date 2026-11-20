@@ -1,0 +1,239 @@
+# A collection of open source resources for web designers
+
+## Design guides (and studies)
+
+* [Design Principles](https://principles.design/)
+* [Adele - Design Systems](https://adele.uxpin.com/)
+* [Design Systems Repo](https://designsystemsrepo.com/)
+* [Style Guides](http://styleguides.io/)
+* [Laws of UX](https://lawsofux.com/)
+* [Humane by Design](https://humanebydesign.com/)
+* [Digital Psychology](https://digitalpsychology.io/)
+* [Design Manifestos](https://designmanifestos.org/)
+* [Código Deontologico READ (PDF)](https://www.designread.es/wp-content/uploads/2022/03/2022_CodigoDeontologico_READ.pdf)
+* [Design Principles (by Jeremy Keith)](https://principles.adactio.com/)
+* [Design Patterns (by Maggie Appleton)](https://maggieappleton.com/patterns)
+* [Research Bookmark](https://www.researchbookmark.io/)
+* [Neurodiversity Design System](https://www.neurodiversity.design/)
+* [Ethical Design resources](https://www.ethicaldesignresources.com/)
+* [Deceptive Patterns (aka Dark Patterns)](https://www.deceptive.design/)
+
+## Learn
+
+* [An interactive guide to color & contrast](https://colorandcontrast.com/)
+* [Resilient Web Design (by Jeremy Keith)](https://resilientwebdesign.com/)
+
+## UI galleries/guides
+
+* [Component gallery](https://component.gallery/) Repository of interface components based on examples from the world of design systems.
+
+## SVG Icons
+
+* [Templarian/MaterialDesign](https://github.com/Templarian/MaterialDesign) 2000+ Material Design Icons from the Community
+* [ionicons](http://ionicons.com/) The premium icon font for Ionic
+* [linear icons](https://linearicons.com/free)
+* [bytesize-icons](https://github.com/danklammer/bytesize-icons) Tiny style-controlled SVG iconset (92 icons, 10kb) 
+* [colebemis/feather](https://github.com/colebemis/feather) Simply beautiful open source icons
+* [michaelampr/jam](https://github.com/michaelampr/jam) Set of icons designed for web projects, illustrations, print projects, etc
+* [xtoolkit/Micon](https://github.com/xtoolkit/Micon) Windows 10 icons
+* [akveo/eva-icons](https://github.com/akveo/eva-icons) A pack of more than 480 beautifully crafted Open Source icons
+* [ikonate](https://github.com/mikolajdobrucki/ikonate) Fully customisable & accessible vector icons
+* [tabler-icons](https://github.com/tabler/tabler-icons) A set of over 300 free MIT-licensed high-quality SVG icons
+* [IconSear.ch](https://iconsear.ch/search.html) - SVG icon search engine with all of the above repos indexed (over 50,000 SVG icons!)
+* [phosphor](https://github.com/phosphor-icons) Phosphor is a flexible icon family for interfaces, diagrams, presentations — whatever, really.
+* [Feather](https://feathericons.com/)  Simply beautiful open-source icons
+* [Icônes](https://icones.js.org/) Icon explorer of almost all popular icon collections
+
+## Logos
+
+* [gilbarbara/logos](https://github.com/gilbarbara/logos) A huge collection of SVG logos http://svgporn.com/
+* [alrra/browser-logos](https://github.com/alrra/browser-logos) High resolution web browser logos
+* [danleech/simple-icons](https://github.com/danleech/simple-icons) SVG icons for popular brands https://simpleicons.org
+* [larsenwork/web.svg.min](https://github.com/larsenwork/web.svg.min) Vector icons, badges, flags etc. über optimised for web use.
+* [kogg/instant-logos](https://github.com/kogg/instant-logos) All the logos of instantlogosearch.com http://instantlogosearch.com/
+* [edent/SuperTinySocialIcons](https://github.com/edent/SuperTinySocialIcons) Under 1KB each! Super Tiny Social Icons are miniscule SVG versions of your favourite logos
+* [LogoSear.ch](https://logosear.ch/search.html) - search engine with over 200,000 SVG logos indexed
+* [VectorLogoZone](https://www.vectorlogo.zone/) - consistently formatted SVG logos
+* [Devicon](https://devicon.dev/) - Set of icons representing programming languages, designing & development tools
+
+## Illustrations
+
+* [Humaaans](https://www.humaaans.com/)
+* [Open Peeps](https://www.openpeeps.com/)
+* [Open Doodles](https://www.opendoodles.com/)
+* [Payforlayers](http://payforlayers.com/)
+
+## Photos
+
+* [WordPress Photos](https://wordpress.org/photos/)
+* [Openverse](https://openverse.org/)
+* [Pexels](https://www.pexels.com/)
+* [Unsplash](https://unsplash.com/)
+
+## Fonts
+
+> :+1: Available as variable font
+
+### Open Source Type foundries or curators
+
+* [Etcetera](https://www.etceteratype.co/)
+* [Fontshare](https://www.fontshare.com/)
+* [Collletttivo](https://www.collletttivo.it/)
+* [Open Foundry](https://open-foundry.com/)
+
+### UI
+
+* [SanFrancisco (MacOS|iOS|WatchOS)](https://github.com/AppleDesignResources/SanFranciscoFont) / [Updated version](https://github.com/Grawl/SanFranciscoFont) ([from apple](https://developer.apple.com/fonts/)) The Apple's UI font used in the Apple Watch, iOS 9, and OS X El Capitan.
+* [Roboto (Android)](https://github.com/google/roboto) Googles's UI font used in Android
+* [Segoe (Windows)](https://github.com/gericom-hummer/segoe) / [More complete version](https://github.com/Shyam9553/Segoe-fonts) UI font used in windows
+* [Fira (FirefoxOS)](https://github.com/mozilla/Fira) Mozilla's new typeface, used in Firefox OS
+* [Ubuntu](http://font.ubuntu.com/) The Ubuntu font family
+* [Inter](https://github.com/rsms/inter) The Inter UI font family http://rsms.me/inter/ :+1:
+* [Salesforce Sans](https://github.com/salesforce-ux/design-system/tree/master/assets/fonts)
+* [IBM Plex](https://github.com/IBM/type)
+* [iA Writer Duospace](https://github.com/iaolo/iA-Fonts)
+* [Public Sans](https://github.com/uswds/public-sans)
+* [PT Root UI](https://www.paratype.com/fonts/pt/pt-root-ui) :+1:
+* [Golos UI](https://www.paratype.com/fonts/pt/golos-ui) :+1:
+
+### Sans serif
+* [Onest](https://onest.md/en)
+* [Clear Sans](https://01.org/clear-SANS)
+* [Cooper Hewitt](https://www.cooperhewitt.org/open-source-at-cooper-hewitt/cooper-hewitt-the-typeface-by-chester-jenkins/)
+* [adobe-fonts/source-sans-pro](https://github.com/adobe-fonts/source-sans-pro)
+* [itfoundry/hind-vadodara](https://github.com/itfoundry/hind-vadodara)
+* [vernnobile/OswaldFont](https://github.com/vernnobile/OswaldFont)
+* [RedHatBrand/overpass](https://github.com/RedHatBrand/overpass)
+* [vernnobile/MuliFont](https://github.com/vernnobile/MuliFont)
+* [weiweihuanghuang/Work-Sans](https://github.com/weiweihuanghuang/Work-Sans)
+* [theleagueof/junction](https://github.com/theleagueof/junction)
+* [theleagueof/league-spartan](https://github.com/theleagueof/league-spartan)
+* [theleagueof/ostrich-sans](https://github.com/theleagueof/ostrich-sans)
+* [theleagueof/league-gothic](https://github.com/theleagueof/league-gothic)
+* [theleagueof/orbitron](https://github.com/theleagueof/orbitron)
+* [sursly/katahdin](https://github.com/sursly/katahdin)
+* [impallari/Raleway](https://github.com/impallari/Raleway)
+* [impallari/Encode-Sans](https://github.com/impallari/Encode-Sans)
+* [impallari/Amiko-Devanagari](https://github.com/impallari/Amiko-Devanagari)
+* [impallari/Cabin](https://github.com/impallari/Cabin)
+* [impallari/Libre-Franklin](https://github.com/impallari/Libre-Franklin)
+* [18F/18franklin](https://github.com/18F/18franklin)
+* [larsenwork/Gidole](https://github.com/larsenwork/Gidole)
+* [Lato](http://www.latofonts.com/lato-free-fonts)
+* [Barlow](https://github.com/jpt/barlow)
+* [Faune](http://www.cnap.graphismeenfrance.fr/faune/en.html)
+* [Space Grotesk](https://github.com/floriankarsten/space-grotesk) :+1:
+* [Wonder Unit](https://github.com/wonderunit/font-wonder-unit)
+* [Techna Sans](https://github.com/carlenlund/techna-sans)
+* [Manrope](https://manropefont.com/) :+1:
+* [Lexend](https://www.lexend.com/) :+1:
+* [Violet Sans](https://github.com/violetoffice/violet_sans)
+* [Secuela](https://github.com/defharo/secuela-variable) :+1:
+* [Atkinson Hyperlegible](https://brailleinstitute.org/freefont) A typeface with greater legibility and readability for low vision readers
+* [Unbounded](https://github.com/w3f/unbounded) Open source, freely available and on-chain funded font. :+1:
+* [Figtree](https://github.com/erikdkennedy/figtree) A friendly, simple geometric sans serif font :+1:
+* [Mona Sans & Hubot Sans](https://github.com/mona-sans) A variable font from GitHub :+1:
+* [Schibsted Grotesk](https://github.com/schibsted/schibsted-grotesk) :+1:
+* [Hanken Grotesk](https://hanken.co/products/hanken-grotesk) Sans serif typeface inspired by the classic grotesques.
+* [SN Pro](https://github.com/supernotes/sn-pro) Sans serif typeface optimized for use with Markdown. It is based on Nunito.
+* [Inclusive Sans](https://github.com/LivKing/Inclusive-Sans) A text font designed for accessibility and readability. [More info](https://www.oliviaking.com/inclusive-sans)
+
+### Serif
+* [Aleo](https://www.behance.net/gallery/8018673/ALEO-Free-Font-Family)
+* [adobe-fonts/source-serif-pro](https://github.com/adobe-fonts/source-serif-pro)
+* [georgd/EB-Garamond](https://github.com/georgd/EB-Garamond)
+* [klepas/open-baskerville](https://github.com/klepas/open-baskerville)
+* [impallari/Libre-Baskerville](https://github.com/impallari/Libre-Baskerville)
+* [CatharsisFonts/Cormorant](https://github.com/CatharsisFonts/Cormorant)
+* [theleagueof/linden-hill](https://github.com/theleagueof/linden-hill)
+* [theleagueof/fanwood](https://github.com/theleagueof/fanwood)
+* [theleagueof/sorts-mill-goudy](https://github.com/theleagueof/sorts-mill-goudy)
+* [theleagueof/prociono](https://github.com/theleagueof/prociono)
+* [theleagueof/goudy-bookletter-1911](https://github.com/theleagueof/goudy-bookletter-1911)
+* [skosch/Crimson](https://github.com/skosch/Crimson)
+  * [Fonthausen/CrimsonPro](https://github.com/Fonthausen/CrimsonPro) :+1: - A professionally produced redesign
+* [edwardtufte/et-book](https://github.com/edwardtufte/et-book)
+* [antonxheight/Arvo](https://github.com/antonxheight/Arvo)
+* [clauseggers/Inknut-Antiqua](https://github.com/clauseggers/Inknut-Antiqua)
+* [clauseggers/Playfair-Display](https://github.com/clauseggers/Playfair-Display)
+* [uplaod/YoungSerif](https://github.com/uplaod/YoungSerif)
+* [impallari/Libre-Clarendon](https://github.com/impallari/Libre-Clarendon)
+* [impallari/Libre-Bodoni](https://github.com/impallari/Libre-Bodoni)
+* [impallari/Libre-Caslon-Text](https://github.com/impallari/Libre-Caslon-Text)
+* [impallari/Libre-Caslon-Display](https://github.com/impallari/Libre-Caslon-Display)
+* [mozilla/zilla-slab](https://github.com/mozilla/zilla-slab)
+* [mjlagattuta/Hepta-Slab](https://github.com/mjlagattuta/Hepta-Slab)
+* [productiontype/NewsReader](https://github.com/productiontype/NewsReader) :+1:
+* [productiontype/Spectral](https://github.com/productiontype/Spectral)
+* [RingoSeeber/Petrona](https://github.com/RingoSeeber/Petrona) :+1:
+* [undercasetype/Frances](https://github.com/undercasetype/Fraunces) :+1:
+* [Literata](https://www.type-together.com/literata-font) :+1:
+* [Yrsa & Rasa](http://github.rosettatype.com/yrsa-rasa/) :+1: Fonts Fonts for Latin and Gujarati
+* [Reforma](https://pampatype.com/reforma) Versatile font family designed for long-form reading.
+
+### Monospaced
+* [adobe-fonts/source-code-pro](https://github.com/adobe-fonts/source-code-pro) Monospaced font family for user interface and coding environments
+* [tonsky/FiraCode](https://github.com/tonsky/FiraCode) Monospaced font with programming ligatures
+* [belluzj/fantasque-sans](https://github.com/belluzj/fantasque-sans) A font family with a great monospaced variant for programmers
+* [larsenwork/monoid](https://github.com/larsenwork/monoid) Customisable coding font with alternates, ligatures and contextual positioning. Crazy crisp at 12px/9pt.
+* [andreberg/Meslo-Font](https://github.com/andreberg/Meslo-Font) Customized version of Apple's Menlo font. 
+* [i-tu/Hasklig](https://github.com/i-tu/Hasklig) A code font with monospaced ligatures
+* [be5invis/Iosevka](https://github.com/be5invis/Iosevka) Slender typeface for code, from cod
+* [source-foundry/Hack](https://github.com/source-foundry/Hack) A typeface designed for source code
+* [madmalik/mononoki](https://github.com/madmalik/mononoki) A programming typeface
+* [raphaelbastide/Whois-mono](https://github.com/raphaelbastide/Whois-mono) A simple monospace font
+* [JetBrains Mono](https://www.jetbrains.com/lp/mono/) A free and open source typeface for developers
+* [Cascadia Code](https://github.com/microsoft/cascadia-code) Monospaced font that includes programming ligatures and is designed to en
+ce the modern look and feel of the Windows Terminal.
+* [Lilex](https://github.com/mishamyrt/Lilex) Open source programming font
+* [Victor Mono](https://github.com/rubjo/victor-mono) A free programming font with cursive italics and ligatures.
+* [Consolas ligaturized](https://github.com/somq/consolas-ligaturized/) Standard Consolas font with FiraCode ligatures.
+* [Hasklig](https://github.com/i-tu/Hasklig) Hasklig - a code font with monospaced ligatures
+* [Fantasque Sans](https://github.com/belluzj/fantasque-sans) A font family with a great monospaced variant for programmers.
+* [Input](https://input.fontbureau.com/) Input is a flexible system of fonts designed specifically for code
+* [JuliaMono](https://github.com/cormullion/juliamono) A monospaced font with reasonable Unicode support.
+* [displaay/Azeret](https://github.com/displaay/Azeret) Azeret is a sans-serif typeface with a mono-linear character.
+* [sursly/sono](https://github.com/sursly/sono) A soft monospace variable font :+1:
+* [fragment-mono](https://github.com/weiweihuanghuang/fragment-mono) Helvetica Monospace Coding Font
+* [Martian mono](https://github.com/evilmartians/mono) Free and open-source monospaced font from Evil Martians :+1:
+* [Intel One Mono](https://github.com/intel/intel-one-mono) Expressive monospaced font family that’s built with clarity, legibility, and the needs of developers in mind.
+* [Commit Mono](https://commitmono.com/) Neutral programming typeface.
+* [Monaspace](https://monaspace.githubnext.com/) :+1: An innovative superfamily of fonts for code
+* [0xProto](https://github.com/0xType/0xProto) A programming font focused on source code legibility
+* [Kelmscott mono](https://github.com/seeddisperser/kelmscott-mono) A black letter for the text editor
+* [Myna](https://github.com/sayyadirfanali/Myna) A monospace typeface designed for symbol-rich programming
+* [Mapple Mono](https://font.subf.dev/) A open source monospace font
+
+### Combined
+* [googlei18n/noto-fonts](https://github.com/googlei18n/noto-fonts)
+* [khaledhosny/libertinus](https://github.com/khaledhosny/libertinus)
+* [Inria](https://github.com/BlackFoundryCom/InriaFonts)
+* [Recursive Sans & Mono](https://www.recursive.design/) :+1:
+* [Instrument Sans](https://github.com/Instrument/instrument-sans) :+1: & [Instrument Serif](https://github.com/Instrument/instrument-serif).
+* [Geist Sans & Mono](https://vercel.com/font/sans) :+1: A typeface specifically designed for developers and designers
+* [Reddit Sans](https://github.com/reddit/redditsans) "The typeface of the internet" with Sans, Sans Condensed and Mono versions.
+
+### Others
+* [antijingoist/open-dyslexic](https://github.com/antijingoist/open-dyslexic)
+* [ipython/xkcd-font](https://github.com/ipython/xkcd-font)
+* [theleagueof/blackout](https://github.com/theleagueof/blackout)
+* [theleagueof/chunk](https://github.com/theleagueof/chunk)
+* [theleagueof/knewave](https://github.com/theleagueof/knewave)
+* [theleagueof/league-script-number-one](https://github.com/theleagueof/league-script-number-one)
+* [theleagueof/sniglet](https://github.com/theleagueof/sniglet)
+* [sursly/taurusmono](https://github.com/sursly/taurusmono)
+* [awp/chawp](https://github.com/awp/chawp)
+* [awp/christopharii](https://github.com/awp/christopharii)
+* [uplaod/FuturaRenner](https://github.com/uplaod/FuturaRenner)
+* [impallari/The-Lobster-Font](https://github.com/impallari/The-Lobster-Font)
+* [sursly/excelsiorama](https://github.com/sursly/excelsiorama)
+* [figs-lab/datalegreya](https://github.com/figs-lab/datalegreya)
+* [Optician Sans](https://github.com/anewtypeofinterference/Optician-Sans) Typeface based on the historical eye charts and optotypes used by opticians world wide
+* [Chomsky](https://github.com/ctrlcctrlv/chomsky) A font in the style of the New York Times masthead
+* [Shake](https://writewithparkinsons.com/) The typeface with Parkingson's
+* [Sprat](https://github.com/EthanNakache/Sprat-type) A display typeface
+* [Shantell Sans](https://github.com/arrowtype/shantell-sans) A marker-style font built for creative expression, typographic play, and animation. :+1:
+* [Urkiola](https://enekopalencia.itch.io/urkiola) Recovery of a basque font
+* [Departure Mono](https://departuremono.com/) A monospaced pixel font with a lo-fi technical vibe
+* [Alpha Lyrae](https://github.com/vegaprotocol/alpha-lyrae) The Vega font - uses Ligatures & Contextual Alternates to add a little glitch to your world 
+
