@@ -21,8 +21,22 @@ it('coalesces overlapping refreshes to one read and opens URLs with native tabs'
   expect(store.model().bookmarks).toHaveLength(1);
   expect(store.phase()).toBe('idle');
   expect(store.progress()).toBeNull();
-  await store.open('https://example.org');
+  expect(await store.open('https://example.org', 'new')).toBe(true);
   expect(create).toHaveBeenCalledWith({ url: 'https://example.org' });
+});
+it('navigates the active tab by default and reports missing tabs without opening a new one', async () => {
+  const query = vi.fn().mockResolvedValue([{ id: 42 }]);
+  const update = vi.fn().mockResolvedValue({});
+  const create = vi.fn();
+  TestBed.configureTestingModule({ providers: [{ provide: CHROME, useValue: { tabs: { query, update, create } } }] });
+  const store = TestBed.inject(BookmarkStore);
+  expect(await store.open('https://example.org')).toBe(true);
+  expect(query).toHaveBeenCalledWith({ active: true, currentWindow: true });
+  expect(update).toHaveBeenCalledWith(42, { url: 'https://example.org' });
+  expect(create).not.toHaveBeenCalled();
+  query.mockResolvedValue([]);
+  expect(await store.open('https://example.org')).toBe(false);
+  expect(store.error()).toContain('could not be opened');
 });
 it('reports failed loads without leaving the popup busy', async () => {
   TestBed.configureTestingModule({ providers: [{ provide: CHROME, useValue: { bookmarks: { getTree: vi.fn().mockRejectedValue(new Error('Denied')) } } }] });

@@ -39,9 +39,12 @@ export function appearanceFrom(value: unknown): Appearance {
 
 @Component({selector:'app-appearance', imports:[MaterialPicker], template: `
   <fieldset [disabled]="!ready()"><legend>Appearance</legend>
-    <div class="size-fields">@for (key of sizeKeys; track key) {
-      <label>{{ranges[key].label}} (px)<input #size type="number" [attr.aria-label]="ranges[key].label" [min]="ranges[key].min" [max]="ranges[key].max" [value]="settings()[key]" (change)="commitSize(key,size)"></label>
-    }</div>
+    <div class="size-fields" role="group" aria-label="Popup size"><span>Popup size:</span><div class="size-inputs">
+      @for (key of sizeKeys; track key) {
+        <input #size type="number" [attr.aria-label]="ranges[key].label" [min]="ranges[key].min" [max]="ranges[key].max" [value]="settings()[key]" (change)="commitSize(key,size)">
+        @if (key === 'width') { <span aria-hidden="true">×</span> }
+      }
+    </div></div>
     @for (key of sliders; track key) {
       <label>{{ranges[key].label}} <input type="range" [attr.aria-label]="ranges[key].label" [min]="ranges[key].min" [max]="ranges[key].max" [step]="ranges[key].step" [value]="settings()[key]" (input)="setDimension(key, +$any($event.target).value)"> {{settings()[key]}}{{ranges[key].unit}}</label>
     }
@@ -56,7 +59,7 @@ export function appearanceFrom(value: unknown): Appearance {
     }
   </fieldset>
   @if (error()) { <p role="alert">Appearance settings could not be loaded or saved.</p> }
-`, styles:`legend { font-weight:600; padding:0; } summary { cursor:pointer; list-style:none; text-decoration:underline; text-underline-offset:.15em; } summary::-webkit-details-marker { display:none; } fieldset { margin: .4rem 0 0; border:0; padding:0; display:grid; gap:.35rem; } fieldset > * + *, app-material-picker + app-material-picker { border-block-start:1px solid var(--border-color); padding-block-start:.4rem; } app-material-picker {display:block} .reset-colors {margin-block:.5rem} label { justify-content:space-between; } input { min-width:0; width:8rem; } .size-fields { display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.75rem } .size-fields label { flex-direction:column;align-items:start } .size-fields input {width:100%}`})
+`, styles:`legend { font-weight:600; padding:0; } summary { cursor:pointer; list-style:none; text-decoration:underline; text-underline-offset:.15em; } summary::-webkit-details-marker { display:none; } fieldset { margin: .4rem 0 0; border:0; padding:0; display:grid; gap:.35rem; } fieldset > * + *, app-material-picker + app-material-picker { border-block-start:1px solid var(--border-color); padding-block-start:.4rem; } app-material-picker {display:block} .reset-colors {margin-block:.5rem} label { justify-content:space-between; } input { min-width:0; width:8rem; } .size-fields { display:flex;align-items:center;justify-content:space-between;gap:.5rem } .size-inputs { display:flex;align-items:center;gap:.4rem } .size-inputs input { width:4.5rem;max-width:100% }`})
 export class AppearanceSettings {
   readonly ranges=ranges; readonly colors=colors; readonly roles=roles; readonly themes=themes; readonly sizeKeys=['width','height'] as const; readonly sliders=['font','split'] as const;
   readonly settings=signal(appearanceFrom(null)); readonly ready=signal(false); readonly error=signal(false);

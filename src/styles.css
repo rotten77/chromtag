@@ -34,8 +34,10 @@ button.title:hover { color: var(--tag-color); filter: none; }
 .add-bookmark { margin-inline-start: auto; }
 #popup-options { position:fixed; inset:auto; left:min(50vw, calc(var(--popup-width) / 2)); top:min(50vh, calc(var(--popup-height) / 2)); transform:translate(-50%, -50%); margin:0; width:calc(min(100vw, var(--popup-width)) - 2rem); max-height:calc(min(100vh, var(--popup-height)) - 2rem); color:var(--foreground); }
 #popup-options[open] { display:grid; gap:.75rem; }
-#popup-options > label + label, #popup-options > app-appearance, #popup-options .editor-actions { border-block-start:1px solid var(--border-color); padding-block-start:.65rem; }
+#popup-options > label + label, #popup-options > .click-settings-section, #popup-options > app-appearance, #popup-options .editor-actions { border-block-start:1px solid var(--border-color); padding-block-start:.65rem; }
 #popup-options .editor-actions { justify-content:flex-end; }
+#popup-options .click-settings { display:grid;gap:.75rem;margin:0;border:0;padding:0;min-width:0; }
+#popup-options .click-settings label + label { border-block-start:1px solid var(--border-color);padding-block-start:.65rem; }
 #popup-options label { display: flex; align-items: center; gap: .25rem; cursor: pointer; }
 .result-count { margin: 0; font-size: .85em; }
 .search-field { min-width: 0; width: min(13rem, 48%); padding: .25rem .4rem; border: 1px solid var(--border-color); border-radius: .25rem; }

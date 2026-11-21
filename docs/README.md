@@ -6,7 +6,7 @@ Chrome 157 or later is required. See [development setup](development.md) and [re
 
 ## Browse bookmarks
 
-Open the Chromtag extension action to display the popup. Each row shows the bookmark title, URL, immediate folder, and parsed tags. Select a title to open the page in a new tab.
+Open the Chromtag extension action to display the popup. Each row shows the bookmark title, URL, immediate folder, and parsed tags. In the published 2.0 build, select a title to open it in a new tab. In the 2.3 development build, bookmark clicks open in the current tab by default.
 
 Nested folders are supported. The list excludes `javascript:` bookmarks. Long titles and URLs truncate; tooltips expose the full text. Only the bookmark list scrolls in the main popup.
 
@@ -38,11 +38,15 @@ In the development build, green folders come first and blue tags follow in the s
 
 Chrome clears session filters on restart. Click outside the popup to dismiss it; there is no separate close button.
 
+## Bookmark clicks (development build)
+
+In version 2.3, open **Options**. Check **Open bookmarks in new tab** to use a new tab; leave it unchecked to use the current tab (the default). **Close popup after opening a bookmark** is checked by default. Both settings persist across Chrome restarts. Chrome can close an action popup automatically when the current tab navigates, even if you turn off explicit popup closing. If navigation fails, the popup stays open and shows an error.
+
 ## Appearance (development build)
 
 In version 2.2, open **Options**. The **Appearance** controls are always shown. Changes apply immediately and stay on this device after Chrome restarts.
 
-- Enter popup width (380–800 px) and height (400–600 px) in the adjacent number fields. Press Tab to apply each value. Use the slider for font size (12–18 px). Defaults are 540 × 580 px and 13 px.
+- Enter popup size on one line as width × height: width 380–800 px and height 400–600 px. Press Tab to apply each value. Use the slider for font size (12–18 px). Defaults are 540 × 580 px and 13 px.
 - **Filter space** limits the cloud to 20–60% of the height shared with bookmarks, in steps of 5 percentage points. The default is 35%. A small cloud leaves unused space for bookmarks.
 - **System** follows the system color preference. Choose **Light** or **Dark** to override it. Under **Light colors** and **Dark colors**, choose text, tag, folder, highlight (hover), and selection colors independently. Each picker shows color-only buttons with screen-reader labels from the [Material palette](https://www.materialpalette.com/colors). Expand a theme to see all its color pickers. Choose a family, then a shade; the swatches stay open. The palette works offline. Each theme has a reset button that restores only its colors; the other theme and popup layout stay unchanged. Backgrounds stay white and dark gray, respectively.
 

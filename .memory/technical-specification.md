@@ -125,7 +125,7 @@ T-03 establishes the Angular CLI workspace and Vitest unit/component runner. `np
 - **US-01-AC1:** Opening the extension action opens the popup.
 - **US-01-AC2:** Include supported bookmarks nested at all folder levels.
 - **US-01-AC3:** Rows show title, URL, containing folder when available, parsed tags, and an edit control. Display titles omit parsed hashtags safely.
-- **US-01-AC4:** Selecting a title opens its URL in a new tab. Version 2.3 makes the target configurable.
+- **US-01-AC4:** Selecting a title opens its URL in the configured tab. Version 2.3 defaults to the current tab; earlier versions opened a new tab.
 - **US-01-AC5:** Exclude `javascript:` bookmarks from the list.
 
 ### US-02 — See and filter by tags
@@ -307,7 +307,7 @@ These criteria supersede the 2.0 control placement and labels in US-05, US-08, a
 
 ### US-10 — Configure appearance (version 2.2)
 
-- **US-10-AC1:** Let users set the base font size. Use adjacent numeric inputs for popup width and height within supported Chrome popup limits. Provide a ratio slider for the vertical space shared by the combined folder/tag cloud and bookmark list, excluding fixed controls. Moving the slider toward filters gives the cloud more space; moving it toward bookmarks leaves more room for results. Preserve usable space for both and keep overflow filters reachable through pagination.
+- **US-10-AC1:** Let users set the base font size. Use adjacent numeric inputs in one Popup size: width × height row for popup width and height within supported Chrome popup limits. Provide a ratio slider for the vertical space shared by the combined folder/tag cloud and bookmark list, excluding fixed controls. Moving the slider toward filters gives the cloud more space; moving it toward bookmarks leaves more room for results. Preserve usable space for both and keep overflow filters reachable through pagination.
 - **US-10-AC2:** Offer Light, Dark, and System modes. System follows Chrome’s `prefers-color-scheme` signal on open and when the system setting changes while the popup is open. Explicit Light and Dark modes ignore system changes. Let users select foreground, tag, folder, filter highlight (hover), and selection colors independently for each theme using visual family and shade swatches covering the full [Material palette](https://www.materialpalette.com/colors), including accent shades, without requiring hex codes. Fix the light background at white (`#FFFFFF`) and the dark background at `#212121`; do not provide background-color editing.
 - **US-10-AC3:** Switching themes applies that theme's colors and fixed background; editing or resetting one theme’s palette to defaults does not change the other palette or any layout settings. Separate configuration rows with thin dividers.
 - **US-10-AC4:** Save font size, popup dimensions, split ratio, chosen mode, and both palettes in `chrome.storage.local`. Restore them across restarts; for System mode, resolve the current theme rather than saving the last resolved theme.
@@ -319,15 +319,15 @@ Approved developer-build defaults: System mode; 540 × 580 px popup (width 380�
 
 ### US-11 — Configure bookmark-click behavior (version 2.3)
 
-- **US-11-AC1:** Provide current-tab/new-tab selection, defaulting to a new tab.
-- **US-11-AC2:** Provide a yes/no popup-close setting, subject to Chrome lifecycle constraints.
+- **US-11-AC1:** Provide an Open bookmarks in new tab checkbox, unchecked by default (current tab).
+- **US-11-AC2:** Provide a Close popup after opening a bookmark checkbox, checked by default, subject to Chrome lifecycle constraints. Show both checkboxes directly in Options without a visible Bookmark clicks heading.
 - **US-11-AC3:** Save both preferences in `chrome.storage.local`; restore across popup/browser restarts.
 - **US-11-AC4:** Separate preferences from bookmark data and session filters.
 - **US-11-AC5:** Verify/document lifecycle constraints, especially during current-tab navigation.
 - **US-11-AC6:** Set version `2.3`. Update README and product documentation.
 - **US-11-AC7:** Regression-test defaults, both targets, both close choices, their combinations, and persistence.
 
-The popup-close default remains undefined.
+Jan approved current-tab navigation and closing the popup by default on 2026-11-21. Closing can occur automatically during current-tab navigation even when the close setting is off; the extension cannot prevent Chrome from closing its action popup.
 
 ## Workflow task acceptance criteria
 

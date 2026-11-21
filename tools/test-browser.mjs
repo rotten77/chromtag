@@ -167,6 +167,14 @@ try {
     const panel = el.getBoundingClientRect(), popup = document.body.getBoundingClientRect();
     return el.matches(':modal') && panel.width > popup.width * .85 && Math.abs(panel.left + panel.width / 2 - popup.width / 2) < 1 && Math.abs(panel.top + panel.height / 2 - popup.height / 2) < 1;
   }), 'Options is a wide modal centered in the popup');
+  assert(await optionsDialog.locator('.click-settings-section').evaluate(section => {
+    const firstLabel = section.querySelector('label');
+    return getComputedStyle(section).borderTopWidth === '1px' &&
+      getComputedStyle(section.querySelector('fieldset')).borderTopWidth === '0px' &&
+      section.getBoundingClientRect().top < firstLabel.getBoundingClientRect().top &&
+      !section.querySelector('legend') &&
+      getComputedStyle(section.querySelectorAll('label')[1]).borderTopWidth === '1px';
+  }), 'Click-option rows have the same thin separators as the preceding options');
   await page.getByRole('button', { name: 'Refresh', exact: true }).click();
   await page.getByRole('button', { name: '<b>Saved page</b>', exact: true }).waitFor();
   await checkRowSpacing(page);
@@ -226,6 +234,14 @@ try {
   assert.equal(await page.locator('article b').count(), 0, 'Bookmark markup must remain literal text');
   assert.equal(await page.getByRole('button', { name: 'Excluded javascript bookmark', exact: true }).count(), 0);
   assert.equal(await page.getByRole('button', { name: '#excluded', exact: true }).count(), 0);
+  await options.click();
+  const clickTarget = page.getByRole('checkbox', { name: 'Open bookmarks in new tab' });
+  assert.equal(await clickTarget.isChecked(), false);
+  const closeAfterOpen = page.getByRole('checkbox', { name: 'Close popup after opening a bookmark' });
+  assert(await closeAfterOpen.isChecked());
+  await clickTarget.check();
+  await closeAfterOpen.uncheck();
+  await page.getByRole('button', { name: 'Done' }).click();
   const opened = context.waitForEvent('page');
   await page.getByRole('button', { name: '<b>Saved page</b>', exact: true }).click();
   const tab = await opened;
@@ -529,13 +545,20 @@ try {
   await clearOnOpen.uncheck();
   await page.keyboard.press('Escape');
   await search.fill('example.invalid/scale/5000');
-  assert.deepEqual(await page.evaluate(() => chrome.storage.local.get(null)), { rememberFilters: true, showFolders: false });
+  assert.deepEqual(await page.evaluate(() => chrome.storage.local.get(null)), { rememberFilters: true, showFolders: false, bookmarkClicks: { target: 'new', close: false } });
   assert.equal(await page.evaluate(async () => (await chrome.storage.session.get('sessionFilters')).sessionFilters.query), 'example.invalid/scale/5000');
   await options.click();
   assert(await optionsDialog.getByRole('group', { name: 'Appearance', exact: true }).getByRole('spinbutton', { name: 'Popup width' }).isVisible(), 'Appearance controls are visible as soon as Options opens');
   const widthField = page.getByRole('spinbutton', {name:'Popup width'});
   const heightField = page.getByRole('spinbutton', {name:'Popup height'});
+  const popupSize = optionsDialog.getByRole('group', {name:'Popup size'});
+  assert.equal(await popupSize.locator('input').count(), 2);
   assert.equal((await widthField.boundingBox()).y, (await heightField.boundingBox()).y);
+  assert(await popupSize.evaluate(group => {
+    const label = group.querySelector('span');
+    const inputs = [...group.querySelectorAll('input')];
+    return label.textContent.trim() === 'Popup size:' && label.getBoundingClientRect().top < inputs[0].getBoundingClientRect().bottom && inputs[1].getBoundingClientRect().top < label.getBoundingClientRect().bottom;
+  }), 'Popup size label and width × height fields share one row');
   await widthField.fill('380'); await widthField.press('Tab');
   await heightField.fill('400'); await heightField.press('Tab');
   await page.getByRole('slider', {name:'Font size'}).press('End');
@@ -582,12 +605,22 @@ try {
   await fresh.getByText('10001 of 10001 bookmarks', { exact: true }).waitFor();
   assert.deepEqual(await fresh.evaluate(() => chrome.storage.session.get(null)), {});
   await fresh.getByRole('button', { name: 'Options', exact: true }).click();
+  assert.equal(await fresh.getByRole('checkbox', { name: 'Open bookmarks in new tab' }).isChecked(), true);
+  assert.equal(await fresh.getByRole('checkbox', { name: 'Close popup after opening a bookmark' }).isChecked(), false);
   await fresh.waitForFunction(() => !document.querySelector('input[aria-controls="filter-cloud"]').disabled);
   assert.equal(await fresh.getByRole('checkbox', { name: 'Show folders', exact: true }).isChecked(), false);
   assert.equal(await fresh.locator('.filter-cloud .folder').count(), 0);
-  assert.deepEqual(await fresh.evaluate(() => chrome.storage.local.get(null)), { rememberFilters: true, showFolders: false, appearance:storedAppearance });
+  assert.deepEqual(await fresh.evaluate(() => chrome.storage.local.get(null)), { rememberFilters: true, showFolders: false, bookmarkClicks: { target: 'new', close: false }, appearance:storedAppearance });
   assert.deepEqual(await fresh.locator('body').evaluate(el => [el.offsetWidth,el.offsetHeight,getComputedStyle(el).fontSize,document.documentElement.dataset.theme]),[380,400,'18px','dark']);
-  console.log('PASS: filters restore on reopen, respect opt-out and clear, and expire on browser restart; both independent Options preferences persist.');
+  await fresh.getByRole('checkbox', { name: 'Open bookmarks in new tab' }).uncheck();
+  await fresh.getByRole('button', { name: 'Done' }).click();
+  await context.route('https://example.invalid/**', route => route.fulfill({ contentType:'text/html', body:'<title>Current-tab destination</title>' }));
+  const currentBookmark = fresh.locator('article .title').first();
+  const currentUrl = await currentBookmark.locator('xpath=..').locator('.url').innerText();
+  await currentBookmark.click();
+  await fresh.waitForURL(currentUrl);
+  console.log('PASS: click preferences default to current tab/close, persist across restart, and navigate the current tab without opening another.');
+  console.log('PASS: filters restore on reopen, respect opt-out and clear, and expire on browser restart; independent Options preferences persist.');
 } finally {
   await context.close();
   await rm(profile, { recursive: true, force: true, maxRetries: 5 });

@@ -1,8 +1,12 @@
 # Changelog
 
+## 2.3 (unreleased)
+
+- Bookmark clicks now open in the current tab and close the popup by default. Two separately divided checkboxes in Options let you open bookmarks in a new tab and disable explicit popup closing. Both choices persist across Chrome restarts. Chrome may still close the popup when the current tab navigates.
+
 ## 2.2 (unreleased)
 
-- Added side-by-side width and height fields, plus sliders for font size and the space shared by filters and bookmarks. Filter hover and selection colors are configurable. Use the centered Options dialog to pick Material color swatches without visible color names for each theme. Appearance is always visible in Options. Expanding Light colors or Dark colors reveals all its swatches without another dropdown. Each theme has its own color reset button. Thin dividers separate the settings rows. System mode follows the current light or dark preference.
+- Added a single Popup size row with width × height fields, plus sliders for font size and the space shared by filters and bookmarks. Filter hover and selection colors are configurable. Use the centered Options dialog to pick Material color swatches without visible color names for each theme. Appearance is always visible in Options. Expanding Light colors or Dark colors reveals all its swatches without another dropdown. Each theme has its own color reset button. Thin dividers separate the settings rows. System mode follows the current light or dark preference.
 
 ## 2.1 (unreleased)
 

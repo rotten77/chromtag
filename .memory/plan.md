@@ -91,7 +91,7 @@ Include default/bounds decisions, documentation, and regression tests.
 
 | ID | Story | User goal | Status | Criteria |
 |---|---|---|---|---|
-| US-11 | Configure bookmark-click behavior | Choose tab target and popup-close behavior, with preferences retained across restarts. | Not started | US-11 |
+| US-11 | Configure bookmark-click behavior | Choose tab target and popup-close behavior, with preferences retained across restarts. | Ready for verification | US-11 |
 
 Include lifecycle verification, documentation, and regression tests.
 

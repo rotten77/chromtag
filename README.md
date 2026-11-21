@@ -12,6 +12,6 @@ Browsing and filtering are read-only. Chromtag processes bookmarks locally and d
 
 ## Documentation
 
-- [Extension guide](docs/README.md), including [appearance settings in the development build](docs/README.md#appearance-development-build)
+- [Extension guide](docs/README.md), including [appearance and bookmark-click settings in the development build](docs/README.md#bookmark-clicks-development-build)
 - [Development guide](docs/development.md)
 - [Changelog](docs/changelog.md)

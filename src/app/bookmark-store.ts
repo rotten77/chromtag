@@ -44,9 +44,19 @@ export class BookmarkStore {
     return this.pending;
   }
 
-  async open(url: string): Promise<void> {
-    try { await this.api.tabs.create({ url }); }
-    catch { this.error.set('This bookmark could not be opened.'); }
+  async open(url: string, target: 'current' | 'new' = 'current'): Promise<boolean> {
+    try {
+      if (target === 'new') await this.api.tabs.create({ url });
+      else {
+        const [tab] = await this.api.tabs.query({ active: true, currentWindow: true });
+        if (tab?.id === undefined) throw new Error('No active tab');
+        await this.api.tabs.update(tab.id, { url });
+      }
+      return true;
+    } catch {
+      this.error.set('This bookmark could not be opened.');
+      return false;
+    }
   }
 
   async save(draft: BookmarkDraft): Promise<boolean> {

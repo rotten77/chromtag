@@ -20,7 +20,7 @@ Run affected cases during each feature/epic verification. Use the full set when 
 
 | ID | Feature | Actions | Expected result |
 |---|---|---|---|
-| M-01 | US-01 Browse | Open the extension action; select a bookmark title. | Popup opens. Nested bookmarks show title, URL, folder, and tags. Title opens a new tab. |
+| M-01 | US-01 Browse | Open the extension action; select a bookmark title. | Popup opens. Nested bookmarks show title, URL, folder, and tags. In the 2.3 development build, title opens the current tab by default; 2.0 opens a new tab. |
 | M-02 | US-01 Exclusions | Include a disposable `javascript:` bookmark; refresh. | The bookmark does not appear in the list. |
 | M-03 | US-02 Tags | Select 2 tags; clear each by selecting it again. | Each tag appears once by normalized identity. Both selected tags must match. Clearing restores the corresponding results. |
 | M-04 | US-02 Parsing | Inspect the setup hashtags in the cloud and editor. | Punctuation is literal. `word#tag` and lone `#` are plain text. Only `#one` is parsed in `#one#two`. Stored spelling is preserved. |
@@ -48,6 +48,8 @@ Run affected cases during each feature/epic verification. Use the full set when 
 | M-26 | US-12 Popup actions | Use Add bookmark in the top row. Cancel the editor, open Options, uncheck Show folders, then select Refresh. Reopen the popup. | No branded header, footer, or close button. Adding still opens the editor. Folder choices hide for this popup only; refresh works and the next popup shows folders. |
 
 **M-27 — US-09 (2.1):** Start in a fresh test profile. Show folders should be checked and Clear filters on popup unchecked. Select filters and hide folders. Reopen: filters should restore and folders should stay hidden. Check Clear filters on popup: the current view should not change, but the next popup should be unfiltered. Uncheck it with a query active; reopen to check it restores. Clear filters and reopen: neither checkbox should change. Apply another query and restart Chrome: the query should disappear and folders should still be hidden.
+
+**M-29 — US-11:** In the unpacked extension, click a bookmark with default settings and confirm it navigates the current tab and closes the popup. In Options, check Open bookmarks in new tab and clear Close popup after opening a bookmark. Click another bookmark: it opens a new tab and the popup should remain open where Chrome permits. Test both close choices with each target, then restart Chrome and confirm both settings persist. Current-tab navigation may close the popup regardless of the close setting. On failed navigation, confirm an error appears rather than silently opening a new tab.
 
 **M-28 — US-10:** In Options → Appearance, try the smallest and largest popup/font sizes and both ends of Filter space with a crowded cloud. Page through filters and scroll bookmarks. Change a color in each palette, switch modes, then change the OS theme in System mode. Confirm only System follows the OS; reopen and restart Chrome to check the settings persist independently of filters.
 

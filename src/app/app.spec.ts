@@ -5,8 +5,8 @@ import { CHROME } from './chrome-api';
 
 it('renders user text literally and loads only once on popup creation', async () => {
   const getTree = vi.fn().mockResolvedValue([{ id: '1', title: '<img src=x onerror=alert(1)> #C++', url: 'https://example.org/<script>' }]);
-  const create = vi.fn().mockResolvedValue({});
-  TestBed.configureTestingModule({ providers: [{ provide: CHROME, useValue: { bookmarks: { getTree }, tabs: { create } } }] });
+  const update = vi.fn().mockResolvedValue({});
+  TestBed.configureTestingModule({ providers: [{ provide: CHROME, useValue: { bookmarks: { getTree }, tabs: { query: vi.fn().mockResolvedValue([{ id: 3 }]), update } } }] });
   const fixture = TestBed.createComponent(App);
   await fixture.whenStable();
   fixture.detectChanges();
@@ -14,8 +14,38 @@ it('renders user text literally and loads only once on popup creation', async ()
   expect(getTree).toHaveBeenCalledTimes(1);
   expect(root.querySelector('article img')).toBeNull();
   expect(root.textContent).toContain('<img');
-  root.querySelector<HTMLButtonElement>('.title')!.click();
-  expect(create).toHaveBeenCalledWith({ url: 'https://example.org/<script>' });
+  const close = vi.spyOn(window, 'close').mockImplementation(() => {});
+  try {
+    root.querySelector<HTMLButtonElement>('.title')!.click();
+    await fixture.whenStable();
+    expect(update).toHaveBeenCalledWith(3, { url: 'https://example.org/<script>' });
+    expect(close).toHaveBeenCalledOnce();
+  } finally { close.mockRestore(); }
+});
+
+it('restores click preferences and closes only after a successful open when enabled', async () => {
+  const getTree = vi.fn().mockResolvedValue([]);
+  const create = vi.fn().mockResolvedValue({});
+  const local = { get: vi.fn().mockResolvedValue({ bookmarkClicks: { target: 'new', close: true } }), set: vi.fn().mockResolvedValue(undefined) };
+  TestBed.configureTestingModule({ providers: [{ provide: CHROME, useValue: { bookmarks: { getTree }, tabs: { create }, storage: { local, session: {} } } }] });
+  const fixture = TestBed.createComponent(App);
+  await fixture.whenStable();
+  const app = fixture.componentInstance;
+  expect(app.clickTarget()).toBe('new');
+  expect(app.closeOnOpen()).toBe(true);
+  const close = vi.spyOn(window, 'close').mockImplementation(() => {});
+  try {
+    await app.openBookmark('https://example.org');
+    expect(create).toHaveBeenCalledWith({ url: 'https://example.org' });
+    expect(close).toHaveBeenCalledTimes(1);
+    create.mockRejectedValueOnce(new Error('blocked'));
+    await app.openBookmark('https://example.org');
+    expect(close).toHaveBeenCalledTimes(1);
+    app.setClickPreferences({ close: false });
+    await app.openBookmark('https://example.org');
+    expect(close).toHaveBeenCalledTimes(1);
+    expect(local.set).toHaveBeenCalledWith({ bookmarkClicks: { target: 'new', close: false } });
+  } finally { close.mockRestore(); }
 });
 
 it('shows reading, then processing and large-library guidance, and clears progress on failure', async () => {

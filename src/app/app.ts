@@ -23,6 +23,10 @@ import { SessionFilters } from './session-filters';
         <h2 id="options-title">Options</h2>
         <label><input type="checkbox" #showFolders aria-controls="filter-cloud" [checked]="foldersVisible()" [disabled]="!settingsReady()" (change)="setShowFolders(showFolders.checked)"> Show folders</label>
         <label><input type="checkbox" #clearOnOpen [checked]="!rememberFilters()" [disabled]="!settingsReady()" (change)="setRemember(!clearOnOpen.checked)"> Clear filters on popup</label>
+        <div class="click-settings-section"><fieldset class="click-settings" aria-label="Bookmark opening preferences" [disabled]="!clickSettingsReady()">
+          <label><input type="checkbox" [checked]="clickTarget() === 'new'" (change)="setClickPreferences({target: $any($event.target).checked ? 'new' : 'current'})"> Open bookmarks in new tab</label>
+          <label><input type="checkbox" [checked]="closeOnOpen()" (change)="setClickPreferences({close: $any($event.target).checked})"> Close popup after opening a bookmark</label>
+        </fieldset></div>
         <app-appearance />
         <div class="editor-actions">
           <button type="button" commandfor="popup-options" command="close" (click)="store.refresh()" [disabled]="store.loading() || store.busy()">Refresh</button>
@@ -48,7 +52,7 @@ import { SessionFilters } from './session-filters';
     <div class="results-tools"><p class="result-count" role="status">{{ filtered().length }} of {{ store.model().bookmarks.length }} bookmarks</p>
       <input #search class="search-field" type="search" aria-label="Search bookmarks" [value]="queryInput()" (input)="onQuery(search.value)" placeholder="Search bookmarks…" autocomplete="off">
     </div>
-    <app-bookmark-list [rows]="filtered()" (open)="store.open($event)" (edit)="openEditor($event)" />
+    <app-bookmark-list [rows]="filtered()" (open)="openBookmark($event)" (edit)="openEditor($event)" />
     </div>
     @if (!store.loading() && !filtered().length) { <p>{{ store.model().bookmarks.length ? 'No matching bookmarks.' : 'No bookmarks yet.' }}</p> }
     </div>
@@ -72,8 +76,38 @@ export class App implements OnDestroy {
   private readonly storage = inject(CHROME).storage;
   private readonly session = this.storage && new SessionFilters(this.storage.session, this.storage.local);
   private filtersTouched = false;
+  readonly clickTarget = signal<'current' | 'new'>('current');
+  readonly closeOnOpen = signal(true);
+  readonly clickSettingsReady = signal(false);
+  private clickSettingsTouched = false;
 
-  constructor() { void this.store.refresh(); void this.restoreSession(); }
+  constructor() { void this.store.refresh(); void this.restoreSession(); void this.restoreClickPreferences(); }
+
+  private async restoreClickPreferences(): Promise<void> {
+    if (!this.storage?.local) return;
+    try {
+      const saved = (await this.storage.local.get('bookmarkClicks'))['bookmarkClicks'];
+      if (!this.clickSettingsTouched && saved && typeof saved === 'object') {
+        const preferences = saved as Record<string, unknown>;
+        this.clickTarget.set(preferences['target'] === 'new' ? 'new' : 'current');
+        this.closeOnOpen.set(typeof preferences['close'] === 'boolean' ? preferences['close'] : true);
+      }
+      this.clickSettingsReady.set(true);
+    } catch { this.storageError.set('Bookmark-click settings could not be loaded.'); }
+  }
+
+  setClickPreferences(patch: { target?: 'current' | 'new'; close?: boolean }): void {
+    this.clickSettingsTouched = true;
+    if (patch.target) this.clickTarget.set(patch.target);
+    if (patch.close !== undefined) this.closeOnOpen.set(patch.close);
+    void this.storage.local.set({bookmarkClicks: {target: this.clickTarget(), close: this.closeOnOpen()}})
+      .catch(() => this.storageError.set('Bookmark-click settings could not be saved.'));
+  }
+
+  async openBookmark(url: string): Promise<void> {
+    const opened = await this.store.open(url, this.clickTarget());
+    if (opened && this.closeOnOpen()) window.close();
+  }
 
   private async restoreSession(): Promise<void> {
     try {
