@@ -22,6 +22,15 @@ for (const file of documents) {
   }
 }
 const spec = await read('.memory/technical-specification.md');
+const plan = await read('plan.todo');
+const planItems = [...plan.matchAll(/^  ([✔☐]) ((?:US|T)-\d{2})\b([^\r\n]*)/gmu)];
+const planIds = planItems.map(([, , id]) => id);
+assert.equal(planIds.length, new Set(planIds).size, 'Todo+ plan IDs must be unique');
+for (const [, marker, id, remainder] of planItems) {
+  assert(spec.includes(`### ${id} — `), `Specification section missing for ${id}`);
+  assert(marker === '☐' || !/@(?:in-progress|ready-for-verification)\b/u.test(remainder), `Verified ${id} cannot have a pending status tag`);
+}
+assert(planIds.length > 0, 'Todo+ plan must contain stories and tasks');
 const criteria = [...spec.matchAll(/\*\*((?:US-0[1-8]|US-12|T-0[0-7])-AC\d+):\*\*/gu)].map(match => match[1]);
 const coverage = await read('.memory/test-coverage.md');
 const mapped = new Set([...coverage.matchAll(/\b(?:US-0[1-8]|US-12|T-0[0-7])-AC\d+\b/gu)].map(match => match[0]));
@@ -65,4 +74,4 @@ if (process.argv.includes('--built')) {
   assert.equal(await read('dist/chromtag/browser/3rdpartylicenses.txt'), await read('dist/chromtag/3rdpartylicenses.txt'), 'Ship the generated dependency notices inside the extension root');
   dom.window.close();
 }
-console.log(`PASS: ${links} documentation links, ${mapped.size} criterion mappings, browser/version consistency, source/ignore policy${process.argv.includes('--built') ? ', generated package' : ''}.`);
+console.log(`PASS: ${links} documentation links, ${mapped.size} criterion mappings, ${planIds.length} planned items, browser/version consistency, source/ignore policy${process.argv.includes('--built') ? ', generated package' : ''}.`);

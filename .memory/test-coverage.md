@@ -1,4 +1,4 @@
-# Version 2.0 criterion mapping
+# Criterion mapping
 
 Criteria remain authoritative in [the technical specification](../.memory/technical-specification.md). This map names regression evidence without redefining requirements. `npm test` runs the application evidence below; `npm run check` checks mapping completeness and links.
 
@@ -33,7 +33,7 @@ Criteria remain authoritative in [the technical specification](../.memory/techni
 | US-07-AC4, US-07-AC5 | [Store tests](../src/app/bookmark-store.spec.ts): update/move/remove and failures; [Chrome integration](../tools/test-browser.mjs): actual native state. |
 | US-07-AC6 | [Editor tests](../src/app/bookmark-editor.spec.ts): cancel without writes; [component tests](../src/app/app.spec.ts): cancel retains creation; [Chrome integration](../tools/test-browser.mjs): Cancel/overlay/Escape. |
 | US-07-AC7 | [Store tests](../src/app/bookmark-store.spec.ts) and [Chrome integration](../tools/test-browser.mjs): exactly one read per mutation, refreshed native records/clouds, and the saved/moved title visible in Chrome Bookmark Manager. |
-| US-08-AC1, US-08-AC2, US-08-AC3 | [Component tests](../src/app/app.spec.ts) and [Chrome integration](../tools/test-browser.mjs): visible default, hide/reopen, no localStorage; [project check](../tools/check-project.mjs): no persistence in runtime source. |
+| US-08-AC1, US-08-AC2, US-08-AC3 | [Component tests](../src/app/app.spec.ts) and [Chrome integration](../tools/test-browser.mjs): visible default, hide/reopen, persistent Show folders preference, no localStorage; [project check](../tools/check-project.mjs): no localStorage in runtime source. |
 | T-00-AC1, T-00-AC2, T-00-AC3 | Historical verified preparation: commit `e600c02`, [session log](../.memory/log/2026-11-12.md). [Project check](../tools/check-project.mjs) checks preserved links/ignore rules. Branch creation is human evidence, not inferred by tests. |
 | T-01-AC1, T-01-AC2, T-01-AC3 | Historical user-verified [baseline](legacy-baseline.md), [measurements](legacy-measurements.md), [diagnostic runner](../tools/legacy-baseline.mjs), and recorded matching decisions. The legacy diagnostic is separate from npm test. |
 | T-02-AC1, T-02-AC2, T-02-AC3 | [Manifest regression](../tools/validate-manifest.test.mjs), [validator](../tools/validate-manifest.mjs), [audit](manifest-audit.md), [project check](../tools/check-project.mjs), [Chrome integration](../tools/test-browser.mjs). |

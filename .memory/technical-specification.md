@@ -1,12 +1,12 @@
 # Technical specification
 
-Updated: 2026-11-12
+Updated: 2026-11-21
 
 ## Scope and authority
 
 Chromtag is a Chrome extension for browsing and editing Chrome bookmarks through a popup. Hashtags in bookmark titles provide tags.
 
-This specification defines implemented E-20 behavior and planned versions 2.1–2.3. The plan distinguishes automated readiness from user verification. Acceptance criteria live here. The plan tracks matching IDs. This is the sole specification. `docs/` contains user and developer documentation and images. Historical 1.8 behavior and analysis remain in `.memory/legacy-baseline.md` and `.memory/legacy-analysis.md`.
+This specification defines the extension's behavior, architecture, and acceptance criteria. `plan.todo` tracks epics, stories, tasks, and verification status by matching ID. This is the sole specification. `docs/` contains user and developer documentation and images. Historical 1.8 behavior and analysis remain in `.memory/legacy-baseline.md` and `.memory/legacy-analysis.md`.
 
 ## Historical implementation
 
@@ -71,17 +71,15 @@ References: [Unicode normalization](https://developer.mozilla.org/en-US/docs/Web
 
 ### Storage policy
 
-| Data | Version | Location | Lifetime |
-|---|---|---|---|
-| Bookmarks, title hashtags, folder relationships | All | Chrome native bookmark tree | Chrome-managed |
-| Derived model and search index | All | Popup memory | Popup load/refresh |
-| Folder-cloud visibility | 2.0 | Popup memory | Popup session |
-| Show folders (default: on) | 2.1 onward | `chrome.storage.local` | Across popup/browser restarts |
-| Search query, selected tags/folder | 2.0 | Popup memory | Popup session |
-| Search query, selected tags/folder | 2.1 onward, when remembering filters | `chrome.storage.session` | Current browser session |
-| Clear filters on popup (default: off) | 2.1 onward | `chrome.storage.local` | Across popup/browser restarts |
-| Appearance/layout preferences | 2.2 onward | `chrome.storage.local` | Across popup/browser restarts |
-| Bookmark-click preferences | 2.3 onward | `chrome.storage.local` | Across popup/browser restarts |
+| Data | Location | Lifetime |
+|---|---|---|
+| Bookmarks, title hashtags, folder relationships | Chrome native bookmark tree | Chrome-managed |
+| Derived model and search index | Popup memory | Popup load/refresh |
+| Show folders (default: on) | `chrome.storage.local` | Across popup/browser restarts |
+| Search query, selected tags/folder (when remembering filters) | `chrome.storage.session` | Current browser session |
+| Clear filters on popup (default: off) | `chrome.storage.local` | Across popup/browser restarts |
+| Appearance/layout preferences | `chrome.storage.local` | Across popup/browser restarts |
+| Bookmark-click preferences | `chrome.storage.local` | Across popup/browser restarts |
 
 Do not use `localStorage`, a separate bookmark store, an account, or a backend. Never persist bookmarks or derived indexes in Chrome storage. Persistent preferences are explicit exceptions to the transient extension-state policy.
 
@@ -90,11 +88,11 @@ Do not use `localStorage`, a separate bookmark store, an account, or a backend. 
 - Retain `manifest_version: 3`; audit metadata, icons, permissions, APIs, and Chrome compatibility.
 - Keep `bookmarks` and replace broad `tabs` access with `activeTab`. The user approved this permission policy during T-02 on 2026-11-12.
 - Read current-page metadata only when Chrome exposes it under the action's temporary grant. If required metadata is unavailable, report that the page cannot be saved and create no incomplete bookmark. US-06 owns implementation and regression coverage.
-- Add `storage` for versions 2.1–2.3 preferences. Session storage requires Chrome 102 or a higher framework floor.
+- Include `storage` for preferences. Session storage requires Chrome 102 or a higher framework floor.
 - T-03 selects Angular 22, TypeScript 6, and Chrome 157 as the conservative application floor. The manifest and `.browserslistrc` agree. Node ranges follow Angular's published compatibility table.
 - Use native `chrome.*` Promise APIs. Use `Intl.Segmenter` with grapheme granularity for the approved search-boundary policy; its Chrome 87 floor is below the selected extension API floor.
 - Add no background service worker without a demonstrated need.
-- Keep `manifest.json` and the preserved 16/48/128 px PNG icons in `public/`; copy them into the production output. T-07 sets extension version `2.0` after automated checks; explicit user verification remains pending.
+- Keep `manifest.json` and the preserved 16/48/128 px PNG icons in `public/`; copy them into the production output. Keep manifest and package versions consistent. Automated checks do not replace explicit user verification.
 - Set `action.default_popup` to built `index.html`. The loadable extension root is `dist/chromtag/browser/`.
 - Bundle local scripts/styles only. Comply with extension Content Security Policy (CSP), without remote code, inline scripts, or `eval`.
 - Declare `script-src 'self'; object-src 'none';` for extension pages. Do not add host permissions, content scripts, or a sandbox.
@@ -118,14 +116,14 @@ T-03 establishes the Angular CLI workspace and Vitest unit/component runner. `np
 
 `ng serve` is not the extension runtime. Select dependency versions and a test runner during setup; the supplied requirements do not prescribe them.
 
-## Version 2.0 feature acceptance criteria
+## Core feature acceptance criteria
 
 ### US-01 — Browse Chrome bookmarks
 
 - **US-01-AC1:** Opening the extension action opens the popup.
 - **US-01-AC2:** Include supported bookmarks nested at all folder levels.
 - **US-01-AC3:** Rows show title, URL, containing folder when available, parsed tags, and an edit control. Display titles omit parsed hashtags safely.
-- **US-01-AC4:** Selecting a title opens its URL in the configured tab. Version 2.3 defaults to the current tab; earlier versions opened a new tab.
+- **US-01-AC4:** Selecting a title opens its URL in the configured tab. The default is the current tab.
 - **US-01-AC5:** Exclude `javascript:` bookmarks from the list.
 
 ### US-02 — See and filter by tags
@@ -157,7 +155,7 @@ T-03 establishes the Angular CLI workspace and Vitest unit/component runner. `np
 
 - **US-05-AC1:** **Reset filter** clears the query and all selected tags/folders.
 - **US-05-AC2:** All supported bookmarks return to the collection. Virtualization still bounds rendered rows.
-- **US-05-AC3:** From version 2.1, Reset clears saved filters; reopening does not restore cleared filters.
+- **US-05-AC3:** Clearing filters also clears saved filters; reopening does not restore them.
 
 ### US-06 — Add the current page
 
@@ -178,9 +176,9 @@ T-03 establishes the Angular CLI workspace and Vitest unit/component runner. `np
 
 ### US-08 — Show or hide folders
 
-- **US-08-AC1:** Toolbar controls show or hide the folder cloud.
-- **US-08-AC2:** Keep visibility only in popup memory, never `localStorage` or either Chrome storage area.
-- **US-08-AC3:** Closing the popup discards the visibility choice. Show folders initially; the user selected this default during E-20 implementation.
+- **US-08-AC1:** The Show folders option shows or hides folder choices without changing bookmarks.
+- **US-08-AC2:** Store the visibility preference in `chrome.storage.local`, not `localStorage`.
+- **US-08-AC3:** Show folders initially when no preference is saved; restore saved visibility on reopening.
 
 ## Supporting task acceptance criteria
 
@@ -231,7 +229,7 @@ Implementation uses iterative traversal, rows sized to 5.6 times the base font (
 - **T-05-AC9:** Increase the default popup height from 540 to 580 px, retaining its 540 px width. Keep the main popup, search field, cloud, and toolbar stationary; only the app-bookmark-list area scrolls. Preserve usable list space with large clouds and at narrower/larger-font test sizes.
 - **T-05-AC10:** Underline bookmark title buttons. On hover, use the current tag color without darkening it. Hide Edit when its article is not hovered; reveal it on article hover. Keep Edit keyboard-focusable and reveal it on visible keyboard focus so keyboard users can open the editor.
 
-T-05-AC5 through T-05-AC10 record Jan's 2026-11-12 review changes to the 2.0 candidate. Jan selected a fixed cloud with excess labels collapsed instead of scrolling the cloud with bookmarks. Pagination keeps the hidden choices reachable and outside keyboard focus until displayed. The existing editor overlay/tag picker can still scroll independently when open.
+T-05-AC5 through T-05-AC10 record Jan's 2026-11-12 review changes. Jan selected a fixed cloud with excess labels collapsed instead of scrolling the cloud with bookmarks. Pagination keeps the hidden choices reachable and outside keyboard focus until displayed. The existing editor overlay/tag picker can still scroll independently when open.
 
 ### T-06 — Document and verify
 
@@ -245,15 +243,15 @@ T-05-AC5 through T-05-AC10 record Jan's 2026-11-12 review changes to the 2.0 can
 
 Regression tests are explicit supplied requirements. `npm test` runs manifest, Angular/Vitest unit/component, production build, project/package, and native stable Chrome checks. [Criterion mapping](test-coverage.md) links every E-20/preparation criterion to evidence. [Testing documentation](testing.md) records limits and timestamped HTML reports.
 
-### T-07 — Release version 2.0
+### T-07 — Release the modernized extension
 
-- **T-07-AC1:** Set manifest version `2.0` after applicable verification.
-- **T-07-AC2:** Add a v2.0 changelog entry describing machine-assisted development and human guidance.
+- **T-07-AC1:** Set a consistent manifest and package version for the release after applicable verification.
+- **T-07-AC2:** Include a changelog entry describing machine-assisted development and human guidance.
 - **T-07-AC3:** Remove replaced legacy runtime code after the Angular build works end to end and no references remain.
 
-The supplied plan names `legacy/`; no tracked directory with that name exists now. Preserve the ignored `.local/legacy/` archive during implementation and final testing. T-11 handles obsolete legacy and work files after final testing.
+The original modernization materials named `legacy/`; no tracked directory with that name exists now. Preserve the ignored `.local/legacy/` archive during implementation and final testing. T-11 handles obsolete legacy and work files after final testing.
 
-## Planned version 2.0 follow-up acceptance criteria
+## Loading and processing acceptance criteria
 
 ### T-13 — Show bookmark processing progress
 
@@ -265,7 +263,11 @@ The supplied plan names `legacy/`; no tracked directory with that name exists no
 
 T-13 counts all URL-bearing tree nodes, including unsupported `javascript:` bookmarks; only supported bookmarks enter the list. The count uses a separate iterative pass over the same tree, not another Chrome read. A chunked iterative builder yields to the browser at most every 8 ms for large snapshots (1,000+ bookmark nodes), allowing progress to paint; small snapshots keep the synchronous fast path. Folder finalization also runs in chunks. The UI displays a count only after the tree arrives. At 10,000+ URL nodes it shows guidance citing the 10,001-supported-bookmark synthetic Chrome test without promising a capacity or duration. Assistive technology receives only the phase change, not each numeric increment.
 
-## Later release acceptance criteria
+## Additional feature acceptance criteria
+
+### US-13 — Exclude folders or tags from filter choices (planned)
+
+Hide selected folder or tag choices from the filter selector without hiding their bookmarks from results. This can keep special-purpose folders such as `Quick access` out of the selector when users normally open them from Chrome's bookmark menu. The exclusion scope, configuration UI, tag behavior, persistence, interaction with active filters, and treatment of descendant folders require clarification before acceptance criteria are defined. Do not implement until Jan resolves these choices.
 
 ### US-14 — Bulk edit bookmarks (planned)
 
@@ -289,7 +291,7 @@ The location of the rename control is undecided.
 
 ### US-12 — Redesign the popup layout (unreleased)
 
-These criteria supersede the 2.0 control placement and labels in US-05, US-08, and T-05 for the development build.
+These criteria define the current control placement and labels, superseding older descriptions in US-05 and T-05.
 
 - **US-12-AC1:** Place the wrapping cloud above search, with folders before tags. Use folder green `#388E3C` and tag blue `#1976D2`, both with white semibold text. Selecting a visible chip updates results directly and keeps its position and page. Show selection with a red `#D32F2F` background only; retain the existing hover, keyboard focus, and pressed-state behavior.
 - **US-12-AC2:** Show First, Previous, and Next directly above the choices when paging is needed; hide pagination when all choices fit.
@@ -340,7 +342,7 @@ Jan moved T-08 ahead of T-13 on 2026-11-12 and requested that the agent perform 
 
 ## Post-implementation task acceptance criteria
 
-Jan brought T-11 forward for the frozen version 2.0 release. Future features remain planned. T-12 (plan archival) is removed; the plan remains active. E-MAINT contains T-14 independently of future releases. T-09 maintains per-feature test cases now; T-10's separate testing role remains pending clarification.
+T-12 (plan archival) is removed; the plan remains active. T-08–T-11 and T-14–T-16 are grouped under Modernization in `plan.todo`. T-15 is closed based on Jan's confirmation that the package was released and published. Future releases are at Jan's discretion, not planning tasks. T-09 maintains per-feature test cases; T-10's separate testing role remains pending clarification.
 
 ### T-09 — Prepare manual test materials
 
@@ -354,16 +356,16 @@ Jan brought T-11 forward for the frozen version 2.0 release. Future features rem
 
 ### T-11 — Clean the repository for the current version
 
-- **T-11-AC1:** Prepare the frozen version 2.0 release now, before future feature updates. Consolidate redundant user documentation without deleting referenced historical evidence or unrelated private files.
-- **T-11-AC2:** Keep README to a short description, installation, privacy, and documentation links. Provide development instructions in `docs/development.md`, detailed extension documentation in `docs/README.md` and complete version 1.0–2.0 history in `docs/changelog.md`.
-- **T-11-AC3:** Identify historical screenshots as historical. Keep distribution preparation in `.memory/distribution.md` for the next planned issue, T-15, rather than in published user documentation.
+- **T-11-AC1:** Consolidate redundant user documentation without deleting referenced historical evidence or unrelated private files.
+- **T-11-AC2:** Keep README to a short description, installation, privacy, and documentation links. Provide development instructions in `docs/development.md`, detailed extension documentation in `docs/README.md`, and complete release history in `docs/changelog.md`.
+- **T-11-AC3:** Identify historical screenshots as historical. Keep distribution preparation in `.memory/distribution.md`, rather than in published user documentation.
 - **T-11-AC4:** After cleanup, the current version's required build, test, and package checks pass, and documentation links resolve.
 
-### T-15 — Package and publish version 2.0
+### T-15 — Package and publish the extension
 
 - **T-15-AC1:** Follow and verify `.memory/distribution.md` to build, test, and create an upload ZIP with `manifest.json` at the root and no private files.
 - **T-15-AC2:** Prepare current store screenshots, release notes, and accurate privacy/permission declarations. Jan controls account access and submission/publication.
-- **T-15-AC3:** Record actual submission/publication state and verify the installed store release after publication. Do not equate a built ZIP with a published release.
+- **T-15-AC3:** Record actual submission and publication confirmed by Jan. Do not equate a built ZIP with a published release. Jan closed T-15 based on his confirmation; an independent installed-store check is not required for this task.
 
 ### T-16 — Add support and rating links
 
@@ -372,7 +374,7 @@ Jan brought T-11 forward for the frozen version 2.0 release. Future features rem
 
 ### T-14 — Review open GitHub issues
 
-- **T-14-AC1:** Under E-MAINT, check the repository's open GitHub issues without depending on plan archival.
+- **T-14-AC1:** Under Modernization, check the repository's open GitHub issues without depending on plan archival.
 - **T-14-AC2:** Decide with Jan what to do with each open issue and record the outcome.
 
 ## Verification procedure
@@ -394,7 +396,7 @@ These steps apply after the relevant implementation and tooling exist.
 
 - Real-profile performance and timing targets. T-01 records the legacy synthetic baseline; T-04/T-05 use 10,001 supported browser records and deep unit fixtures. Tests check at most 24 live rows in exercised layouts; this is not a timing guarantee.
 - T-13 uses all URL-bearing nodes for progress, an 8 ms chunk budget for large snapshots, and a 10,000-node threshold for guidance. The 10,001-bookmark synthetic test is evidence, not a support guarantee.
-- Version 2.2 appearance settings are subject to developer-build review; defaults and supported ranges are recorded under US-10. Version 2.0 starts with a 13 px base font and a 540 × 580 px popup; T-05 checks compact layout and overflow.
-- The v2.3 popup-close default and verified lifecycle limits.
+- Appearance defaults and supported ranges are recorded under US-10; T-05 checks compact layout and overflow. US-09, US-10, and US-11 await user verification.
+- Current-tab navigation can close the action popup regardless of the close preference; verify this lifecycle behavior in the developer build.
 
 Resolve decisions before affected implementation. Analysis suggestions are not approved technical choices.

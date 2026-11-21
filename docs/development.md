@@ -1,6 +1,6 @@
 # Develop Chromtag
 
-Use Node.js `^22.22.3`, `^24.15.0`, or `^26.0.0`. The published extension is version 2.0; the development build is version 2.2.
+Use Node.js `^22.22.3`, `^24.15.0`, or `^26.0.0`. The published extension is version 2.0; the development build is version 2.3.
 
 ## Build and load the extension
 
@@ -28,4 +28,4 @@ npm test       # Full suite; requires stable Chrome 157+
 
 Test reports: `.local/test-results/`.
 
-See the [agent workflow](../AGENTS.md) and [release plan](../.memory/plan.md).
+See the [agent workflow](../AGENTS.md) and [plan](../plan.todo).

@@ -1,0 +1,58 @@
+Chromtag plan:
+  Source of truth for epics, stories, tasks, and statuses. Technical design and acceptance criteria: `.memory/technical-specification.md` (matching IDs).
+  ✔ Verified by Jan. ☐ Not started. ☐ @ready-for-verification Implemented, awaiting Jan's verification. ☐ @in-progress In progress.
+  Implement at most one user story at a time. Tests and commits do not replace explicit user verification.
+
+E-00 — Repository preparation:
+  ✔ T-00 Prepare the repository
+
+E-20 — Modernization:
+  ✔ T-01 Define and baseline behavior
+  ✔ T-02 Audit the manifest
+  ✔ T-03 Rebuild the popup with Angular
+  ✔ T-04 Fix scale and search
+  ✔ T-05 Preserve and refine the design
+  ✔ T-06 Document and verify
+  ✔ T-07 Release the modernized extension
+  ✔ US-01 Browse Chrome bookmarks
+  ✔ US-02 See and filter by tags
+  ✔ US-03 Filter by bookmark folder
+  ✔ US-04 Search bookmarks
+  ✔ US-05 Reset filters
+  ✔ US-06 Add the current page
+  ✔ US-07 Edit or delete a bookmark
+  ✔ US-08 Show or hide folders
+  ✔ T-08 Remove automatic logging and commit instructions
+  ✔ T-09 Maintain manual test cases
+  ☐ T-10 Perform final manual verification
+  Clarify the separate final-testing role.
+  ✔ T-11 Clean the repository for the published release
+  ✔ T-15 Package and publish the extension
+  Jan confirmed version 2.0 was packaged, released, and published; T-15 is closed on that confirmation. Future releases are at Jan's discretion, not planned here.
+  ☐ T-14 Review open GitHub issues
+  ☐ T-16 Add support and rating links
+  Confirm the provider and URL before implementation.
+
+E-20 follow-up — Bookmark loading and processing feedback:
+  ✔ T-13 Show bookmark processing progress
+
+E-21 — Session filters:
+  ☐ US-09 Restore popup filters @ready-for-verification
+
+E-22 — Appearance:
+  ☐ US-10 Configure appearance @ready-for-verification
+
+E-23 — Bookmark clicks:
+  ☐ US-11 Configure bookmark-click behavior @ready-for-verification
+
+E-24 — UI redesign:
+  ✔ US-12 Redesign the popup layout
+
+E-25 — Filter-selector exclusions:
+  ☐ US-13 Exclude folders or tags from filter choices
+  Clarify exclusion scope, configuration, persistence, active filters, and descendant folders before implementation.
+
+E-26 — Bulk bookmark actions:
+  ☐ US-14 Bulk edit bookmarks
+  ☐ US-15 Rename a tag across bookmarks
+  Source: https://github.com/rotten77/chromtag/issues/4

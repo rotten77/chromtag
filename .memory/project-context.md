@@ -8,20 +8,20 @@ Chromtag is a Chrome bookmark browser/editor. Hashtags in native bookmark titles
 - AI agents follow `AGENTS.md`, maintain documentation, and implement at most 1 story before user verification.
 - The completed E-20 batch used Jan's explicit whole-epic authorization with sequential task commits/logs. Jan explicitly verified E-20 on 2026-11-12. The exception does not extend into E-21; future work follows the normal stopping rule unless Jan directs otherwise.
 - Jan moved T-08 ahead of T-13 on 2026-11-12 and asked the agent to remove automatic session-ending, logging, and commit requirements. Keep status/context current; write dated logs and commit only on request. User verification remains separate.
-- Freeze the current release scope at version 2.0; versions 2.1–2.3 are future updates. Jan brought T-11 documentation cleanup forward for this release. T-15 packaging/publication is under E-MAINT; Jan reported Chrome Web Store approval and publication on 2026-11-20. Installed-store verification remains pending.
+- Version 2.0 was packaged, released, and published in the Chrome Web Store. Jan closed T-15 on 2026-11-21 based on that confirmation; no independent installed-store check was reported or required for closure. Versions 2.1–2.3 are developer builds. Future release scheduling belongs to Jan and is not tracked as a task.
 - T-09 is verified and maintains `.memory/test-cases.md` and its report template with each new feature. Verification occurs per feature/epic. Clarification of the request to remove E-23 versus T-10 is pending; E-23 currently denotes click preferences.
-- Do not archive the active plan: T-12 is removed. T-14 belongs to E-MAINT and reviews open GitHub issues with Jan independently of future releases.
+- Do not archive the active plan: T-12 is removed. T-08–T-11 and T-14–T-16 belong under Modernization in `plan.todo`. T-14 reviews open GitHub issues with Jan.
 
 ## Sources of truth
 
 - `AGENTS.md`: repository workflow and agent instructions.
-- `.memory/plan.md`: epics, stories, supporting tasks, and statuses.
+- `plan.todo`: sole planning document for epics, stories, supporting tasks, and statuses. Details and acceptance criteria belong in `.memory/technical-specification.md`.
 - `.memory/technical-specification.md`: target architecture, acceptance criteria, decisions, and open choices.
 - `.memory/technical-specification.md` is the sole specification; the duplicate `docs/SPEC.md` is removed.
 - `.memory/legacy-baseline.md` and `.memory/legacy-analysis.md`: supplied historical 1.8 behavior and root-cause analysis.
 - `.memory/legacy-measurements.md`: T-01 synthetic browser measurements and diagnostic reproduction instructions.
 - `.memory/manifest-audit.md`: T-02 metadata, permissions, API floors, and packaging handoff to Angular setup.
-- `docs/README.md`: GitHub documentation index and extension guide; `docs/changelog.md`: complete release history; `.memory/distribution.md`: planned build, ZIP, and store-submission procedure for T-15.
+- `docs/README.md`: GitHub documentation index and extension guide; `docs/changelog.md`: complete release history; `.memory/distribution.md`: T-15 packaging and store-submission record and procedure.
 - `.memory/legacy-readme.md` and `docs/img/`: preserved historical README and visual references, not current store screenshots.
 - The root README introduces Chromtag, installation, and privacy. `docs/development.md` holds setup, build, and test commands. Images remain in `docs/img/`. Internal testing, coverage, audits, and historical references live in `.memory/`.
 
@@ -31,7 +31,7 @@ Do not duplicate target acceptance criteria in the plan or user documentation. S
 
 - Chrome's native tree remains the bookmark source of truth. Tags remain hashtags in titles.
 - No separate bookmark database, backend, account, or `localStorage`.
-- Bookmarks/indexes remain in transient popup memory. Folder visibility is popup-only in 2.0; in 2.1 Show folders defaults on and persists independently in local extension storage.
+- Bookmarks/indexes remain in transient popup memory. Show folders defaults on and persists independently in local extension storage.
 - Version 2.1 remembers query and selected tags/folder in `chrome.storage.session` by default. Only the Clear filters on popup and Show folders preferences use `chrome.storage.local`.
 - Versions 2.2/2.3 use `chrome.storage.local` only for appearance/layout and bookmark-click preferences.
 - Retain MV3. Audit metadata/APIs and permissions; add no service worker without demonstrated need.
@@ -54,7 +54,7 @@ Do not duplicate target acceptance criteria in the plan or user documentation. S
 - Loadable output: `dist/chromtag/browser/`. Do not load source as an unpacked extension.
 - Build, test, and static commands are defined in package.json. Production finalization copies generated dependency notices into the loadable extension root. `ng serve` is not the extension runtime.
 - Run standalone manifest checks with `node tools/validate-manifest.mjs --source` and `node --test tools/validate-manifest.test.mjs`. Built validation checks the real Angular output.
-- Version 2.0 uses Angular 22 / TypeScript 6 targeting Chrome 157+. `npm test` retains timestamped HTML reports in ignored `.local/test-results/`. Show the folder cloud initially; visibility remains popup-only.
+- The application uses Angular 22 / TypeScript 6 targeting Chrome 157+. `npm test` retains timestamped HTML reports in ignored `.local/test-results/`. Show the folder cloud initially; its visibility preference persists.
 - The standalone legacy diagnostic lives in `tools/legacy-baseline.mjs`. Its dependencies and raw measurements remain under ignored `.local/`; it does not create application tooling.
 - Private/local references stay in ignored `.local/`. Shared documentation and memory remain tracked.
 - Preserve referenced historical evidence and unrelated private files during release cleanup. Do not present historical screenshots as version 2.0 screenshots.
