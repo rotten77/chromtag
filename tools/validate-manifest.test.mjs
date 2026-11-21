@@ -104,7 +104,7 @@ test('built validation detects stale manifest or icon copies', async () => {
 
 test('storage appears only with preference releases, whose Chrome floor includes session storage', async () => {
   await fixture(async ({ directory, manifest, save }) => {
-    manifest.permissions.push('storage');
+    manifest.version = '2.0';
     await save();
     await assert.rejects(validateManifest(directory), /storage only for releases/);
     manifest.version = '2.1';
@@ -124,9 +124,9 @@ test('rejects missing bookmark access, duplicate permissions, and unrelated perm
   await fixture(async ({ directory, manifest, save }) => {
     const permissions = [...manifest.permissions];
     for (const invalid of [permissions.filter(permission => permission !== 'bookmarks'),
-      permissions.filter(permission => permission !== 'activeTab'), ['bookmarks', 'tabs'],
+      permissions.filter(permission => permission !== 'activeTab'), ['bookmarks', 'tabs', 'storage'],
       [...permissions, 'bookmarks'], [...permissions, 'debugger'], [...permissions, 'scripting'],
-      ['bookmarks', 'tabs', 'activeTab']]) {
+      ['bookmarks', 'tabs', 'activeTab', 'storage']]) {
       manifest.permissions = invalid;
       await save();
       await assert.rejects(validateManifest(directory), /Unexpected permission set/);

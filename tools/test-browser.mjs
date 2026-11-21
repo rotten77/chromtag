@@ -1,7 +1,8 @@
 import assert from 'node:assert/strict';
 import { chromium } from 'playwright';
 import { resolve } from 'node:path';
-import { mkdir } from 'node:fs/promises';
+import { mkdir, mkdtemp, rm } from 'node:fs/promises';
+import { tmpdir } from 'node:os';
 import { validateManifest } from './validate-manifest.mjs';
 
 let commandId = 0;
@@ -123,10 +124,12 @@ async function targetCommand(session, sessionId, method, params = {}) {
 
 await validateManifest(resolve('dist/chromtag/browser'), { built: true });
 // Chrome's test-only CDP loading uses a fresh temporary profile, never the user's profile.
-const context = await chromium.launchPersistentContext('', {
+const profile = await mkdtemp(resolve(tmpdir(), 'chromtag-test-'));
+const launch = () => chromium.launchPersistentContext(profile, {
   channel: 'chrome', headless: true, ignoreDefaultArgs: ['--disable-extensions'],
   args: ['--enable-unsafe-extension-debugging'],
 });
+let context = await launch();
 context.setDefaultTimeout(10000);
 context.setDefaultNavigationTimeout(10000);
 try {
@@ -292,6 +295,31 @@ try {
   await page.getByText('1 of 10001 bookmarks', { exact: true }).waitFor();
   await (await findFilter(page, '#C++')).click();
   await (await findFilter(page, '<Folder> café')).click();
+  await page.reload();
+  await page.getByText('1 of 10001 bookmarks', { exact: true }).waitFor();
+  assert.equal(await search.inputValue(), '<b>Saved');
+  assert.equal(await page.locator('.filter-cloud [aria-pressed="true"]').count(), 2);
+  assert.equal(await page.evaluate(() => globalThis.treeReads), 1);
+  const snapshot = await page.evaluate(() => chrome.storage.session.get(null));
+  assert.deepEqual(Object.keys(snapshot), ['sessionFilters']);
+  assert.deepEqual(Object.keys(snapshot.sessionFilters).sort(), ['folderId', 'query', 'tags']);
+  assert.deepEqual(snapshot.sessionFilters.tags, ['c++']);
+  const clearOnOpen = page.getByRole('checkbox', { name: 'Clear filters on popup', exact: true });
+  await options.click();
+  assert.equal(await clearOnOpen.isChecked(), false, 'Clearing on open is opt-in');
+  await clearOnOpen.check();
+  await page.waitForFunction(async () => !(await chrome.storage.session.get('sessionFilters')).sessionFilters);
+  assert.equal(await search.inputValue(), '<b>Saved', 'Opting out preserves the current view');
+  await page.reload();
+  await page.getByText('10001 of 10001 bookmarks', { exact: true }).waitFor();
+  assert.equal(await search.inputValue(), '', 'Opening clears the previous search');
+  await search.fill('Scale bookmark 9999');
+  await options.click();
+  assert.equal(await clearOnOpen.isChecked(), true);
+  assert.deepEqual(await page.evaluate(() => chrome.storage.session.get(null)), {});
+  await clearOnOpen.uncheck();
+  await page.waitForFunction(async () => (await chrome.storage.session.get('sessionFilters')).sessionFilters?.query === 'Scale bookmark 9999');
+  await options.click();
   await page.getByRole('button', { name: 'Clear filters', exact: true }).click();
   await page.getByText('10001 of 10001 bookmarks', { exact: true }).waitFor();
   assert.equal(await search.inputValue(), '');
@@ -305,7 +333,9 @@ try {
   assert.equal(await page.evaluate(() => localStorage.length), 0);
   await page.reload();
   await options.click();
-  assert(await showFolders.isChecked(), 'Folder visibility resets on reopen');
+  await page.waitForFunction(() => !document.querySelector('input[aria-controls="filter-cloud"]').disabled);
+  assert.equal(await showFolders.isChecked(), false, 'Folder visibility survives reopening');
+  await showFolders.check();
   await options.click();
   await page.getByText('10001 of 10001 bookmarks', { exact: true }).waitFor();
   assert(await page.locator('.filter-cloud > .folder').count() > 1);
@@ -484,6 +514,33 @@ try {
   console.log(`10,001 supported native synthetic bookmarks: startup ${elapsed.toFixed(1)} ms, ${liveRows} live rows; last row reached.`);
   assert.deepEqual(errors, [], 'No runtime or CSP errors');
   console.log('PASS: loadable extension, native bookmark snapshot, literal rendering, new-tab navigation, no runtime/CSP errors.');
+  await options.click();
+  await showFolders.uncheck();
+  await clearOnOpen.check();
+  await page.keyboard.press('Escape');
+  await page.getByRole('button', { name: 'Clear filters', exact: true }).click();
+  await options.click();
+  assert.equal(await showFolders.isChecked(), false, 'Neither opt-out nor Clear filters changes visibility');
+  await clearOnOpen.uncheck();
+  await page.keyboard.press('Escape');
+  await search.fill('example.invalid/scale/5000');
+  assert.deepEqual(await page.evaluate(() => chrome.storage.local.get(null)), { rememberFilters: true, showFolders: false });
+  assert.equal(await page.evaluate(async () => (await chrome.storage.session.get('sessionFilters')).sessionFilters.query), 'example.invalid/scale/5000');
+  await context.close();
+  context = await launch();
+  const restarted = await context.browser().newBrowserCDPSession();
+  await restarted.send('Extensions.loadUnpacked', { path: resolve('dist/chromtag/browser') });
+  const fresh = await context.newPage();
+  await fresh.goto(`chrome-extension://${id}/index.html`);
+  await fresh.getByText('10001 of 10001 bookmarks', { exact: true }).waitFor();
+  assert.deepEqual(await fresh.evaluate(() => chrome.storage.session.get(null)), {});
+  await fresh.getByRole('button', { name: 'Options', exact: true }).click();
+  await fresh.waitForFunction(() => !document.querySelector('input[aria-controls="filter-cloud"]').disabled);
+  assert.equal(await fresh.getByRole('checkbox', { name: 'Show folders', exact: true }).isChecked(), false);
+  assert.equal(await fresh.locator('.filter-cloud .folder').count(), 0);
+  assert.deepEqual(await fresh.evaluate(() => chrome.storage.local.get(null)), { rememberFilters: true, showFolders: false });
+  console.log('PASS: filters restore on reopen, respect opt-out and clear, and expire on browser restart; both independent Options preferences persist.');
 } finally {
   await context.close();
+  await rm(profile, { recursive: true, force: true, maxRetries: 5 });
 }

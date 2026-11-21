@@ -43,7 +43,7 @@ it('shows reading, then processing and large-library guidance, and clears progre
   root.querySelector<HTMLButtonElement>('#popup-options button')!.click();
   await fixture.whenStable(); fixture.detectChanges();
   expect(root.querySelector('.loading-progress')).toBeNull();
-  expect(root.querySelector('[role="alert"]')?.textContent).toContain('could not be loaded');
+  expect(Array.from(root.querySelectorAll('[role="alert"]'), alert => alert.textContent).join(' ')).toContain('could not be loaded');
 });
 
 it('toggles multiple normalized tags immediately and combines them with AND', async () => {
@@ -132,22 +132,24 @@ it('resets every filter, visible input, and pending debounce in one action', asy
   } finally { vi.useRealTimers(); }
 });
 
-it('shows folders initially, keeps visibility in memory, and resets on popup creation', async () => {
-  const setItem = vi.spyOn(Storage.prototype, 'setItem');
+it('shows folders by default and restores a hidden cloud even when filter storage is off', async () => {
+  const values = { rememberFilters: false };
+  const local = { get: async () => values, set: vi.fn(async data => Object.assign(values, data)) };
   TestBed.configureTestingModule({ providers: [{ provide: CHROME, useValue: {
-    bookmarks: { getTree: vi.fn().mockResolvedValue([{ id: '1', title: 'Folder' }]) }, tabs: {},
+    bookmarks: { getTree: vi.fn().mockResolvedValue([{ id: '1', title: 'Folder' }]) }, tabs: {}, storage: { local, session: {} },
   } }] });
   const first = TestBed.createComponent(App);
   await first.whenStable();
-  first.componentInstance.foldersVisible.set(false);
+  expect(first.componentInstance.foldersVisible()).toBe(true);
+  first.componentInstance.setShowFolders(false);
   first.detectChanges();
   expect(first.nativeElement.querySelector('.filter-cloud .folder')).toBeNull();
-  expect(setItem).not.toHaveBeenCalled();
+  expect(local.set).toHaveBeenCalledWith({ showFolders: false });
   first.destroy();
   const reopened = TestBed.createComponent(App);
   await reopened.whenStable();
-  expect(reopened.componentInstance.foldersVisible()).toBe(true);
-  setItem.mockRestore();
+  expect(reopened.componentInstance.foldersVisible()).toBe(false);
+  expect(reopened.componentInstance.rememberFilters()).toBe(false);
 });
 
 it('opens the newly created bookmark editor and cancellation retains the created bookmark', async () => {

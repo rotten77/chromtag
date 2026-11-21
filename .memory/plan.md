@@ -75,7 +75,7 @@ Jan verified T-08 and requested T-13 implementation on 2026-11-12. The existing 
 
 | ID | Story | User goal | Status | Criteria |
 |---|---|---|---|---|
-| US-09 | Restore popup filters | Resume the query and selected tags/folder during the browser session. | Not started | US-09 |
+| US-09 | Restore popup filters | Resume filters during the browser session and retain independent folder visibility across restarts. | Ready for verification | US-09 |
 
 Depends on the current filters. Include permission updates, documentation, and regression tests in this story.
 

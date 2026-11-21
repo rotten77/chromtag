@@ -4,7 +4,7 @@ Chromtag is a Chrome extension for browsing and editing native Chrome bookmarks.
 
 [**Install from Chrome Web Store**](https://chrome.google.com/webstore/detail/chromtag-tag-your-bookmar/epeiimpoigheahfbmmhadnfgimaacipk)
 
-Version **2.0** is the current release scope. Chrome **157+** is required.
+Version **2.0** is published. The **2.1 development build** remembers filters for the browser session and saves folder visibility across restarts. Both settings are configurable in **Options**. Chrome **157+** is required.
 
 - [Extension guide](docs/index.md)
 - [Changelog](docs/changelog.md)

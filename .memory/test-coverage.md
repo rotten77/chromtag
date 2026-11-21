@@ -22,7 +22,8 @@ Criteria remain authoritative in [the technical specification](../.memory/techni
 | US-04-AC4, US-04-AC5 | [Search tests](../src/app/search.spec.ts): canonical accents, Turkish, Arabic, Chinese, mixed scripts, emoji and grapheme boundaries. |
 | US-04-AC6 | [Search tests](../src/app/search.spec.ts) and [Chrome integration](../tools/test-browser.mjs): literal metacharacters, empty and no-match queries. |
 | US-05-AC1, US-05-AC2 | [Component tests](../src/app/app.spec.ts): clear filters/input/pending timer; [Chrome integration](../tools/test-browser.mjs): combined reset and bounded rows. |
-| US-05-AC3 | Deferred to US-09 in 2.1: version 2.0 deliberately saves no filters. |
+| US-05-AC3, US-09-AC1, US-09-AC2, US-09-AC3, US-09-AC4, US-09-AC6 | [Chrome integration](../tools/test-browser.mjs): restore, opt-out, clear, independent folder visibility, storage contents, and restart with the same profile. |
+| US-09-AC5 | [Manifest tests](../tools/validate-manifest.test.mjs) and package checks: version, storage permission, and compatible browser floor. |
 | US-06-AC1, US-06-AC2 | [Store tests](../src/app/bookmark-store.spec.ts): metadata/default destination; [Chrome integration](../tools/test-browser.mjs): native action grant and creation. |
 | US-06-AC3 | [Component tests](../src/app/app.spec.ts) and [Chrome integration](../tools/test-browser.mjs): populated add editor. |
 | US-06-AC4 | [Store tests](../src/app/bookmark-store.spec.ts): missing/restricted metadata and rejected grant, no create/read; [Chrome integration](../tools/test-browser.mjs): no grant, no creation. |

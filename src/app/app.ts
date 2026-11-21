@@ -4,6 +4,8 @@ import { BookmarkList } from './bookmark-list';
 import { Bookmark, filterBookmarks, Filters } from './model';
 import { BookmarkEditor } from './bookmark-editor';
 import { FilterCloud } from './filter-cloud';
+import { CHROME } from './chrome-api';
+import { SessionFilters } from './session-filters';
 
 @Component({
   selector: 'app-root',
@@ -17,10 +19,12 @@ import { FilterCloud } from './filter-cloud';
       <button type="button" class="primary add-bookmark" [disabled]="store.busy() || store.loading()" (click)="addCurrentPage()">Add bookmark</button>
       <button type="button" popovertarget="popup-options">Options</button>
       <div id="popup-options" popover role="group" aria-label="Popup options">
-        <label><input type="checkbox" #showFolders aria-controls="filter-cloud" [checked]="foldersVisible()" (change)="foldersVisible.set(showFolders.checked)"> Show folders</label>
+        <label><input type="checkbox" #showFolders aria-controls="filter-cloud" [checked]="foldersVisible()" [disabled]="!settingsReady()" (change)="setShowFolders(showFolders.checked)"> Show folders</label>
+        <label><input type="checkbox" #clearOnOpen [checked]="!rememberFilters()" [disabled]="!settingsReady()" (change)="setRemember(!clearOnOpen.checked)"> Clear filters on popup</label>
         <button type="button" popovertarget="popup-options" popovertargetaction="hide" (click)="store.refresh()" [disabled]="store.loading() || store.busy()">Refresh</button>
       </div>
     </div>
+    @if (storageError()) { <p role="alert">{{ storageError() }}</p> }
     @if (store.error()) { <p role="alert">{{ store.error() }}</p> }
     <span class="sr-only" role="status" aria-live="polite">{{ store.phase() === 'reading' ? 'Reading bookmarks from Chrome' : store.phase() === 'processing' ? 'Processing bookmarks' : '' }}</span>
     @if (store.loading()) {
@@ -54,7 +58,53 @@ export class App implements OnDestroy {
   private queryTimer?: ReturnType<typeof setTimeout>;
   private readonly injector = inject(Injector);
   private previousFocus?: HTMLElement;
-  constructor() { void this.store.refresh(); }
+  readonly rememberFilters = signal(true);
+  readonly settingsReady = signal(false);
+  readonly storageError = signal('');
+  private readonly storage = inject(CHROME).storage;
+  private readonly session = this.storage && new SessionFilters(this.storage.session, this.storage.local);
+  private filtersTouched = false;
+
+  constructor() { void this.store.refresh(); void this.restoreSession(); }
+
+  private async restoreSession(): Promise<void> {
+    try {
+      const options = await this.session.options();
+      this.foldersVisible.set(options.showFolders);
+      this.rememberFilters.set(options.rememberFilters);
+      if (this.rememberFilters()) {
+        const saved = await this.session.read();
+        if (saved && !this.filtersTouched) {
+          this.filters.set(saved);
+          this.queryInput.set(saved.query);
+        }
+      }
+      this.settingsReady.set(true);
+      if (this.filtersTouched) this.saveFilters();
+    } catch {
+      this.storageError.set('Session settings are unavailable. You can still filter bookmarks.');
+    }
+  }
+
+  private saveFilters(): void {
+    this.filtersTouched = true;
+    if (this.settingsReady() && this.rememberFilters()) {
+      // Issue the storage request now, independently of the search debounce and popup lifetime.
+      void this.session.save({ ...this.filters(), query: this.queryInput() }).catch(() => this.storageError.set('Could not save session filters.'));
+    }
+  }
+
+  setShowFolders(visible: boolean): void {
+    this.foldersVisible.set(visible);
+    void this.session.setShowFolders(visible).catch(() => this.storageError.set('Could not save folder visibility.'));
+  }
+
+  setRemember(enabled: boolean): void {
+    this.rememberFilters.set(enabled);
+    void this.session.setEnabled(enabled).catch(() => this.storageError.set('Could not save the Clear filters on popup preference.'));
+    if (enabled) this.saveFilters();
+    else void this.session.clear().catch(() => this.storageError.set('Could not clear saved session filters.'));
+  }
   openEditor(bookmark: Bookmark): void {
     this.previousFocus = document.activeElement instanceof HTMLElement ? document.activeElement : undefined;
     this.store.error.set(''); this.editing.set(bookmark);
@@ -73,6 +123,7 @@ export class App implements OnDestroy {
   }
   onQuery(value: string): void {
     this.queryInput.set(value);
+    this.saveFilters();
     clearTimeout(this.queryTimer);
     this.queryTimer = setTimeout(() => {
       this.filters.update(filters => ({ ...filters, query: value }));
@@ -88,17 +139,20 @@ export class App implements OnDestroy {
     const tags = new Set(this.filters().tags);
     if (tags.has(key)) tags.delete(key); else tags.add(key);
     this.filters.update(filters => ({ ...filters, tags }));
+    this.saveFilters();
     this.list()?.resetScroll();
   }
   toggleFolder(id: string): void {
     this.flushQuery();
     this.filters.update(filters => ({ ...filters, folderId: filters.folderId === id ? null : id }));
+    this.saveFilters();
     this.list()?.resetScroll();
   }
   resetFilters(): void {
     clearTimeout(this.queryTimer);
     this.queryInput.set('');
     this.filters.set({ query: '', tags: new Set(), folderId: null });
+    this.saveFilters();
     this.list()?.resetScroll();
   }
   ngOnDestroy(): void { clearTimeout(this.queryTimer); }

@@ -2,6 +2,7 @@ import { InjectionToken } from '@angular/core';
 
 export interface ChromeApi {
   bookmarks: Pick<typeof chrome.bookmarks, 'getTree' | 'create' | 'update' | 'move' | 'remove'>;
+  storage: Pick<typeof chrome['storage'], 'local' | 'session'>;
   tabs: Pick<typeof chrome.tabs, 'query' | 'create'>;
 }
 

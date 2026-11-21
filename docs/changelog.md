@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.1 (unreleased)
+
+- Restore filters during the current Chrome session by default. Options lets you disable this behavior and remembers whether to show folders across restarts.
+
 ## 2.0
 
 Implemented and user-verified on 2026-11-12. Submitted to the Chrome Web Store on 2026-11-16 and published on 2026-11-20.

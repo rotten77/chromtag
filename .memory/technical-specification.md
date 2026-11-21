@@ -75,9 +75,11 @@ References: [Unicode normalization](https://developer.mozilla.org/en-US/docs/Web
 |---|---|---|---|
 | Bookmarks, title hashtags, folder relationships | All | Chrome native bookmark tree | Chrome-managed |
 | Derived model and search index | All | Popup memory | Popup load/refresh |
-| Folder-cloud visibility | 2.0 onward | Popup memory | Popup session |
+| Folder-cloud visibility | 2.0 | Popup memory | Popup session |
+| Show folders (default: on) | 2.1 onward | `chrome.storage.local` | Across popup/browser restarts |
 | Search query, selected tags/folder | 2.0 | Popup memory | Popup session |
-| Search query, selected tags/folder | 2.1 onward | `chrome.storage.session` | Current browser session |
+| Search query, selected tags/folder | 2.1 onward, when remembering filters | `chrome.storage.session` | Current browser session |
+| Clear filters on popup (default: off) | 2.1 onward | `chrome.storage.local` | Across popup/browser restarts |
 | Appearance/layout preferences | 2.2 onward | `chrome.storage.local` | Across popup/browser restarts |
 | Bookmark-click preferences | 2.3 onward | `chrome.storage.local` | Across popup/browser restarts |
 
@@ -276,10 +278,10 @@ These criteria supersede the 2.0 control placement and labels in US-05, US-08, a
 
 ### US-09 — Restore popup filters (version 2.1)
 
-- **US-09-AC1:** Save only query, selected tags, and selected folder in `chrome.storage.session` as filters change.
+- **US-09-AC1:** In Options, leave **Clear filters on popup** unchecked by default. Save this checkbox preference separately from **Show folders** in `chrome.storage.local`. While unchecked, save only the query, selected tags, and folder ID in `chrome.storage.session` as filters change.
 - **US-09-AC2:** Restore filters when reopening during the browser session. Reconstruct bookmarks from Chrome's tree.
-- **US-09-AC3:** Reset clears active/saved filters. Ending the browser session clears saved filters.
-- **US-09-AC4:** Store no bookmarks/indexes there. Folder visibility remains popup-only.
+- **US-09-AC3:** Enabling the option deletes saved filters without changing the current view; subsequent popups open unfiltered. Disabling it saves the current filters. Clear filters clears active and saved filters without changing the option. Ending the browser session clears saved filters but retains the option.
+- **US-09-AC4:** Store no bookmarks or indexes. **Show folders** defaults on and persists across popup and browser restarts, independently of remembering or clearing filters.
 - **US-09-AC5:** Add `storage`, set a compatible minimum Chrome version, and set extension version `2.1`.
 - **US-09-AC6:** Document and regression-test restore, updates, Reset, expiry, and storage boundaries.
 
@@ -289,7 +291,7 @@ These criteria supersede the 2.0 control placement and labels in US-05, US-08, a
 - **US-10-AC2:** Provide light/dark themes. Let users select foreground, tag, and folder colors independently for each theme from the Material Design color palette. Fix the light background at white (`#FFFFFF`) and the dark background at `#212121`; do not provide background-color editing.
 - **US-10-AC3:** Switching themes applies that theme's colors and fixed background; editing one theme does not overwrite the other.
 - **US-10-AC4:** Save appearance/layout in `chrome.storage.local`; restore across popup/browser restarts.
-- **US-10-AC5:** Separate preferences from bookmarks/indexes/session filters. Do not persist folder visibility.
+- **US-10-AC5:** Separate preferences from bookmarks/indexes/session filters. Retain the separate US-09 folder visibility preference.
 - **US-10-AC6:** Set version `2.2`. Update README and product documentation.
 - **US-10-AC7:** Regression-test defaults, each setting/palette, switching, persistence, bounds, overflow, scaling, fixed backgrounds, and cloud pagination at supported heights.
 

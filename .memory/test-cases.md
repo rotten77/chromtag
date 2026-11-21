@@ -47,6 +47,8 @@ Run affected cases during each feature/epic verification. Use the full set when 
 | M-25 | US-12 Layout (development build) | With few choices, check that paging is hidden. With a crowded cloud, use Next, select a chip, return with Previous or First, type a search, then use Clear filters. | Folders precede tags above search. Labels are white and semibold. After the pointer leaves a selected chip, only its red background indicates selection. The chip keeps its page and position. The result count updates; Clear filters restores the full list. Rows retain their compact layout. |
 | M-26 | US-12 Popup actions | Use Add bookmark in the top row. Cancel the editor, open Options, uncheck Show folders, then select Refresh. Reopen the popup. | No branded header, footer, or close button. Adding still opens the editor. Folder choices hide for this popup only; refresh works and the next popup shows folders. |
 
+**M-27 — US-09 (2.1):** Start in a fresh test profile. Show folders should be checked and Clear filters on popup unchecked. Select filters and hide folders. Reopen: filters should restore and folders should stay hidden. Check Clear filters on popup: the current view should not change, but the next popup should be unfiltered. Uncheck it with a query active; reopen to check it restores. Clear filters and reopen: neither checkbox should change. Apply another query and restart Chrome: the query should disappear and folders should still be hidden.
+
 Numeric snapshot/read-count boundaries and forced Chrome API failures are covered by the automated suite. Do not claim manual proof of those internals from appearance alone.
 
 ## Verification report template

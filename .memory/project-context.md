@@ -31,8 +31,8 @@ Do not duplicate target acceptance criteria in the plan or user documentation. S
 
 - Chrome's native tree remains the bookmark source of truth. Tags remain hashtags in titles.
 - No separate bookmark database, backend, account, or `localStorage`.
-- Bookmarks/indexes remain in transient popup memory. Folder visibility is popup-only.
-- Version 2.1 uses `chrome.storage.session` only for the query and selected tags/folder.
+- Bookmarks/indexes remain in transient popup memory. Folder visibility is popup-only in 2.0; in 2.1 Show folders defaults on and persists independently in local extension storage.
+- Version 2.1 remembers query and selected tags/folder in `chrome.storage.session` by default. Only the Clear filters on popup and Show folders preferences use `chrome.storage.local`.
 - Versions 2.2/2.3 use `chrome.storage.local` only for appearance/layout and bookmark-click preferences.
 - Retain MV3. Audit metadata/APIs and permissions; add no service worker without demonstrated need.
 - T-02 permission policy: use `bookmarks` and `activeTab`, adding `storage` only with preference releases. US-06 must report unavailable required tab metadata without creating an incomplete bookmark; do not restore broad `tabs` access.

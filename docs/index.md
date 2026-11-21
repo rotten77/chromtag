@@ -31,7 +31,12 @@ Folders and tags share a fixed cloud. Use **First filters**, **Previous filters*
 
 In the development build, green folders come first and blue tags follow in the same cloud. Folder and tag labels use white semibold text. Select a chip to filter the list; its background turns red without moving the chip. When not all choices fit, **First**, **Previous**, and **Next** appear above the cloud. Use **Search bookmarks…** beside the result count to narrow the list further. **Clear filters** beside the cloud clears the folder, tags, and search together.
 
-**Add bookmark** is in the top row. **Options** contains **Refresh** and a **Show folders** checkbox that applies only to the current popup. Click outside the popup to dismiss it; there is no separate close button.
+**Add bookmark** is in the top row. **Options** contains **Refresh** and two settings in the unreleased 2.1 build:
+
+- **Show folders** is on by default and controls whether folder choices appear. It survives closing the popup and restarting Chrome, even if you clear filters or turn off filter storage.
+- **Clear filters on popup** is off by default: reopening the popup restores the search, selected tags, and selected folder during the same Chrome session. Turn it on to start each popup unfiltered. This leaves the current view unchanged. Turn it off again to remember the current filters. **Clear filters** removes active and saved filters but leaves both settings unchanged.
+
+Chrome clears session filters on restart. Click outside the popup to dismiss it; there is no separate close button.
 
 ## Hashtags
 
@@ -88,6 +93,8 @@ Chrome's native bookmark tree remains the source of truth. Changes also appear i
 
 - **bookmarks:** read, create, update, move, and delete native bookmarks.
 - **activeTab:** obtain the current page's metadata after the extension action grants access.
+
+The 2.1 development build adds the **storage** permission. Chrome session storage holds only the remembered query, tag keys, and folder ID. Local extension storage holds only the two checkbox preferences; bookmarks and indexes are never copied there.
 
 Version 2.0 keeps derived indexes, filters, and visibility in popup memory. It uses no `localStorage`, Chrome storage, separate bookmark store, account, or backend. The extension bundles its scripts and styles locally and requests no host permissions.
 
