@@ -47,6 +47,8 @@ Do not duplicate target acceptance criteria in the plan or user documentation. S
 
 ## Repository conventions
 
+- Each new feature requires a higher extension version, even if the previous feature has not been published. Follow the versioning rule in `AGENTS.md`.
+
 - Before implementing a feature or bug fix, report the current branch and ask Jan whether to create or switch to a dedicated branch. Jan makes and verifies the branch decision; do not switch automatically. Documentation, planning, workflow, and other `.memory/`-only updates do not require a new branch unless Jan requests one. Commits, merges, and pushes require a user request.
 - Application code: `src/`; manifest source and preserved static icons: `public/`.
 - Loadable output: `dist/chromtag/browser/`. Do not load source as an unpacked extension.

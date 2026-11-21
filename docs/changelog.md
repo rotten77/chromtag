@@ -2,6 +2,8 @@
 
 ## 2.1 (unreleased)
 
+- Put the folder and tag filters first, with direct pagination, compact search, and **Add bookmark** in the top row.
+
 - Restore filters during the current Chrome session by default. Options lets you disable this behavior and remembers whether to show folders across restarts.
 
 ## 2.0

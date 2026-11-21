@@ -2,6 +2,8 @@
 
 Updated: 2026-11-21
 
+New feature work must include a version increase. This workflow change does not alter the current 2.1 development build.
+
 ## US-09 — Ready for verification
 
 The 2.1 development build restores session filters by default and remembers Show folders independently across browser restarts. In Options, Clear filters on popup is unchecked by default. Checking it makes subsequent popups start with no search, tags, or selected folder without changing the current view. Static checks and the full suite passed, including a same-profile Chrome restart. Review manual case M-27 before marking the story verified. Report: `.local/test-results/2026-11-21T05-50-55.545Z-20608.html`.
