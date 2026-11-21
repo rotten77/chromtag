@@ -6,7 +6,7 @@ Updated: 2026-11-12
 
 Chromtag is a Chrome extension for browsing and editing Chrome bookmarks through a popup. Hashtags in bookmark titles provide tags.
 
-This specification defines implemented E-20 behavior and planned versions 2.1–2.3. The plan distinguishes automated readiness from user verification. Acceptance criteria live here. The plan tracks matching IDs. This is the sole specification. `docs/` contains only user documentation and images. Historical 1.8 behavior and analysis remain in `.memory/legacy-baseline.md` and `.memory/legacy-analysis.md`.
+This specification defines implemented E-20 behavior and planned versions 2.1–2.3. The plan distinguishes automated readiness from user verification. Acceptance criteria live here. The plan tracks matching IDs. This is the sole specification. `docs/` contains user and developer documentation and images. Historical 1.8 behavior and analysis remain in `.memory/legacy-baseline.md` and `.memory/legacy-analysis.md`.
 
 ## Historical implementation
 
@@ -235,7 +235,7 @@ T-05-AC5 through T-05-AC10 record Jan's 2026-11-12 review changes to the 2.0 can
 
 ### T-06 — Document and verify
 
-- **T-06-AC1:** Keep README features, permissions, compatibility, storage, commands, and `docs/index.md` consistent with implemented releases.
+- **T-06-AC1:** Keep the README overview, the extension guide in `docs/README.md`, and commands in `docs/development.md` consistent with implemented releases.
 - **T-06-AC2:** Map every applicable target feature/criterion to repository regression tests. Update tests/mapping when criteria change.
 - **T-06-AC3:** Use unit/component tests with mocked Chrome APIs and integration coverage across popup/API boundaries. Include tests in `npm test`.
 - **T-06-AC4:** Run `npm ci`, `npm run build`, `npm test`, manifest validation, and static checks after tooling exists. Required checks pass.
@@ -267,6 +267,26 @@ T-13 counts all URL-bearing tree nodes, including unsupported `javascript:` book
 
 ## Later release acceptance criteria
 
+### US-14 — Bulk edit bookmarks (planned)
+
+[Issue #4](https://github.com/rotten77/chromtag/issues/4) asks to replace `#money` with `#finance`, or remove `#money` from every matching bookmark without deleting the bookmarks. A user can target all matches by filtering on `#money`, checking one row, then choosing **Select all**.
+
+- **US-14-AC1:** Place a checkbox to the left of each bookmark title, aligned on the same line. Checking it selects the bookmark, not its link. Track selection by bookmark ID so scrolling a virtualized row out of view does not change which bookmark is selected.
+- **US-14-AC2:** Place a compact bulk-actions dropdown immediately before `.result-count`. Disable it when no bookmarks are checked. Use a keyboard-accessible trigger with an accessible name; if using a character as its icon, use a broadly supported text character (e.g. ASCII `*`), not an image or icon font. Verify rendering across Windows, macOS, Linux, and different locales.
+- **US-14-AC3:** **Select all** checks every bookmark matching the current folder, tag, and search filters. **Invert selection** toggles each match. Both act on the entire filtered result set, including rows outside the viewport, not on unrelated bookmarks.
+- **US-14-AC4:** **Open all** opens each selected bookmark in a separate tab. **Move to folder** lets the user choose a destination folder and moves the selected bookmarks there.
+- **US-14-AC5:** **Add tag** shows the existing tag cloud and a **New tag** input. Apply the chosen tag to selected bookmark titles that lack it, using the existing hashtag identity and parsing rules. Preserve other title text and tags.
+- **US-14-AC6:** **Remove tag** offers only tags present on at least one selected bookmark. Disable the action if none have tags. Remove all matching hashtag occurrences from the selected titles, leaving other text, bookmarks, and unselected titles intact.
+
+US-14 tag actions only add or remove hashtags in checked bookmark titles; they do not rename a tag library-wide. Before implementation, confirm how selection behaves when filters change and a checked bookmark no longer matches.
+
+### US-15 — Rename a tag across bookmarks (planned)
+
+- **US-15-AC1:** Select an existing source tag, then choose an existing destination tag or enter a new tag.
+- **US-15-AC2:** Replace the source hashtag in every matching bookmark title, regardless of current filters or checked rows. Use the existing hashtag parsing and identity rules. Preserve unrelated title text and tags, and do not change bookmark URLs or folders.
+
+The location of the rename control is undecided.
+
 ### US-12 — Redesign the popup layout (unreleased)
 
 These criteria supersede the 2.0 control placement and labels in US-05, US-08, and T-05 for the development build.
@@ -287,15 +307,15 @@ These criteria supersede the 2.0 control placement and labels in US-05, US-08, a
 
 ### US-10 — Configure appearance (version 2.2)
 
-- **US-10-AC1:** Provide base-font, popup width/height, and combined folder/tag cloud height controls within supported bounds that respect Chrome popup limits and leave usable bookmark-list space. Keep cloud overflow collapsed and every label reachable through pagination.
-- **US-10-AC2:** Provide light/dark themes. Let users select foreground, tag, and folder colors independently for each theme from the Material Design color palette. Fix the light background at white (`#FFFFFF`) and the dark background at `#212121`; do not provide background-color editing.
+- **US-10-AC1:** Let users set the base font size and popup width and height within supported Chrome popup limits. Provide a ratio slider for the vertical space shared by the combined folder/tag cloud and bookmark list, excluding fixed controls. Moving the slider toward filters gives the cloud more space; moving it toward bookmarks leaves more room for results. Preserve usable space for both and keep overflow filters reachable through pagination.
+- **US-10-AC2:** Offer Light, Dark, and System modes. System follows Chrome’s `prefers-color-scheme` signal on open and when the system setting changes while the popup is open. Explicit Light and Dark modes ignore system changes. Let users select foreground, tag, and folder colors independently for each theme from the Material Design color palette. Fix the light background at white (`#FFFFFF`) and the dark background at `#212121`; do not provide background-color editing.
 - **US-10-AC3:** Switching themes applies that theme's colors and fixed background; editing one theme does not overwrite the other.
-- **US-10-AC4:** Save appearance/layout in `chrome.storage.local`; restore across popup/browser restarts.
+- **US-10-AC4:** Save font size, popup dimensions, split ratio, chosen mode, and both palettes in `chrome.storage.local`. Restore them across restarts; for System mode, resolve the current theme rather than saving the last resolved theme.
 - **US-10-AC5:** Separate preferences from bookmarks/indexes/session filters. Retain the separate US-09 folder visibility preference.
 - **US-10-AC6:** Set version `2.2`. Update README and product documentation.
-- **US-10-AC7:** Regression-test defaults, each setting/palette, switching, persistence, bounds, overflow, scaling, fixed backgrounds, and cloud pagination at supported heights.
+- **US-10-AC7:** Test font size, popup dimensions, ratio slider endpoints and resizing, pagination and list usability, independent palettes and fixed backgrounds, live System changes versus explicit modes, and restoration after restart.
 
-The light/dark backgrounds are fixed. Exact defaults for editable colors and cloud height, supported bounds, and the precise Material Design palette choices remain undefined.
+The light/dark backgrounds are fixed. The default mode and split ratio, slider range and step, font-size and dimension bounds, editable-color defaults, and Material palette choices remain open.
 
 ### US-11 — Configure bookmark-click behavior (version 2.3)
 
@@ -335,7 +355,7 @@ Jan brought T-11 forward for the frozen version 2.0 release. Future features rem
 ### T-11 — Clean the repository for the current version
 
 - **T-11-AC1:** Prepare the frozen version 2.0 release now, before future feature updates. Consolidate redundant user documentation without deleting referenced historical evidence or unrelated private files.
-- **T-11-AC2:** Keep README to a simple project description and development instructions. Provide detailed extension documentation in `docs/index.md` and complete version 1.0–2.0 history in `docs/changelog.md`.
+- **T-11-AC2:** Keep README to a short description, installation, privacy, and documentation links. Provide development instructions in `docs/development.md`, detailed extension documentation in `docs/README.md` and complete version 1.0–2.0 history in `docs/changelog.md`.
 - **T-11-AC3:** Identify historical screenshots as historical. Keep distribution preparation in `.memory/distribution.md` for the next planned issue, T-15, rather than in published user documentation.
 - **T-11-AC4:** After cleanup, the current version's required build, test, and package checks pass, and documentation links resolve.
 
@@ -344,6 +364,11 @@ Jan brought T-11 forward for the frozen version 2.0 release. Future features rem
 - **T-15-AC1:** Follow and verify `.memory/distribution.md` to build, test, and create an upload ZIP with `manifest.json` at the root and no private files.
 - **T-15-AC2:** Prepare current store screenshots, release notes, and accurate privacy/permission declarations. Jan controls account access and submission/publication.
 - **T-15-AC3:** Record actual submission/publication state and verify the installed store release after publication. Do not equate a built ZIP with a published release.
+
+### T-16 — Add support and rating links
+
+- **T-16-AC1:** Include a **Buy me a coffee** link in both `README.md` and the Options dialog. Confirm the provider and destination URL with Jan before implementation; Gumroad is a candidate.
+- **T-16-AC2:** Include a **Rating** link in both places that opens Chromtag’s rating page in the Chrome Web Store.
 
 ### T-14 — Review open GitHub issues
 
@@ -369,7 +394,7 @@ These steps apply after the relevant implementation and tooling exist.
 
 - Real-profile performance and timing targets. T-01 records the legacy synthetic baseline; T-04/T-05 use 10,001 supported browser records and deep unit fixtures. Tests check at most 24 live rows in exercised layouts; this is not a timing guarantee.
 - T-13 uses all URL-bearing nodes for progress, an 8 ms chunk budget for large snapshots, and a 10,000-node threshold for guidance. The 10,001-bookmark synthetic test is evidence, not a support guarantee.
-- Version 2.2 editable-color defaults, supported bounds (including cloud height), and precise Material Design palette choices. Light/dark backgrounds are fixed at `#FFFFFF`/`#212121`. Version 2.0 starts with a 13 px base font and a 540 × 580 px popup; T-05 checks compact layout and overflow.
+- Version 2.2 editable-color defaults, supported bounds (including the filter-to-bookmark split ratio), and precise Material Design palette choices. Light/dark backgrounds are fixed at `#FFFFFF`/`#212121`. Version 2.0 starts with a 13 px base font and a 540 × 580 px popup; T-05 checks compact layout and overflow.
 - The v2.3 popup-close default and verified lifecycle limits.
 
 Resolve decisions before affected implementation. Analysis suggestions are not approved technical choices.

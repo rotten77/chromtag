@@ -56,7 +56,8 @@ If a required file is still a placeholder, do not infer its contents. Ask the us
 - Keep `.memory/project-status.md` for current state, blockers, and next steps.
 - Keep `.memory/technical-specification.md` for technical design and acceptance criteria.
 - Keep `.memory/plan.md` for epics and user stories.
-- Keep the README’s build, run, and test commands accurate when project tooling or workflows change.
+- Keep the root `README.md` focused on the extension description, Chrome Web Store installation, privacy and security, and documentation links. Distinguish read-only browsing from user-requested bookmark changes.
+- Use `docs/README.md` as the GitHub documentation index and extension guide; do not maintain a duplicate `docs/index.md`. Keep build, unpacked installation, and test instructions in `docs/development.md`.
 
 ## Task updates
 

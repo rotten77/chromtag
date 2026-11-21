@@ -83,7 +83,7 @@ Depends on the current filters. Include permission updates, documentation, and r
 
 | ID | Story | User goal | Status | Criteria |
 |---|---|---|---|---|
-| US-10 | Configure appearance | Set typography, popup and combined folder/tag cloud height, and independent light/dark Material palette colors that persist across restarts; theme backgrounds are fixed. | Not started | US-10 |
+| US-10 | Configure appearance | Set font size, popup width and height, and the filter-to-bookmark space ratio. Choose Light, Dark, or System mode and configure colors separately for light and dark themes. | Not started | US-10 |
 
 Include default/bounds decisions, documentation, and regression tests.
 
@@ -110,6 +110,15 @@ Jan verified the cloud-first redesign on 2026-11-20.
 | US-13 | Exclude folders or tags from filter choices | Hide selected folders or tags from the filter selector without hiding their bookmarks from results. | Not started | US-13 |
 
 This can keep special-purpose folders, such as `Quick access`, out of the selector when users normally open them from Chrome's bookmark menu. The exclusion scope, configuration UI, tag behavior, persistence, interaction with active filters, and treatment of descendant folders require clarification before acceptance criteria are defined.
+
+## E-26 — Bulk bookmark actions
+
+| ID | Story | User goal | Status | Criteria |
+|---|---|---|---|---|
+| US-14 | Bulk edit bookmarks | Select bookmarks from filtered results to manage title hashtags, open tabs, or move bookmarks together. | Not started | US-14 |
+| US-15 | Rename a tag across bookmarks | Replace a title hashtag throughout the bookmark library with an existing or newly entered tag. | Not started | US-15 |
+
+Source: [Chromtag issue #4 — manage tags across bookmarks](https://github.com/rotten77/chromtag/issues/4).
 
 ## Workflow update before T-13
 
@@ -139,6 +148,7 @@ This epic is independent of future feature releases and plan archival.
 |---|---|---|---|---|---|
 | T-15 | Package and publish version 2.0 | Jan Zatloukal and AI agent | Follow [distribution procedure](distribution.md), prepare the store package and listing, and submit the release. Jan reported approval and publication on 2026-11-20; installed-store verification remains pending. | In progress | T-15 |
 | T-14 | Review open GitHub issues | Jan Zatloukal and AI agent | Check open issues on GitHub and decide what to do with each. | Not started | T-14 |
+| T-16 | Add support and rating links | Jan Zatloukal and AI agent | Let users support Chromtag or rate it from the README and the Options dialog. | Not started | T-16 |
 
 ## Next step
 

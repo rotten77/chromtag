@@ -21,9 +21,9 @@ Chromtag is a Chrome bookmark browser/editor. Hashtags in native bookmark titles
 - `.memory/legacy-baseline.md` and `.memory/legacy-analysis.md`: supplied historical 1.8 behavior and root-cause analysis.
 - `.memory/legacy-measurements.md`: T-01 synthetic browser measurements and diagnostic reproduction instructions.
 - `.memory/manifest-audit.md`: T-02 metadata, permissions, API floors, and packaging handoff to Angular setup.
-- `docs/index.md`: detailed current extension guide; `docs/changelog.md`: complete release history; `.memory/distribution.md`: planned build, ZIP, and store-submission procedure for T-15.
+- `docs/README.md`: GitHub documentation index and extension guide; `docs/changelog.md`: complete release history; `.memory/distribution.md`: planned build, ZIP, and store-submission procedure for T-15.
 - `.memory/legacy-readme.md` and `docs/img/`: preserved historical README and visual references, not current store screenshots.
-- `docs/` contains `README.md`, `index.md`, and `changelog.md` for users, plus images in `docs/img/`. Internal testing, coverage, audits, and historical references live in `.memory/`.
+- The root README introduces Chromtag, installation, and privacy. `docs/development.md` holds setup, build, and test commands. Images remain in `docs/img/`. Internal testing, coverage, audits, and historical references live in `.memory/`.
 
 Do not duplicate target acceptance criteria in the plan or user documentation. Separate historical limitations from target behavior.
 
@@ -41,7 +41,7 @@ Do not duplicate target acceptance criteria in the plan or user documentation. S
 - Preserve the compact design. Support Unicode without transliteration, search URLs/titles/folders, and preserve diacritic distinctions.
 - Jan's 2.0 layout review: show Search... without a visible label; combine folders and tags into 1 fixed wrapping cloud with a 14rem height limit, pagination above the choices, and no large blank area below the first page. Cap cloud height further at smaller sizes so the bookmark list remains visible. Only the bookmark-list area scrolls in the main popup (540 x 580 px); a `--border-color` top border separates it from the controls. Use folder green #4CAF50 and tag blue #448AFF, selected #F44336 without a shadow, and hover #212121. The editor also has no shadow. Keep full-width bookmark rows CSS-truncated with space reserved for Edit and even top/bottom spacing within fixed virtual rows. Size URL text and row folder/tag badges at 80% of the title font size; give both row badge types a #9E9E9E background. Underline titles and use tag-blue on hover; reveal Edit on row hover or visible keyboard focus.
 - T-01 records user-approved hashtag, phrase-search, and folder-ID/descendant semantics in the technical specification. Use those rules when implementing the affected stories.
-- Version 2.2 plans configurable combined folder/tag cloud height and independently selected Material Design foreground/tag/folder colors for light and dark themes. Backgrounds are fixed at white/light and #212121/dark; no background editor.
+- US-10 plans adjustable font size, popup width and height, and a ratio slider dividing available height between filters and bookmarks. Light, Dark, and system-following modes use independent light and dark foreground/tag/folder palettes. Backgrounds are fixed at white/light and #212121/dark; no background editor.
 - T-13 loading and hashtag-processing feedback counts all URL-bearing tree nodes, including excluded `javascript:` bookmarks, after Chrome returns the tree. Large-library messaging cites synthetic evidence, not a guaranteed bookmark limit. Jan verified T-13 with an imported 50,000-bookmark synthetic collection on 2026-11-12.
 - Default bookmark clicks open a new tab. Version 2.3 adds target and popup-close preferences.
 

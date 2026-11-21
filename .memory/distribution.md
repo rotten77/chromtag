@@ -10,7 +10,7 @@ Publication requires access to the developer account that owns the existing Chro
 
 ## Build and test
 
-Use the Node.js version range in [README](../README.md#development). Stable Chrome 157+ is required for browser tests.
+Use the Node.js version range in [the development guide](../docs/development.md). Stable Chrome 157+ is required for browser tests.
 
 1. Run `npm ci` from the repository root.
 2. Run `npm run check`.
@@ -56,7 +56,7 @@ For the existing extension, update the existing item rather than creating a dupl
 
 Prepare:
 
-- A current description based on the [extension guide](../docs/index.md).
+- A current description based on the [extension guide](../docs/README.md).
 - Version 2.0 release notes from the [changelog](../docs/changelog.md).
 - Current screenshots of the built 2.0 popup, filtering, and editor. Do not use the historical `docs/img/` screenshots.
 - Store icons and promotional images that meet the dashboard's current size requirements.
