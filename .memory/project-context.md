@@ -21,7 +21,7 @@ Chromtag is a Chrome bookmark browser/editor. Hashtags in native bookmark titles
 - `.memory/legacy-baseline.md` and `.memory/legacy-analysis.md`: supplied historical 1.8 behavior and root-cause analysis.
 - `.memory/legacy-measurements.md`: T-01 synthetic browser measurements and diagnostic reproduction instructions.
 - `.memory/manifest-audit.md`: T-02 metadata, permissions, API floors, and packaging handoff to Angular setup.
-- `docs/README.md`: GitHub documentation index and extension guide; `docs/changelog.md`: complete release history; `.memory/distribution.md`: T-15 packaging and store-submission record and procedure.
+- `docs/README.md`: GitHub documentation index and extension guide; `docs/changelog.md`: complete release history; `.memory/distribution.md`: T-15 packaging record and the store-submission checklist. The upstream skill's `CHROMEWEBSTORE.md` guidance is covered there; no duplicate root file is maintained.
 - `.memory/legacy-readme.md` and `docs/img/`: preserved historical README and visual references, not current store screenshots.
 - The root README introduces Chromtag, installation, and privacy. `docs/development.md` holds setup, build, and test commands. Images remain in `docs/img/`. Internal testing, coverage, audits, and historical references live in `.memory/`.
 
@@ -48,6 +48,7 @@ Do not duplicate target acceptance criteria in the plan or user documentation. S
 ## Repository conventions
 
 - Each new feature requires a higher extension version, even if the previous feature has not been published. Follow the versioning rule in `AGENTS.md`.
+- The pinned `chrome-extensions` skill under `.agents/skills/` is external guidance. `AGENTS.md` and the tested `activeTab` action-popup behavior take precedence where it conflicts. Review skill updates before adopting them; Jan chooses when to publish.
 
 - Before implementing a feature or bug fix, report the current branch and ask Jan whether to create or switch to a dedicated branch. Jan makes and verifies the branch decision; do not switch automatically. Documentation, planning, workflow, and other `.memory/`-only updates do not require a new branch unless Jan requests one. Commits, merges, and pushes require a user request.
 - Application code: `src/`; manifest source and preserved static icons: `public/`.

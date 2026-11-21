@@ -73,6 +73,16 @@ Permission justifications:
 
 The implementation has no backend, analytics, remote code, or separate bookmark storage. Bookmarks and URLs are processed locally through Chrome APIs. Review actual behavior before completing privacy declarations; do not assume that local processing exempts the listing from policy requirements.
 
+### Store information to review when Jan requests publication
+
+The upstream Chrome Extensions skill recommends a root `CHROMEWEBSTORE.md`; this repository keeps store preparation here and published release history in `docs/changelog.md` instead. Before a requested submission, compare these items with the current dashboard and code. Do not fill unknown account or contact fields with guesses or put private credentials in tracked files.
+
+- Listing: manifest-matching name and short description, specific detailed description, category, single purpose, primary language, publisher, public contact/support details, and homepage if used. Check the dashboard's current length limits and avoid claims about unreleased features.
+- Assets: verify the packaged 128 px icon, at least one current screenshot, and any optional promotional images against the dashboard's size rules. Record which screenshots need refreshing after UI changes.
+- Permissions: justify every current manifest permission and host permission by user-facing purpose. Recheck the manifest for unused or newly added permissions; do not broaden permissions to satisfy a template.
+- Privacy: compare actual data stored or transmitted, retention and deletion, sharing, and third-party services with the dashboard disclosure and a live public privacy-policy URL. Verify policy, listing, and disclosure agree. Local data and Chrome storage still need an accurate review.
+- Submission: confirm visibility and regions with Jan. Record the submitted version, date, summary, review status, and any rejection reason and resolution. Keep release notes in `docs/changelog.md`; only Jan authorizes publication.
+
 ## Submit the update
 
 1. Open the existing Chromtag item in the developer dashboard.

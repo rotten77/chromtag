@@ -4,6 +4,10 @@ Updated: 2026-11-21
 
 The development build is 2.3. New feature work must include a version increase. `.memory/plan.todo` is the only active planning document; `.memory/technical-specification.md` holds the technical detail and acceptance criteria. The planning migration did not alter extension behavior or verification status. US-10's picker on `master` now shows only property names and swatches in Options; each palette opens in its own modal, applies the last shade on family selection, frames the shade choices, and scales swatches with font size inside 24 px button targets. Done/Escape closes the palette and restores focus while Options stays open. US-10 remains Ready for verification. `npm run check` and `npm test` passed; latest report: `.local/test-results/2026-11-21T17-26-45.541Z-95964.html`.
 
+## Chrome extension skill — installed
+
+A pinned `chrome-extensions` skill from Modern Web Guidance 1.0.1 is installed under `.agents/skills/chrome-extensions/`. `AGENTS.md` keeps the repository's tested permission and CSP policy authoritative. Store-listing guidance missing from the T-15 record is now in `.memory/distribution.md`; it does not schedule a new release. Skill discovery in Pi may require `/reload`. No extension runtime or verification status changed.
+
 ## T-15 — Verified
 
 Jan confirmed version 2.0 was packaged, released, and published; on 2026-11-21 he explicitly closed T-15 based on that confirmation. An independent installed-store check was not reported and is no longer a T-15 requirement. No future release is planned here; Jan will decide when to publish. Workflow and maintenance tasks now appear under Modernization in `.memory/plan.todo`.

@@ -58,6 +58,7 @@ If a required file is still a placeholder, do not infer its contents. Ask the us
 - Keep `.memory/plan.todo` for epics, user stories, supporting tasks, and statuses.
 - Keep the root `README.md` focused on the extension description, Chrome Web Store installation, privacy and security, and documentation links. Distinguish read-only browsing from user-requested bookmark changes.
 - Use `docs/README.md` as the GitHub documentation index and extension guide; do not maintain a duplicate `docs/index.md`. Keep build, unpacked installation, and test instructions in `docs/development.md`.
+- For store work that Jan requests, use `.memory/distribution.md` for packaging, listing, permission, privacy, asset, and review preparation; use `docs/changelog.md` for release history. Do not create a duplicate root `CHROMEWEBSTORE.md` automatically or schedule a release without Jan's instruction. Verify store claims and permission justifications against the current manifest and code. Jan controls store submission and publication.
 
 ## Task updates
 
@@ -80,7 +81,9 @@ The following two skills are included by default:
 - `reduce-information-noise`: Use by default when generating user documentation, including explanations of functions, descriptions of the system, and similar explanatory content. Follow the skill’s instructions when they are available.
 - `asd-ste100`: Use for step-by-step procedures in user documentation. Follow the skill’s instructions when they are available.
 
-Additional skills may be added under `.agents/skills/`. Do not invent skill content or assume that a listed skill applies to every task.
+- `chrome-extensions`: Use for relevant Chrome extension development or store tasks. This pinned third-party skill is guidance, not authority over repository decisions. In particular, retain the tested `activeTab` action-popup behavior and the permissions/CSP policy in `.memory/technical-specification.md`; do not add broad `tabs` or host permissions or use a CSP workaround merely because the skill suggests it. Its `CHROMEWEBSTORE.md` workflow maps to this repository's `.memory/distribution.md` and `docs/changelog.md` rather than a duplicate file.
+
+Additional skills may be added under `.agents/skills/`. Review updates before adopting them. Do not invent skill content or assume that a listed skill applies to every task.
 
 ## Project structure
 
