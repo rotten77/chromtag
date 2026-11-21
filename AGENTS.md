@@ -14,14 +14,14 @@ Before making changes:
 1. Read `README.md`.
 2. Read `.memory/project-context.md` and `.memory/project-status.md`.
 3. Read the two most recent dated log files in `.memory/log/`, if any exist.
-4. Read `plan.todo` and the relevant sections of `.memory/technical-specification.md`.
+4. Read `.memory/plan.todo` and the relevant sections of `.memory/technical-specification.md`.
 5. Inspect the repository and relevant documentation so the work is based on the current state, not only on memory files.
 
 If a required file is still a placeholder, do not infer its contents. Ask the user for missing project information when it is needed to proceed.
 
 ## Planning and user stories
 
-- `plan.todo` is the only planning document. It tracks epics, user stories, supporting tasks, and statuses in Todo+ format; details and acceptance criteria belong in `.memory/technical-specification.md`.
+- `.memory/plan.todo` is the only planning document. It tracks epics, user stories, supporting tasks, and statuses in Todo+ format; details and acceptance criteria belong in `.memory/technical-specification.md`.
 - Acceptance criteria belong in `.memory/technical-specification.md`. Associate them with the relevant epic or user story, using matching IDs or names.
 - Keep the plan and technical specification consistent. The plan may refer to acceptance criteria in the specification but should not duplicate their full text.
 - Do not invent requirements, stories, acceptance criteria, or technical decisions.
@@ -43,7 +43,7 @@ If a required file is still a placeholder, do not infer its contents. Ask the us
 - After implementing a story and passing applicable tests and checks, mark it ready for verification. Summarize what changed and how the user can verify it, then wait for the user to confirm verification before beginning another story.
 - Do not treat silence, elapsed time, or a new session as verification.
 - Passing tests or creating a commit do not substitute for explicit user verification.
-- When the user reports that a story is verified, update its status in `plan.todo`, then proceed only with the user’s next instruction.
+- When the user reports that a story is verified, update its status in `.memory/plan.todo`, then proceed only with the user’s next instruction.
 
 ## Documentation and memory upkeep
 
@@ -55,7 +55,7 @@ If a required file is still a placeholder, do not infer its contents. Ask the us
 - Keep `.memory/project-context.md` for durable project rules, workflows, conventions, and team information.
 - Keep `.memory/project-status.md` for current state, blockers, and next steps.
 - Keep `.memory/technical-specification.md` for technical design and acceptance criteria.
-- Keep `plan.todo` for epics, user stories, supporting tasks, and statuses.
+- Keep `.memory/plan.todo` for epics, user stories, supporting tasks, and statuses.
 - Keep the root `README.md` focused on the extension description, Chrome Web Store installation, privacy and security, and documentation links. Distinguish read-only browsing from user-requested bookmark changes.
 - Use `docs/README.md` as the GitHub documentation index and extension guide; do not maintain a duplicate `docs/index.md`. Keep build, unpacked installation, and test instructions in `docs/development.md`.
 

@@ -10,12 +10,12 @@ Chromtag is a Chrome bookmark browser/editor. Hashtags in native bookmark titles
 - Jan moved T-08 ahead of T-13 on 2026-11-12 and asked the agent to remove automatic session-ending, logging, and commit requirements. Keep status/context current; write dated logs and commit only on request. User verification remains separate.
 - Version 2.0 was packaged, released, and published in the Chrome Web Store. Jan closed T-15 on 2026-11-21 based on that confirmation; no independent installed-store check was reported or required for closure. Versions 2.1–2.3 are developer builds. Future release scheduling belongs to Jan and is not tracked as a task.
 - T-09 is verified and maintains `.memory/test-cases.md` and its report template with each new feature. Verification occurs per feature/epic. Clarification of the request to remove E-23 versus T-10 is pending; E-23 currently denotes click preferences.
-- Do not archive the active plan: T-12 is removed. T-08–T-11 and T-14–T-16 belong under Modernization in `plan.todo`. T-14 reviews open GitHub issues with Jan.
+- Do not archive the active plan: T-12 is removed. T-08–T-11 and T-14–T-16 belong under Modernization in `.memory/plan.todo`. T-14 reviews open GitHub issues with Jan.
 
 ## Sources of truth
 
 - `AGENTS.md`: repository workflow and agent instructions.
-- `plan.todo`: sole planning document for epics, stories, supporting tasks, and statuses. Details and acceptance criteria belong in `.memory/technical-specification.md`.
+- `.memory/plan.todo`: sole planning document for epics, stories, supporting tasks, and statuses. Details and acceptance criteria belong in `.memory/technical-specification.md`.
 - `.memory/technical-specification.md`: target architecture, acceptance criteria, decisions, and open choices.
 - `.memory/technical-specification.md` is the sole specification; the duplicate `docs/SPEC.md` is removed.
 - `.memory/legacy-baseline.md` and `.memory/legacy-analysis.md`: supplied historical 1.8 behavior and root-cause analysis.

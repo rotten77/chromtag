@@ -22,7 +22,7 @@ for (const file of documents) {
   }
 }
 const spec = await read('.memory/technical-specification.md');
-const plan = await read('plan.todo');
+const plan = await read('.memory/plan.todo');
 const planItems = [...plan.matchAll(/^  ([✔☐]) ((?:US|T)-\d{2})\b([^\r\n]*)/gmu)];
 const planIds = planItems.map(([, , id]) => id);
 assert.equal(planIds.length, new Set(planIds).size, 'Todo+ plan IDs must be unique');

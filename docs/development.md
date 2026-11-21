@@ -28,4 +28,4 @@ npm test       # Full suite; requires stable Chrome 157+
 
 Test reports: `.local/test-results/`.
 
-See the [agent workflow](../AGENTS.md) and [plan](../plan.todo).
+See the [agent workflow](../AGENTS.md) and [plan](../.memory/plan.todo).

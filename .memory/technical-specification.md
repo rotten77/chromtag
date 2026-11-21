@@ -6,7 +6,7 @@ Updated: 2026-11-21
 
 Chromtag is a Chrome extension for browsing and editing Chrome bookmarks through a popup. Hashtags in bookmark titles provide tags.
 
-This specification defines the extension's behavior, architecture, and acceptance criteria. `plan.todo` tracks epics, stories, tasks, and verification status by matching ID. This is the sole specification. `docs/` contains user and developer documentation and images. Historical 1.8 behavior and analysis remain in `.memory/legacy-baseline.md` and `.memory/legacy-analysis.md`.
+This specification defines the extension's behavior, architecture, and acceptance criteria. `.memory/plan.todo` tracks epics, stories, tasks, and verification status by matching ID. This is the sole specification. `docs/` contains user and developer documentation and images. Historical 1.8 behavior and analysis remain in `.memory/legacy-baseline.md` and `.memory/legacy-analysis.md`.
 
 ## Historical implementation
 
@@ -342,7 +342,7 @@ Jan moved T-08 ahead of T-13 on 2026-11-12 and requested that the agent perform 
 
 ## Post-implementation task acceptance criteria
 
-T-12 (plan archival) is removed; the plan remains active. T-08–T-11 and T-14–T-16 are grouped under Modernization in `plan.todo`. T-15 is closed based on Jan's confirmation that the package was released and published. Future releases are at Jan's discretion, not planning tasks. T-09 maintains per-feature test cases; T-10's separate testing role remains pending clarification.
+T-12 (plan archival) is removed; the plan remains active. T-08–T-11 and T-14–T-16 are grouped under Modernization in `.memory/plan.todo`. T-15 is closed based on Jan's confirmation that the package was released and published. Future releases are at Jan's discretion, not planning tasks. T-09 maintains per-feature test cases; T-10's separate testing role remains pending clarification.
 
 ### T-09 — Prepare manual test materials
 
