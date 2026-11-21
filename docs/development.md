@@ -1,6 +1,6 @@
 # Develop Chromtag
 
-Use Node.js `^22.22.3`, `^24.15.0`, or `^26.0.0`. The published extension is version 2.0; the development build is version 2.1.
+Use Node.js `^22.22.3`, `^24.15.0`, or `^26.0.0`. The published extension is version 2.0; the development build is version 2.2.
 
 ## Build and load the extension
 

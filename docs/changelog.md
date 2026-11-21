@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.2 (unreleased)
+
+- Added side-by-side width and height fields, plus sliders for font size and the space shared by filters and bookmarks. Filter hover and selection colors are configurable. Use the centered Options dialog to pick Material color swatches without visible color names for each theme. Appearance is always visible in Options. Expanding Light colors or Dark colors reveals all its swatches without another dropdown. Each theme has its own color reset button. Thin dividers separate the settings rows. System mode follows the current light or dark preference.
+
 ## 2.1 (unreleased)
 
 - Put the folder and tag filters first, with direct pagination, compact search, and **Add bookmark** in the top row.

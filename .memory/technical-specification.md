@@ -307,15 +307,15 @@ These criteria supersede the 2.0 control placement and labels in US-05, US-08, a
 
 ### US-10 — Configure appearance (version 2.2)
 
-- **US-10-AC1:** Let users set the base font size and popup width and height within supported Chrome popup limits. Provide a ratio slider for the vertical space shared by the combined folder/tag cloud and bookmark list, excluding fixed controls. Moving the slider toward filters gives the cloud more space; moving it toward bookmarks leaves more room for results. Preserve usable space for both and keep overflow filters reachable through pagination.
-- **US-10-AC2:** Offer Light, Dark, and System modes. System follows Chrome’s `prefers-color-scheme` signal on open and when the system setting changes while the popup is open. Explicit Light and Dark modes ignore system changes. Let users select foreground, tag, and folder colors independently for each theme from the Material Design color palette. Fix the light background at white (`#FFFFFF`) and the dark background at `#212121`; do not provide background-color editing.
-- **US-10-AC3:** Switching themes applies that theme's colors and fixed background; editing one theme does not overwrite the other.
+- **US-10-AC1:** Let users set the base font size. Use adjacent numeric inputs for popup width and height within supported Chrome popup limits. Provide a ratio slider for the vertical space shared by the combined folder/tag cloud and bookmark list, excluding fixed controls. Moving the slider toward filters gives the cloud more space; moving it toward bookmarks leaves more room for results. Preserve usable space for both and keep overflow filters reachable through pagination.
+- **US-10-AC2:** Offer Light, Dark, and System modes. System follows Chrome’s `prefers-color-scheme` signal on open and when the system setting changes while the popup is open. Explicit Light and Dark modes ignore system changes. Let users select foreground, tag, folder, filter highlight (hover), and selection colors independently for each theme using visual family and shade swatches covering the full [Material palette](https://www.materialpalette.com/colors), including accent shades, without requiring hex codes. Fix the light background at white (`#FFFFFF`) and the dark background at `#212121`; do not provide background-color editing.
+- **US-10-AC3:** Switching themes applies that theme's colors and fixed background; editing or resetting one theme’s palette to defaults does not change the other palette or any layout settings. Separate configuration rows with thin dividers.
 - **US-10-AC4:** Save font size, popup dimensions, split ratio, chosen mode, and both palettes in `chrome.storage.local`. Restore them across restarts; for System mode, resolve the current theme rather than saving the last resolved theme.
 - **US-10-AC5:** Separate preferences from bookmarks/indexes/session filters. Retain the separate US-09 folder visibility preference.
 - **US-10-AC6:** Set version `2.2`. Update README and product documentation.
 - **US-10-AC7:** Test font size, popup dimensions, ratio slider endpoints and resizing, pagination and list usability, independent palettes and fixed backgrounds, live System changes versus explicit modes, and restoration after restart.
 
-The light/dark backgrounds are fixed. The default mode and split ratio, slider range and step, font-size and dimension bounds, editable-color defaults, and Material palette choices remain open.
+Approved developer-build defaults: System mode; 540 × 580 px popup (width 380–800, height 400–600); 13 px font (12–18); 35% maximum filter share (20–60%, step 5). Small clouds yield unused space to bookmarks. Preserve the current light colors; dark defaults are #FAFAFA text, #90CAF9 tags, and #A5D6A7 folders on #212121.
 
 ### US-11 — Configure bookmark-click behavior (version 2.3)
 
@@ -394,7 +394,7 @@ These steps apply after the relevant implementation and tooling exist.
 
 - Real-profile performance and timing targets. T-01 records the legacy synthetic baseline; T-04/T-05 use 10,001 supported browser records and deep unit fixtures. Tests check at most 24 live rows in exercised layouts; this is not a timing guarantee.
 - T-13 uses all URL-bearing nodes for progress, an 8 ms chunk budget for large snapshots, and a 10,000-node threshold for guidance. The 10,001-bookmark synthetic test is evidence, not a support guarantee.
-- Version 2.2 editable-color defaults, supported bounds (including the filter-to-bookmark split ratio), and precise Material Design palette choices. Light/dark backgrounds are fixed at `#FFFFFF`/`#212121`. Version 2.0 starts with a 13 px base font and a 540 × 580 px popup; T-05 checks compact layout and overflow.
+- Version 2.2 appearance settings are subject to developer-build review; defaults and supported ranges are recorded under US-10. Version 2.0 starts with a 13 px base font and a 540 × 580 px popup; T-05 checks compact layout and overflow.
 - The v2.3 popup-close default and verified lifecycle limits.
 
 Resolve decisions before affected implementation. Analysis suggestions are not approved technical choices.

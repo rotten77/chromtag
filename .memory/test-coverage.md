@@ -4,6 +4,7 @@ Criteria remain authoritative in [the technical specification](../.memory/techni
 
 | Criteria | Repository evidence |
 |---|---|
+| US-10-AC1, US-10-AC2, US-10-AC3, US-10-AC4, US-10-AC5, US-10-AC6, US-10-AC7 | [Chrome integration](../tools/test-browser.mjs): dimensions, font size, filter ratio endpoints, System changes, explicit mode, palette isolation, and restoration alongside US-09 preferences. Manifest and package checks validate version consistency. |
 | US-12-AC4 (unreleased) | [Chrome integration](../tools/test-browser.mjs): top actions, no header/footer/close button, refresh via Options, folder toggle and reset on reopen. |
 | US-12-AC1, US-12-AC2, US-12-AC3 (unreleased) | [Chrome integration](../tools/test-browser.mjs): cloud/search order, same-line folder/tag flow, stable selected chip on a later page, hidden or reachable paging, combined clear and list scrolling. |
 | US-01-AC1 | [Chrome integration](../tools/test-browser.mjs): native action renders the registered popup target and natural dimensions. |

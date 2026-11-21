@@ -4,12 +4,13 @@ import { BookmarkList } from './bookmark-list';
 import { Bookmark, filterBookmarks, Filters } from './model';
 import { BookmarkEditor } from './bookmark-editor';
 import { FilterCloud } from './filter-cloud';
+import { AppearanceSettings } from './appearance-settings';
 import { CHROME } from './chrome-api';
 import { SessionFilters } from './session-filters';
 
 @Component({
   selector: 'app-root',
-  imports: [BookmarkList, BookmarkEditor, FilterCloud],
+  imports: [BookmarkList, BookmarkEditor, FilterCloud, AppearanceSettings],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="popup-content" [inert]="!!editing()">
@@ -17,12 +18,17 @@ import { SessionFilters } from './session-filters';
       <h1>Filters</h1>
       <button type="button" class="clear-filters" (click)="resetFilters()">Clear filters</button>
       <button type="button" class="primary add-bookmark" [disabled]="store.busy() || store.loading()" (click)="addCurrentPage()">Add bookmark</button>
-      <button type="button" popovertarget="popup-options">Options</button>
-      <div id="popup-options" popover role="group" aria-label="Popup options">
+      <button type="button" commandfor="popup-options" command="show-modal" aria-haspopup="dialog">Options</button>
+      <dialog id="popup-options" closedby="any" aria-labelledby="options-title">
+        <h2 id="options-title">Options</h2>
         <label><input type="checkbox" #showFolders aria-controls="filter-cloud" [checked]="foldersVisible()" [disabled]="!settingsReady()" (change)="setShowFolders(showFolders.checked)"> Show folders</label>
         <label><input type="checkbox" #clearOnOpen [checked]="!rememberFilters()" [disabled]="!settingsReady()" (change)="setRemember(!clearOnOpen.checked)"> Clear filters on popup</label>
-        <button type="button" popovertarget="popup-options" popovertargetaction="hide" (click)="store.refresh()" [disabled]="store.loading() || store.busy()">Refresh</button>
-      </div>
+        <app-appearance />
+        <div class="editor-actions">
+          <button type="button" commandfor="popup-options" command="close" (click)="store.refresh()" [disabled]="store.loading() || store.busy()">Refresh</button>
+          <button type="button" class="primary" commandfor="popup-options" command="close">Done</button>
+        </div>
+      </dialog>
     </div>
     @if (storageError()) { <p role="alert">{{ storageError() }}</p> }
     @if (store.error()) { <p role="alert">{{ store.error() }}</p> }
@@ -36,12 +42,14 @@ import { SessionFilters } from './session-filters';
         }
       </div>
     }
+    <div class="workspace">
     <app-filter-cloud [folders]="store.model().folders" [tags]="store.model().tags" [showFolders]="foldersVisible()"
       [selectedFolder]="filters().folderId" [selectedTags]="filters().tags" (folderSelected)="toggleFolder($event)" (tagSelected)="toggleTag($event)" />
     <div class="results-tools"><p class="result-count" role="status">{{ filtered().length }} of {{ store.model().bookmarks.length }} bookmarks</p>
       <input #search class="search-field" type="search" aria-label="Search bookmarks" [value]="queryInput()" (input)="onQuery(search.value)" placeholder="Search bookmarks…" autocomplete="off">
     </div>
     <app-bookmark-list [rows]="filtered()" (open)="store.open($event)" (edit)="openEditor($event)" />
+    </div>
     @if (!store.loading() && !filtered().length) { <p>{{ store.model().bookmarks.length ? 'No matching bookmarks.' : 'No bookmarks yet.' }}</p> }
     </div>
     @if (editing(); as bookmark) { <app-bookmark-editor [bookmark]="bookmark" [model]="store.model()" (closed)="closeEditor()" /> }

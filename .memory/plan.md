@@ -83,7 +83,7 @@ Depends on the current filters. Include permission updates, documentation, and r
 
 | ID | Story | User goal | Status | Criteria |
 |---|---|---|---|---|
-| US-10 | Configure appearance | Set font size, popup width and height, and the filter-to-bookmark space ratio. Choose Light, Dark, or System mode and configure colors separately for light and dark themes. | Not started | US-10 |
+| US-10 | Configure appearance | Set font size, popup width and height, and the filter-to-bookmark space ratio. Choose Light, Dark, or System mode and configure colors separately for light and dark themes. | Ready for verification | US-10 |
 
 Include default/bounds decisions, documentation, and regression tests.
 

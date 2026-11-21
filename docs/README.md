@@ -38,6 +38,14 @@ In the development build, green folders come first and blue tags follow in the s
 
 Chrome clears session filters on restart. Click outside the popup to dismiss it; there is no separate close button.
 
+## Appearance (development build)
+
+In version 2.2, open **Options**. The **Appearance** controls are always shown. Changes apply immediately and stay on this device after Chrome restarts.
+
+- Enter popup width (380–800 px) and height (400–600 px) in the adjacent number fields. Press Tab to apply each value. Use the slider for font size (12–18 px). Defaults are 540 × 580 px and 13 px.
+- **Filter space** limits the cloud to 20–60% of the height shared with bookmarks, in steps of 5 percentage points. The default is 35%. A small cloud leaves unused space for bookmarks.
+- **System** follows the system color preference. Choose **Light** or **Dark** to override it. Under **Light colors** and **Dark colors**, choose text, tag, folder, highlight (hover), and selection colors independently. Each picker shows color-only buttons with screen-reader labels from the [Material palette](https://www.materialpalette.com/colors). Expand a theme to see all its color pickers. Choose a family, then a shade; the swatches stay open. The palette works offline. Each theme has a reset button that restores only its colors; the other theme and popup layout stay unchanged. Backgrounds stay white and dark gray, respectively.
+
 ## Hashtags
 
 A tag starts with `#` at the beginning of a title or after whitespace. It ends at whitespace, another `#`, or the title end.

@@ -49,6 +49,8 @@ Run affected cases during each feature/epic verification. Use the full set when 
 
 **M-27 — US-09 (2.1):** Start in a fresh test profile. Show folders should be checked and Clear filters on popup unchecked. Select filters and hide folders. Reopen: filters should restore and folders should stay hidden. Check Clear filters on popup: the current view should not change, but the next popup should be unfiltered. Uncheck it with a query active; reopen to check it restores. Clear filters and reopen: neither checkbox should change. Apply another query and restart Chrome: the query should disappear and folders should still be hidden.
 
+**M-28 — US-10:** In Options → Appearance, try the smallest and largest popup/font sizes and both ends of Filter space with a crowded cloud. Page through filters and scroll bookmarks. Change a color in each palette, switch modes, then change the OS theme in System mode. Confirm only System follows the OS; reopen and restart Chrome to check the settings persist independently of filters.
+
 Numeric snapshot/read-count boundaries and forced Chrome API failures are covered by the automated suite. Do not claim manual proof of those internals from appearance alone.
 
 ## Verification report template
