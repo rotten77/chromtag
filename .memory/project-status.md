@@ -2,7 +2,7 @@
 
 Updated: 2026-11-21
 
-The development build is 2.3. New feature work must include a version increase. `plan.todo` is the only active planning document; `.memory/technical-specification.md` holds the technical detail and acceptance criteria. The planning migration does not alter extension behavior or verification status. US-09, US-10, and US-11 remain Ready for verification. `npm run check` and `npm test` passed; latest report: `.local/test-results/2026-11-21T17-26-45.541Z-95964.html`.
+The development build is 2.3. New feature work must include a version increase. `plan.todo` is the only active planning document; `.memory/technical-specification.md` holds the technical detail and acceptance criteria. The planning migration did not alter extension behavior or verification status. US-10's picker on `master` now shows only property names and swatches in Options; each palette opens in its own modal, applies the last shade on family selection, frames the shade choices, and scales swatches with font size inside 24 px button targets. Done/Escape closes the palette and restores focus while Options stays open. US-10 remains Ready for verification. `npm run check` and `npm test` passed; latest report: `.local/test-results/2026-11-21T17-26-45.541Z-95964.html`.
 
 ## T-15 — Verified
 

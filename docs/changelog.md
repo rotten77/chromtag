@@ -6,7 +6,7 @@
 
 ## 2.2 (unreleased)
 
-- Added a single Popup size row with width × height fields, plus sliders for font size and the space shared by filters and bookmarks. Filter hover and selection colors are configurable. Use the centered Options dialog to pick Material color swatches without visible color names for each theme. Appearance is always visible in Options. Expanding Light colors or Dark colors reveals all its swatches without another dropdown. Each theme has its own color reset button. Thin dividers separate the settings rows. System mode follows the current light or dark preference.
+- Added a single Popup size row with width × height fields, plus sliders for font size and the space shared by filters and bookmarks. Filter hover and selection colors are configurable. Use the centered Options dialog to pick Material color swatches without visible color names for each theme. Appearance is always visible in Options. Expanding Light colors or Dark colors reveals a compact list of color properties; selecting one opens the palette in a separate dialog. Selecting a color family applies its last shade; the smaller shade buttons sit in a separate framed group. Each theme has its own color reset button. Thin dividers separate the settings rows. System mode follows the current light or dark preference.
 
 ## 2.1 (unreleased)
 
