@@ -377,6 +377,26 @@ T-12 (plan archival) is removed; the plan remains active. T-08–T-11 and T-14�
 - **T-14-AC1:** Under Modernization, check the repository's open GitHub issues without depending on plan archival.
 - **T-14-AC2:** Decide with Jan what to do with each open issue and record the outcome.
 
+## High-priority audit follow-ups (planned)
+
+These tasks record findings from the read-only audit of the 2.3 developer build. They do not change the verified status of earlier work. Address them one at a time after Jan authorizes implementation and chooses a branch. The 2026-11-22 `npm run check` and `npm test` passed, but the existing tests do not cover all cases below.
+
+### T-17 — Bound filter-cloud rendering and measurement
+
+`src/app/filter-cloud.ts` renders all remaining folder/tag buttons and measures them even when pagination hides most choices. Investigate the impact with many *distinct* choices, not only many bookmarks. Plan bounded rendering/measurement while keeping every choice reachable, preserving the current page and selection behavior, and checking resize and keyboard navigation. Do not set a performance guarantee without evidence.
+
+### T-18 — Preserve the latest preferences under rapid changes
+
+`src/app/app.ts` starts filter save/remove operations without ordering them; `src/app/appearance-settings.ts` starts independent whole-appearance writes. The audit identified a possible last-write race, not a reproduced Chrome failure. First reproduce or rule it out with delayed/reordered storage operations. If confirmed, make the most recent user choice survive rapid filter-option toggles and appearance edits, including popup reopen; keep storage boundaries specified by US-09 and US-10.
+
+### T-19 — Resolve default and selectable color contrast
+
+The light folder chip's specified `#388E3C` background with white 13 px text has approximately 4.12:1 contrast, below WCAG AA's 4.5:1 normal-text threshold. The appearance picker also permits colors that can make text or controls unreadable. Check default and selected theme combinations, including text on fixed backgrounds and chip/hover/selection states. **Decision required before implementation:** US-12-AC1 explicitly requires the current green and white label; Jan must decide whether to change a specified color, change label treatment, or accept the contrast limitation. Also agree how to handle low-contrast user-selected shades without silently removing the specified full palette.
+
+### T-20 — Distinguish bookmark-load failure from an empty library
+
+When `chrome.bookmarks.getTree()` fails, `src/app/bookmark-store.ts` shows an error but `src/app/app.ts` can also say “No bookmarks yet.” Plan an error-state distinction that does not suggest the bookmark library is empty; test a failed read, retry, and a genuinely empty tree. Keep the existing phase/error handling and one-tree-read-per-refresh behavior.
+
 ## Verification procedure
 
 These steps apply after the relevant implementation and tooling exist.

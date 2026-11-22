@@ -1,8 +1,12 @@
 # Project status
 
-Updated: 2026-11-21
+Updated: 2026-11-22
 
-The development build is 2.3. New feature work must include a version increase. `.memory/plan.todo` is the only active planning document; `.memory/technical-specification.md` holds the technical detail and acceptance criteria. The planning migration did not alter extension behavior or verification status. US-10's picker on `master` now shows only property names and swatches in Options; each palette opens in its own modal, applies the last shade on family selection, frames the shade choices, and scales swatches with font size inside 24 px button targets. Done/Escape closes the palette and restores focus while Options stays open. US-10 remains Ready for verification. `npm run check` and `npm test` passed; latest report: `.local/test-results/2026-11-21T17-26-45.541Z-95964.html`.
+The development build is 2.3. New feature work must include a version increase. `.memory/plan.todo` is the only active planning document; `.memory/technical-specification.md` holds the technical detail and acceptance criteria. The planning migration did not alter extension behavior or verification status. US-10's picker on `master` now shows only property names and swatches in Options; each palette opens in its own modal, applies the last shade on family selection, frames the shade choices, and scales swatches with font size inside 24 px button targets. Done/Escape closes the palette and restores focus while Options stays open. US-10 remains Ready for verification. `npm run check` and `npm test` passed for the picker work; report: `.local/test-results/2026-11-21T17-26-45.541Z-95964.html`.
+
+## High-priority audit follow-ups — planned, not implemented
+
+T-17–T-20 in `.memory/plan.todo` track the four findings from the 2.3 read-only audit: unbounded filter-cloud button rendering/measurement, a possible rapid-write preference race that needs reproduction, contrast limitations (including the specified light folder-chip colors), and a misleading empty-library message on bookmark-read failure. Details and the unresolved color decision are in `.memory/technical-specification.md`. Address the fixes separately when Jan requests them; before implementing, confirm the branch. `npm run check` and `npm test` passed on 2026-11-22; report: `.local/test-results/2026-11-22T10-30-39.742Z-54744.html`. Passing checks do not resolve the findings or verify US-09–US-11. No release is scheduled.
 
 ## Chrome extension skill — installed
 
