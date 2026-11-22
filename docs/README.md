@@ -10,7 +10,7 @@ Open the Chromtag extension action to display the popup. Each row shows the book
 
 Nested folders are supported. The list excludes `javascript:` bookmarks. Long titles and URLs truncate; tooltips expose the full text. Only the bookmark list scrolls in the main popup.
 
-The popup uses a 540 × 580 px layout and a 13 px base font. Appearance and click-behavior settings are not part of version 2.0.
+The popup uses a 540 × 580 px layout and a 13 px base font. Appearance and click-behavior settings are not part of version 2.0. In the 2.4 development build, filter pages render only the visible choices, even with many distinct tags or folders. Use Next, Previous, or First to reach other choices.
 
 ## Filter bookmarks
 

@@ -383,7 +383,7 @@ These tasks record findings from the read-only audit of the 2.3 developer build.
 
 ### T-17 — Bound filter-cloud rendering and measurement
 
-`src/app/filter-cloud.ts` renders all remaining folder/tag buttons and measures them even when pagination hides most choices. Investigate the impact with many *distinct* choices, not only many bookmarks. Plan bounded rendering/measurement while keeping every choice reachable, preserving the current page and selection behavior, and checking resize and keyboard navigation. Do not set a performance guarantee without evidence.
+The cloud now probes at most 32 buttons per page, retains only fitted choices, and renders no buttons from other pages. Next/Previous/First keep every choice reachable; input changes reset paging, while selection leaves the page in place. Resize remeasures. Native Chrome regression covers 2,000 distinct tags, 246 mixed folder/tag choices, keyboard paging, and supported layout changes. This is a DOM bound, not a timing guarantee.
 
 ### T-18 — Preserve the latest preferences under rapid changes
 

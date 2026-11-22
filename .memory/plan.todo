@@ -58,8 +58,8 @@ E-26 — Bulk bookmark actions:
   Source: https://github.com/rotten77/chromtag/issues/4
 
 E-27 — High-priority audit follow-ups:
-  ☐ T-17 Bound filter-cloud rendering and measurement
+  ☐ T-17 Bound filter-cloud rendering and measurement @ready-for-verification
   ☐ T-18 Preserve the latest filter and appearance preferences under rapid changes
   ☐ T-19 Resolve default and selectable color contrast
   ☐ T-20 Distinguish bookmark-load failure from an empty library
-  Plan these fixes separately; see the technical specification for evidence, test scope, and the color decision needed before implementation.
+  T-17 awaits Jan's verification. Plan remaining fixes separately; see the technical specification for evidence, test scope, and the color decision needed before implementation.

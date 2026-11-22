@@ -319,7 +319,7 @@ try {
   await page.reload();
   await page.getByText('1 of 10001 bookmarks', { exact: true }).waitFor();
   assert.equal(await search.inputValue(), '<b>Saved');
-  assert.equal(await page.locator('.filter-cloud [aria-pressed="true"]').count(), 2);
+  assert.equal(await page.locator('.filter-cloud [aria-pressed="true"]').count(), 1, 'Only the selected choice on the current page is rendered');
   assert.equal(await page.evaluate(() => globalThis.treeReads), 1);
   const snapshot = await page.evaluate(() => chrome.storage.session.get(null));
   assert.deepEqual(Object.keys(snapshot), ['sessionFilters']);
@@ -366,10 +366,11 @@ try {
     overflow: getComputedStyle(cloud).overflowY, tags: cloud.querySelectorAll(':scope > .tag').length,
     sections: cloud.querySelectorAll('section').length,
   }));
-  assert.equal(fullCloud.tags, 130);
+  assert(fullCloud.tags >= 0 && fullCloud.tags < 130, 'Only the current filter page is rendered');
+  assert(await page.locator('.filter-cloud > button').count() <= 32, 'The cloud keeps a bounded rendered window');
   assert.equal(fullCloud.sections, 0);
   assert.equal(fullCloud.overflow, 'hidden');
-  assert(fullCloud.scrollHeight > fullCloud.height, 'Excess cloud labels collapse without a scrollbar');
+  assert(fullCloud.scrollHeight <= fullCloud.height + 1, 'The cloud does not scroll or retain hidden pages');
   const pagingPosition = await page.evaluate(() => {
     const nav = document.querySelector('app-filter-cloud .cloud-paging').getBoundingClientRect();
     const cloud = document.querySelector('.filter-cloud').getBoundingClientRect();
@@ -383,18 +384,25 @@ try {
   }
   const reached = new Set();
   do {
-    for (const label of await page.locator('.filter-cloud button:not([inert])').allTextContents()) reached.add(label);
+    const live = await page.locator('.filter-cloud > button').count();
+    assert(live <= 32, `Each page has bounded live buttons (saw ${live})`);
+    for (const label of await page.locator('.filter-cloud > button').allTextContents()) reached.add(label);
     const more = page.getByRole('button', { name: 'Next filters', exact: true });
     if (!await more.isEnabled()) break;
     await filterPage(page, 'Next filters');
   } while (true);
   assert.equal([...reached].filter(label => label.startsWith('#')).length, 130, 'All 130 collapsed tags remain reachable by pagination');
   assert.equal(reached.size, 246, 'All 116 folders and 130 tags remain reachable');
-  await filterPage(page, 'Previous filters');
+  const lastRange = await pageRange.innerText();
+  await page.getByRole('button', { name: 'Previous filters', exact: true }).focus();
+  await page.keyboard.press('Enter');
+  await page.waitForFunction(text => document.querySelector('.cloud-paging span')?.textContent !== text, lastRange);
+  await page.locator('.filter-cloud[aria-busy="false"]').waitFor();
+  assert(await page.locator('.filter-cloud > button').count() <= 32, 'Keyboard paging keeps a bounded page');
   await filterPage(page, 'First filters');
   const firstPage = await page.evaluate(() => {
     const cloud = document.querySelector('.filter-cloud');
-    const shown = [...cloud.querySelectorAll('button:not([inert])')];
+    const shown = [...cloud.querySelectorAll('button')];
     const last = shown.at(-1)?.getBoundingClientRect();
     const bounds = cloud.getBoundingClientRect();
     return { lastBottom: last?.bottom, cloudBottom: bounds.bottom, cloudHeight: bounds.height, listHeight: document.querySelector('cdk-virtual-scroll-viewport').getBoundingClientRect().height };
@@ -566,9 +574,13 @@ try {
   await ratio.press('Home');
   const cloudHeight = () => page.locator('app-filter-cloud').evaluate(el => el.clientHeight);
   await page.waitForFunction(() => document.documentElement.style.getPropertyValue('--filter-share') === '0.2');
+  await page.locator('.filter-cloud[aria-busy="false"]').waitFor();
+  assert(await page.locator('.filter-cloud > button').count() <= 32, 'Small layout keeps cloud buttons bounded');
   const small = await cloudHeight();
   await ratio.press('End');
   await page.waitForFunction(() => document.documentElement.style.getPropertyValue('--filter-share') === '0.6');
+  await page.locator('.filter-cloud[aria-busy="false"]').waitFor();
+  assert(await page.locator('.filter-cloud > button').count() <= 32, 'Resized layout keeps cloud buttons bounded');
   assert(await cloudHeight() > small, `Cloud height must increase from ${small} (now ${await cloudHeight()})`);
   assert(await page.locator('cdk-virtual-scroll-viewport').evaluate(el => el.clientHeight > 0));
   const theme = page.getByLabel('Theme', {exact:true});
@@ -646,6 +658,25 @@ try {
   await fresh.waitForURL(currentUrl);
   console.log('PASS: click preferences default to current tab/close, persist across restart, and navigate the current tab without opening another.');
   console.log('PASS: filters restore on reopen, respect opt-out and clear, and expire on browser restart; independent Options preferences persist.');
+  // Exercise the cloud with distinct choices, not just many bookmarks sharing tags.
+  const dense = await context.newPage();
+  await dense.goto(`chrome-extension://${id}/index.html`);
+  await dense.evaluate(async () => {
+    for (let batch = 0; batch < 20; batch++) {
+      await Promise.all(Array.from({length: 100}, (_, index) => {
+        const n = batch * 100 + index;
+        return chrome.bookmarks.create({ title: `Distinct filter ${n} #unique${n}`, url: `https://example.invalid/distinct/${n}` });
+      }));
+    }
+  });
+  await dense.reload();
+  await dense.getByText('12001 of 12001 bookmarks', {exact:true}).waitFor();
+  await dense.locator('.filter-cloud[aria-busy="false"]').waitFor();
+  assert(await dense.locator('.filter-cloud > button').count() <= 32, '2,000 distinct tags do not render an unbounded cloud');
+  await (await findFilter(dense, '#unique1999')).click();
+  await dense.getByText('1 of 12001 bookmarks', {exact:true}).waitFor();
+  assert(await dense.locator('.filter-cloud > button').count() <= 32, 'Paging to the final distinct tag stays bounded');
+  console.log('PASS: 2,000 distinct tags retain bounded cloud buttons and a reachable last choice.');
 } finally {
   await context.close();
   await rm(profile, { recursive: true, force: true, maxRetries: 5 });

@@ -1,6 +1,9 @@
 import { afterRenderEffect, AfterViewInit, ChangeDetectionStrategy, Component, computed, effect, ElementRef, input, OnDestroy, output, signal, viewChild, viewChildren } from '@angular/core';
 import { Folder, Tag } from './model';
 
+// The probe holds at most 32 choices; only fitted buttons remain after measurement.
+const MEASURE_BATCH = 32;
+
 interface FilterChoice { key: string; id: string; label: string; kind: 'folder' | 'tag' }
 
 @Component({
@@ -15,11 +18,11 @@ interface FilterChoice { key: string; id: string; label: string; kind: 'folder' 
       </nav>
     }
     <div #cloud id="filter-cloud" class="cloud filter-cloud" role="group" aria-label="Bookmark filters" [attr.aria-busy]="!pageReady()">
-      @for (choice of remaining(); track choice.key; let index = $index) {
+      @for (choice of pageChoices(); track choice.key) {
         <button #choiceButton type="button" [class.folder]="choice.kind === 'folder'" [class.tag]="choice.kind === 'tag'"
           [class.active]="isSelected(choice)" [attr.aria-pressed]="isSelected(choice)" [title]="choice.label"
-          [inert]="index >= visibleCount()" [attr.aria-hidden]="index >= visibleCount() ? true : null"
-          [style.visibility]="index >= visibleCount() ? 'hidden' : null" (click)="select(choice)">{{ choice.label }}</button>
+          [inert]="!pageReady()" [attr.aria-hidden]="!pageReady() ? true : null"
+          (click)="select(choice)">{{ choice.label }}</button>
       }
     </div>
   `,
@@ -41,19 +44,26 @@ export class FilterCloud implements AfterViewInit, OnDestroy {
   readonly visibleCount = signal(0);
   readonly history = signal<number[]>([]);
   readonly pageReady = signal(false);
-  readonly remaining = computed(() => this.choices().slice(this.start()));
+  readonly measureCount = signal(MEASURE_BATCH);
+  private measuredSize = -1;
+  private probePending = false;
+  readonly pageChoices = computed(() => this.choices().slice(this.start(), this.start() + this.measureCount()));
   readonly hasMore = computed(() => this.start() + this.visibleCount() < this.choices().length);
   private readonly cloud = viewChild.required<ElementRef<HTMLElement>>('cloud');
   private readonly buttons = viewChildren<ElementRef<HTMLButtonElement>>('choiceButton');
   private readonly sizeVersion = signal(0);
   private observer?: ResizeObserver;
   constructor() {
-    effect(() => { this.choices(); this.start.set(0); this.history.set([]); this.invalidate(); });
-    // Clipped labels retain layout for measurement, but stay out of view, focus, and the accessibility tree.
-    // Input/page/size changes invalidate this read; bookmark scrolling does not scan the cloud.
+    effect(() => {
+      this.choices();
+      this.start.set(0);
+      this.history.set([]);
+      this.invalidate();
+    });
+    // Only the current page and a bounded probe are present. Resize/page changes remeasure;
+    // bookmark scrolling does not scan the cloud.
     afterRenderEffect({ read: () => {
-      this.sizeVersion();
-      this.remaining();
+      const size = this.sizeVersion();
       const buttons = this.buttons();
       const cloud = this.cloud().nativeElement;
       const bottom = cloud.getBoundingClientRect().bottom - parseFloat(getComputedStyle(cloud).paddingBottom || '0');
@@ -62,7 +72,20 @@ export class FilterCloud implements AfterViewInit, OnDestroy {
         if (button.nativeElement.getBoundingClientRect().bottom > bottom + .5) break;
         count++;
       }
-      this.visibleCount.set(buttons.length ? Math.max(1, count) : 0);
+      const fitted = buttons.length ? Math.max(1, count) : 0;
+      if (this.probePending) {
+        this.probePending = false;
+        this.pageReady.set(true);
+        return;
+      }
+      if (this.measuredSize !== size) {
+        this.measuredSize = size;
+        this.visibleCount.set(fitted);
+        if (this.measureCount() !== fitted) {
+          this.probePending = true;
+          this.measureCount.set(fitted);
+        }
+      }
       this.pageReady.set(true);
     } });
   }
@@ -87,6 +110,11 @@ export class FilterCloud implements AfterViewInit, OnDestroy {
     this.invalidate();
   }
   first(): void { this.start.set(0); this.history.set([]); this.invalidate(); }
-  private invalidate(): void { this.pageReady.set(false); this.sizeVersion.update(value => value + 1); }
+  private invalidate(): void {
+    this.pageReady.set(false);
+    this.probePending = false;
+    this.measureCount.set(MEASURE_BATCH);
+    this.sizeVersion.update(value => value + 1);
+  }
   ngOnDestroy(): void { this.observer?.disconnect(); }
 }

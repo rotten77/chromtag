@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.4 (unreleased)
+
+- Filter pages now render only the choices on the current page, keeping the popup responsive when a bookmark collection has many distinct tags or folders. All choices remain available through pagination.
+
 ## 2.3 (unreleased)
 
 - Bookmark clicks now open in the current tab and close the popup by default. Two separately divided checkboxes in Options let you open bookmarks in a new tab and disable explicit popup closing. Both choices persist across Chrome restarts. Chrome may still close the popup when the current tab navigates.
