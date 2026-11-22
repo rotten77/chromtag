@@ -387,7 +387,7 @@ The cloud now probes at most 32 buttons per page, retains only fitted choices, a
 
 ### T-18 — Preserve the latest preferences under rapid changes
 
-`src/app/app.ts` starts filter save/remove operations without ordering them; `src/app/appearance-settings.ts` starts independent whole-appearance writes. The audit identified a possible last-write race, not a reproduced Chrome failure. First reproduce or rule it out with delayed/reordered storage operations. If confirmed, make the most recent user choice survive rapid filter-option toggles and appearance edits, including popup reopen; keep storage boundaries specified by US-09 and US-10.
+Delayed/reordered storage mocks reproduced stale filter and whole-appearance writes: an earlier call finishing last overwrote a newer value. Version 2.5 orders writes per storage key in the popup: session filter saves/removals, remember and folder preferences, appearance, and bookmark-click preferences. A failed write reports its error but does not block later writes. Changes made before an initial settings read completes remain in the UI; reopening restores the last completed choice. Bookmark data stays transient; filter values remain in session storage, while preferences remain in local storage. Browser integration uses ordinary Chrome storage; delayed completion and rejection are exercised by mocked regression tests. No guarantee is made for a popup closed before a queued write starts.
 
 ### T-19 — Resolve default and selectable color contrast
 

@@ -1,4 +1,5 @@
 import { Filters } from './model';
+import { OrderedWrites } from './ordered-writes';
 
 const key = 'sessionFilters';
 interface SessionArea {
@@ -9,6 +10,9 @@ interface SessionArea {
 
 /** The popup owns the model; only these three filter fields cross the storage boundary. */
 export class SessionFilters {
+  private readonly savedFilters = new OrderedWrites();
+  private readonly enabledPreference = new OrderedWrites();
+  private readonly foldersPreference = new OrderedWrites();
   constructor(private readonly area: SessionArea, private readonly preferences: Pick<SessionArea, 'get' | 'set'>) {}
 
   async options() {
@@ -17,14 +21,14 @@ export class SessionFilters {
   }
 
   setShowFolders(showFolders: boolean): Promise<void> {
-    return this.preferences.set({ showFolders });
+    return this.foldersPreference.enqueue(() => this.preferences.set({ showFolders }));
   }
 
   setEnabled(enabled: boolean): Promise<void> {
-    return this.preferences.set({ rememberFilters: enabled });
+    return this.enabledPreference.enqueue(() => this.preferences.set({ rememberFilters: enabled }));
   }
 
-  clear(): Promise<void> { return this.area.remove(key); }
+  clear(): Promise<void> { return this.savedFilters.enqueue(() => this.area.remove(key)); }
 
   async read(): Promise<Filters | null> {
     const value: unknown = (await this.area.get(key))[key];
@@ -34,8 +38,9 @@ export class SessionFilters {
     return { query: value.query, folderId: value.folderId, tags: new Set(value.tags) };
   }
 
-  async save({ query, tags, folderId }: Filters): Promise<void> {
-    if (!query && !tags.size && folderId === null) await this.clear();
-    else await this.area.set({ [key]: { query, tags: [...tags], folderId } });
+  save({ query, tags, folderId }: Filters): Promise<void> {
+    const value = { query, tags: [...tags], folderId };
+    return this.savedFilters.enqueue(() => !query && !value.tags.length && folderId === null
+      ? this.area.remove(key) : this.area.set({ [key]: value }));
   }
 }

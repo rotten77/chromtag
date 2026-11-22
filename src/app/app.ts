@@ -7,6 +7,7 @@ import { FilterCloud } from './filter-cloud';
 import { AppearanceSettings } from './appearance-settings';
 import { CHROME } from './chrome-api';
 import { SessionFilters } from './session-filters';
+import { OrderedWrites } from './ordered-writes';
 
 @Component({
   selector: 'app-root',
@@ -80,6 +81,9 @@ export class App implements OnDestroy {
   readonly closeOnOpen = signal(true);
   readonly clickSettingsReady = signal(false);
   private clickSettingsTouched = false;
+  private readonly clickWrites = new OrderedWrites();
+  private showFoldersTouched = false;
+  private rememberFiltersTouched = false;
 
   constructor() { void this.store.refresh(); void this.restoreSession(); void this.restoreClickPreferences(); }
 
@@ -100,7 +104,8 @@ export class App implements OnDestroy {
     this.clickSettingsTouched = true;
     if (patch.target) this.clickTarget.set(patch.target);
     if (patch.close !== undefined) this.closeOnOpen.set(patch.close);
-    void this.storage.local.set({bookmarkClicks: {target: this.clickTarget(), close: this.closeOnOpen()}})
+    const value = {target: this.clickTarget(), close: this.closeOnOpen()};
+    void this.clickWrites.enqueue(() => this.storage.local.set({bookmarkClicks: value}))
       .catch(() => this.storageError.set('Bookmark-click settings could not be saved.'));
   }
 
@@ -112,8 +117,8 @@ export class App implements OnDestroy {
   private async restoreSession(): Promise<void> {
     try {
       const options = await this.session.options();
-      this.foldersVisible.set(options.showFolders);
-      this.rememberFilters.set(options.rememberFilters);
+      if (!this.showFoldersTouched) this.foldersVisible.set(options.showFolders);
+      if (!this.rememberFiltersTouched) this.rememberFilters.set(options.rememberFilters);
       if (this.rememberFilters()) {
         const saved = await this.session.read();
         if (saved && !this.filtersTouched) {
@@ -131,21 +136,23 @@ export class App implements OnDestroy {
   private saveFilters(): void {
     this.filtersTouched = true;
     if (this.settingsReady() && this.rememberFilters()) {
-      // Issue the storage request now, independently of the search debounce and popup lifetime.
+      // Queue the latest snapshot independently of search debounce; same-key writes stay ordered.
       void this.session.save({ ...this.filters(), query: this.queryInput() }).catch(() => this.storageError.set('Could not save session filters.'));
     }
   }
 
   setShowFolders(visible: boolean): void {
+    this.showFoldersTouched = true;
     this.foldersVisible.set(visible);
     void this.session.setShowFolders(visible).catch(() => this.storageError.set('Could not save folder visibility.'));
   }
 
   setRemember(enabled: boolean): void {
+    this.rememberFiltersTouched = true;
     this.rememberFilters.set(enabled);
     void this.session.setEnabled(enabled).catch(() => this.storageError.set('Could not save the Clear filters on popup preference.'));
-    if (enabled) this.saveFilters();
-    else void this.session.clear().catch(() => this.storageError.set('Could not clear saved session filters.'));
+    if (enabled && this.settingsReady()) this.saveFilters();
+    else if (!enabled) void this.session.clear().catch(() => this.storageError.set('Could not clear saved session filters.'));
   }
   openEditor(bookmark: Bookmark): void {
     this.previousFocus = document.activeElement instanceof HTMLElement ? document.activeElement : undefined;

@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.5 (unreleased)
+
+- Rapid changes to filters and Options now save in order. The latest choice is retained when reopening the popup, including after quickly changing appearance colors or toggling Clear filters on popup.
+
 ## 2.4 (unreleased)
 
 - Filter pages now render only the choices on the current page, keeping the popup responsive when a bookmark collection has many distinct tags or folders. All choices remain available through pagination.
@@ -77,4 +81,4 @@ Version 2.0 used machine-assisted development under human guidance. Jan Zatlouka
 
 - First released version.
 
-Versions 1.0–1.8 reproduce the original project's recorded release history. Versions 2.1–2.3 remain future updates, outside the 2.0 release scope.
+Versions 1.0–1.8 reproduce the original project's recorded release history. Versions 2.1–2.5 remain future updates, outside the 2.0 release scope.

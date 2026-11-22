@@ -3,6 +3,7 @@ import { MaterialPicker } from './material-picker';
 import { shadeNames } from './material-colors';
 import { CHROME } from './chrome-api';
 import { Theme, ThemeMode, watchTheme } from './appearance';
+import { OrderedWrites } from './ordered-writes';
 
 const ranges = {
   width: { label: 'Popup width', min: 380, max: 800, step: 1, initial: 540, unit: 'px' },
@@ -64,6 +65,8 @@ export class AppearanceSettings {
   readonly ranges=ranges; readonly colors=colors; readonly roles=roles; readonly themes=themes; readonly sizeKeys=['width','height'] as const; readonly sliders=['font','split'] as const;
   readonly settings=signal(appearanceFrom(null)); readonly ready=signal(false); readonly error=signal(false);
   private readonly area=inject(CHROME).storage?.local;
+  private readonly writes=new OrderedWrites();
+  private settingsTouched=false;
   constructor() {
     const root=document.documentElement;
     const system=window.matchMedia?.('(prefers-color-scheme: dark)');
@@ -78,11 +81,12 @@ export class AppearanceSettings {
       if (system) onCleanup(watchTheme(s.mode,system,apply)); else apply(s.mode==='dark'?'dark':'light');
     });
     const lifecycle=inject(DestroyRef);
-    if (this.area) void this.area.get('appearance').then(data=>{ if (!lifecycle.destroyed) {this.settings.set(appearanceFrom(data['appearance'])); this.ready.set(true);} }).catch(()=>this.error.set(true));
+    if (this.area) void this.area.get('appearance').then(data=>{ if (!lifecycle.destroyed) {if (!this.settingsTouched) this.settings.set(appearanceFrom(data['appearance'])); this.ready.set(true);} }).catch(()=>this.error.set(true));
   }
   update(patch: Partial<Appearance>): void {
+    this.settingsTouched=true;
     const s=appearanceFrom({...this.settings(),...patch}); this.settings.set(s);
-    void this.area.set({appearance:s}).catch(()=>this.error.set(true));
+    void this.writes.enqueue(()=>this.area.set({appearance:s})).catch(()=>this.error.set(true));
   }
   commitSize(key:'width'|'height', input:HTMLInputElement): void {
     if (Number.isFinite(input.valueAsNumber)) this.setDimension(key,input.valueAsNumber);
