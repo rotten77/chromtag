@@ -97,7 +97,7 @@ Each refresh reads Chrome's tree once. The popup first indicates tree loading, t
 
 At 10,000 or more nodes, guidance cites a test with 10,001 synthetic bookmarks. This is not a guaranteed capacity or completion time. Large snapshots process in chunks so progress can update.
 
-A failed load keeps the previous snapshot when available. Select **Refresh** to retry. Mutation errors appear in the popup.
+In the 2.7 development build, a failed bookmark read shows an error, not an empty-library message. A failed load keeps the previous snapshot when available. Select **Refresh** to retry. “No bookmarks yet” appears only after a successful empty read. Mutation errors appear in the popup.
 
 ## Data and permissions
 

@@ -395,7 +395,7 @@ Jan approved replacing the light folder-chip `#388E3C` (4.12:1 against white) wi
 
 ### T-20 — Distinguish bookmark-load failure from an empty library
 
-When `chrome.bookmarks.getTree()` fails, `src/app/bookmark-store.ts` shows an error but `src/app/app.ts` can also say “No bookmarks yet.” Plan an error-state distinction that does not suggest the bookmark library is empty; test a failed read, retry, and a genuinely empty tree. Keep the existing phase/error handling and one-tree-read-per-refresh behavior.
+A bookmark-read or processing failure sets a load-failure state independent of the shared error text. The popup suppresses “No bookmarks yet” and “No matching bookmarks” while that state is active; it shows the existing load error and retains the previous snapshot when available. A successful refresh replaces the snapshot, clears the failure state, and shows “No bookmarks yet” only for a genuinely empty result. Other action errors do not change the load-failure state. Component and store tests cover failed initial reads, retry, an empty tree, a failed refresh after a successful read, and one tree read per refresh. The existing reading/processing phases and progress reset remain unchanged.
 
 ## Verification procedure
 

@@ -76,6 +76,51 @@ it('shows reading, then processing and large-library guidance, and clears progre
   expect(Array.from(root.querySelectorAll('[role="alert"]'), alert => alert.textContent).join(' ')).toContain('could not be loaded');
 });
 
+it('distinguishes a failed initial read, retry, and an empty tree from other errors', async () => {
+  const getTree = vi.fn().mockRejectedValueOnce(new Error('Denied')).mockResolvedValueOnce([])
+    .mockResolvedValueOnce([{ id: '1', title: 'Saved #tag', url: 'https://example.org' }])
+    .mockRejectedValueOnce(new Error('Offline')).mockResolvedValue([]);
+  TestBed.configureTestingModule({ providers: [{ provide: CHROME, useValue: { bookmarks: { getTree }, tabs: {} } }] });
+  const fixture = TestBed.createComponent(App);
+  await fixture.whenStable();
+  const app = fixture.componentInstance;
+  const root: HTMLElement = fixture.nativeElement;
+  expect(Array.from(root.querySelectorAll('[role="alert"]'), alert => alert.textContent).join(' ')).toContain('Bookmarks could not be loaded');
+  expect(root.textContent).not.toContain('No bookmarks yet.');
+  expect(root.textContent).not.toContain('No matching bookmarks.');
+  expect(app.store.loadFailed()).toBe(true);
+  expect(app.store.phase()).toBe('idle');
+  expect(app.store.progress()).toBeNull();
+  expect(getTree).toHaveBeenCalledTimes(1);
+
+  await app.store.refresh();
+  await fixture.whenStable();
+  expect(app.store.loadFailed()).toBe(false);
+  expect(app.store.error()).toBe('');
+  expect(root.textContent).toContain('No bookmarks yet.');
+  expect(getTree).toHaveBeenCalledTimes(2);
+
+  await app.store.refresh();
+  await fixture.whenStable();
+  expect(root.textContent).toContain('Saved');
+  await app.store.refresh();
+  await fixture.whenStable();
+  expect(root.textContent).toContain('Saved');
+  expect(root.textContent).not.toContain('No matching bookmarks.');
+  expect(Array.from(root.querySelectorAll('[role="alert"]'), alert => alert.textContent).join(' ')).toContain('Bookmarks could not be loaded');
+  expect(app.store.model().bookmarks).toHaveLength(1);
+  expect(getTree).toHaveBeenCalledTimes(4);
+  app.store.error.set('This bookmark could not be opened.');
+  await fixture.whenStable();
+  expect(root.textContent).toContain('Saved');
+  expect(app.store.loadFailed()).toBe(true);
+  await app.store.refresh();
+  await fixture.whenStable();
+  expect(app.store.loadFailed()).toBe(false);
+  expect(root.textContent).toContain('No bookmarks yet.');
+  expect(getTree).toHaveBeenCalledTimes(5);
+});
+
 it('toggles multiple normalized tags immediately and combines them with AND', async () => {
   TestBed.configureTestingModule({ providers: [{ provide: CHROME, useValue: {
     bookmarks: { getTree: vi.fn().mockResolvedValue([

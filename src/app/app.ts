@@ -55,7 +55,7 @@ import { OrderedWrites } from './ordered-writes';
     </div>
     <app-bookmark-list [rows]="filtered()" (open)="openBookmark($event)" (edit)="openEditor($event)" />
     </div>
-    @if (!store.loading() && !filtered().length) { <p>{{ store.model().bookmarks.length ? 'No matching bookmarks.' : 'No bookmarks yet.' }}</p> }
+    @if (!store.loading() && !store.loadFailed() && !filtered().length) { <p>{{ store.model().bookmarks.length ? 'No matching bookmarks.' : 'No bookmarks yet.' }}</p> }
     </div>
     @if (editing(); as bookmark) { <app-bookmark-editor [bookmark]="bookmark" [model]="store.model()" (closed)="closeEditor()" /> }
   `,

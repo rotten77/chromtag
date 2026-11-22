@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.7 (unreleased)
+
+- A failed bookmark read now shows an error without saying the library is empty. Refresh retries the read; a successful empty read still says “No bookmarks yet.”
+
 ## 2.6 (unreleased)
 
 - Changed the default light folder green to improve white-label contrast and made bookmark-row badges use dark text. Appearance color pickers now offer only shades with readable text contrast for each theme and color role. Previously saved low-contrast shades fall back to the applicable default.
@@ -85,4 +89,4 @@ Version 2.0 used machine-assisted development under human guidance. Jan Zatlouka
 
 - First released version.
 
-Versions 1.0–1.8 reproduce the original project's recorded release history. Versions 2.1–2.6 remain future updates, outside the 2.0 release scope.
+Versions 1.0–1.8 reproduce the original project's recorded release history. Versions 2.1–2.7 remain future updates, outside the 2.0 release scope.

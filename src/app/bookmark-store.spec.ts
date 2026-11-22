@@ -46,6 +46,7 @@ it('reports failed loads without leaving the popup busy', async () => {
   expect(store.loading()).toBe(false);
   expect(store.phase()).toBe('idle');
   expect(store.progress()).toBeNull();
+  expect(store.loadFailed()).toBe(true);
 });
 
 it('reports actual node counts while processing a large snapshot and refreshes once per load', async () => {
@@ -150,7 +151,9 @@ it('recovers from synchronous Chrome errors and allows retry', async () => {
   await store.refresh();
   expect(store.loading()).toBe(false);
   expect(store.error()).toContain('could not be loaded');
+  expect(store.loadFailed()).toBe(true);
   await store.refresh();
   expect(getTree).toHaveBeenCalledTimes(2);
   expect(store.error()).toBe('');
+  expect(store.loadFailed()).toBe(false);
 });

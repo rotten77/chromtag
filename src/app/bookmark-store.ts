@@ -12,6 +12,7 @@ export class BookmarkStore {
   readonly progress = signal<{ processed: number; total: number } | null>(null);
   readonly phase = signal<'idle' | 'reading' | 'processing'>('idle');
   readonly error = signal('');
+  readonly loadFailed = signal(false);
   readonly busy = signal(false);
   private pending?: Promise<void>;
 
@@ -38,8 +39,9 @@ export class BookmarkStore {
         await new Promise<void>(resolve => setTimeout(resolve, 0));
       }
       this.model.set(builder.finish());
+      this.loadFailed.set(false);
     })
-      .catch(() => { this.error.set('Bookmarks could not be loaded. Try Refresh.'); })
+      .catch(() => { this.loadFailed.set(true); this.error.set('Bookmarks could not be loaded. Try Refresh.'); })
       .finally(() => { this.phase.set('idle'); this.progress.set(null); this.loading.set(false); this.pending = undefined; });
     return this.pending;
   }
