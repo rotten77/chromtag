@@ -48,6 +48,7 @@ Do not duplicate target acceptance criteria in the plan or user documentation. S
 ## Repository conventions
 
 - Each new feature requires a higher extension version, even if the previous feature has not been published. Follow the versioning rule in `AGENTS.md`.
+- For US-14, Jan chose to deselect checked bookmarks when filters exclude them. Selection is popup-only; bulk tag changes affect checked titles, not all matching bookmarks. Disabled buttons use the standard arrow cursor.
 - The pinned `chrome-extensions` skill under `.agents/skills/` is external guidance. `AGENTS.md` and the tested `activeTab` action-popup behavior take precedence where it conflicts. Review skill updates before adopting them; Jan chooses when to publish.
 
 - Before implementing a feature or bug fix, report the current branch and ask Jan whether to create or switch to a dedicated branch. Jan makes and verifies the branch decision; do not switch automatically. Documentation, planning, workflow, and other `.memory/`-only updates do not require a new branch unless Jan requests one. Commits, merges, and pushes require a user request.

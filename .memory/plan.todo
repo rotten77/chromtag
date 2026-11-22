@@ -53,7 +53,7 @@ E-25 — Filter-selector exclusions:
   Clarify exclusion scope, configuration, persistence, active filters, and descendant folders before implementation.
 
 E-26 — Bulk bookmark actions:
-  ☐ US-14 Bulk edit bookmarks
+  ☐ US-14 Bulk edit bookmarks @ready-for-verification
   ☐ US-15 Rename a tag across bookmarks
   Source: https://github.com/rotten77/chromtag/issues/4
 

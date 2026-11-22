@@ -82,10 +82,20 @@ export function newTag(value: string): Tag | undefined {
   return !label || /[\s#]/u.test(label) ? undefined : { key: normalize(label), label };
 }
 
+export function addTitleTag(title: string, tag: Tag): string {
+  if (parseTags(title).some(span => span.key === tag.key)) return title;
+  return `${title}${title && !/\s$/u.test(title) ? ' ' : ''}#${tag.label}`;
+}
+
+export function removeTitleTag(title: string, key: string): string {
+  const spans = parseTags(title).filter(span => span.key === key);
+  return spans.length ? withoutTags(title, spans) : title;
+}
+
 export function toggleTitleTag(title: string, tag: Tag): string {
   const spans = parseTags(title).filter(span => span.key === tag.key);
   if (spans.length) return withoutTags(title, spans);
-  return `${title}${title && !/\s$/u.test(title) ? ' ' : ''}#${tag.label}`;
+  return addTitleTag(title, tag);
 }
 
 // Count every URL-bearing node, including unsupported javascript: bookmarks, on the same snapshot.

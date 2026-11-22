@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { buildModel, codePointOrder, countBookmarkNodes, ModelBuilder, parseTags, withoutTags } from './model';
+import { addTitleTag, buildModel, codePointOrder, countBookmarkNodes, ModelBuilder, parseTags, removeTitleTag, withoutTags } from './model';
 
 describe('snapshot model', () => {
   it('resolves nested parents from a single snapshot and omits javascript bookmarks', () => {
@@ -28,6 +28,13 @@ describe('snapshot model', () => {
     const text = '#one#two word#tag # #C++ #work,\u2003#café';
     expect(parseTags(text).map(t => t.label)).toEqual(['one', 'C++', 'work,', 'café']);
     expect(withoutTags('<img> #C++')).toBe('<img>');
+  });
+  it('adds only missing normalized tags and removes every matching hashtag without changing other text', () => {
+    const title = 'Read #CAFÉ and #cafe\u0301 #work #cafe';
+    expect(addTitleTag(title, { key: 'café', label: 'café' })).toBe(title);
+    expect(addTitleTag(title, { key: '中文', label: '中文' })).toBe(`${title} #中文`);
+    expect(removeTitleTag(title, 'café')).toBe('Read  and  #work #cafe');
+    expect(removeTitleTag(title, 'missing')).toBe(title);
   });
   it('traverses 12,000 folder levels without recursive calls', () => {
     let node: chrome.bookmarks.BookmarkTreeNode = { syncing: false, id: 'leaf', title: 'Deep', url: 'https://example.org' };

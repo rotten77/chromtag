@@ -112,6 +112,41 @@ it('handles partial save and removal failures honestly, preserving actual snapsh
   expect(store.error()).toContain('could not be saved');
 });
 
+it('opens all selected bookmarks in separate tabs and reports individual failures', async () => {
+  const create = vi.fn().mockResolvedValueOnce({}).mockRejectedValueOnce(new Error('Blocked'));
+  TestBed.configureTestingModule({ providers: [{ provide: CHROME, useValue: { tabs: { create } } }] });
+  const store = TestBed.inject(BookmarkStore);
+  const bookmarks = ['https://a.example', 'https://b.example'].map((url, i) => ({ id: String(i), url })) as import('./model').Bookmark[];
+  await store.openAll(bookmarks);
+  expect(create.mock.calls).toEqual([[{ url: bookmarks[0].url }], [{ url: bookmarks[1].url }]]);
+  expect(store.error()).toContain('1 of 2');
+  expect(store.busy()).toBe(false);
+});
+
+it('bulk edits only changed selected titles, moves eligible rows, refreshes once, and reports partial failures', async () => {
+  const getTree = vi.fn().mockResolvedValue([]);
+  const update = vi.fn().mockResolvedValueOnce({}).mockRejectedValueOnce(new Error('Locked'));
+  const move = vi.fn().mockResolvedValue({});
+  TestBed.configureTestingModule({ providers: [{ provide: CHROME, useValue: { bookmarks: { getTree, update, move } } }] });
+  const store = TestBed.inject(BookmarkStore);
+  const rows = [
+    { id: '1', title: 'First #money #money', parentId: 'old' },
+    { id: '2', title: 'Second #work', parentId: 'new' },
+    { id: '3', title: 'Third #money', parentId: 'old' },
+  ] as import('./model').Bookmark[];
+  await store.bulkChange(rows, { kind: 'remove', tag: { key: 'money', label: 'money' } });
+  expect(update.mock.calls).toEqual([['1', { title: 'First' }], ['3', { title: 'Third' }]]);
+  expect(store.error()).toContain('1 of 3');
+  expect(getTree).toHaveBeenCalledTimes(1);
+  await store.bulkChange(rows, { kind: 'add', tag: { key: 'money', label: 'money' } });
+  expect(update).toHaveBeenCalledWith('2', { title: 'Second #work #money' });
+  expect(getTree).toHaveBeenCalledTimes(2);
+  await store.bulkChange(rows, { kind: 'move', parentId: 'new' });
+  expect(move.mock.calls).toEqual([['1', { parentId: 'new' }], ['3', { parentId: 'new' }]]);
+  expect(getTree).toHaveBeenCalledTimes(3);
+  expect(store.busy()).toBe(false);
+});
+
 it('adds exposed active-page metadata in the default folder and refreshes exactly once', async () => {
   const created = { id: 'new', title: 'Page #中文', url: 'https://a.example', parentId: '1' };
   const create = vi.fn().mockResolvedValue(created);

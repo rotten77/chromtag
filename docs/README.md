@@ -38,6 +38,15 @@ In the development build, green folders come first and blue tags follow in the s
 
 Chrome clears session filters on restart. Click outside the popup to dismiss it; there is no separate close button.
 
+## Bulk bookmark actions (2.8 development build)
+
+1. Select **Actions** beside the selected count, or check a bookmark in the list. The checkbox is separate from its title link.
+2. Select **Select all** to check every current match, including rows outside the visible list. Select **Invert selection** to toggle current matches, or **Deselect all** to clear the checks.
+3. Use **Open selected** to open checked pages in separate tabs. Use **Move to folder** to choose a destination for checked bookmarks.
+4. Use **Add tag** to choose an existing tag or enter a new one. Use **Remove tag** to remove a tag present on checked bookmarks.
+
+**Actions** is available when bookmarks match the current filters. Without a selection, only **Select all** is available. A filter change deselects checked bookmarks that no longer match. Selection is not saved when the popup closes. Tag actions change only checked bookmark titles; they do not rename a tag across the library. If some bookmarks cannot be changed or opened, Chromtag reports the number that failed. Disabled buttons use the standard arrow cursor.
+
 ## Bookmark clicks (development build)
 
 In version 2.3, open **Options**. Check **Open bookmarks in new tab** to use a new tab; leave it unchecked to use the current tab (the default). **Close popup after opening a bookmark** is checked by default. Both settings persist across Chrome restarts. Chrome can close an action popup automatically when the current tab navigates, even if you turn off explicit popup closing. If navigation fails, the popup stays open and shows an error.

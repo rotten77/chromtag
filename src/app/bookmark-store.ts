@@ -1,6 +1,6 @@
 import { inject, Injectable, signal } from '@angular/core';
 import { CHROME } from './chrome-api';
-import { Bookmark, buildModel, countBookmarkNodes, ModelBuilder } from './model';
+import { addTitleTag, Bookmark, buildModel, countBookmarkNodes, ModelBuilder, removeTitleTag, Tag } from './model';
 
 export interface BookmarkDraft { id: string; title: string; url: string; parentId: string; originalParentId?: string }
 
@@ -59,6 +59,43 @@ export class BookmarkStore {
       this.error.set('This bookmark could not be opened.');
       return false;
     }
+  }
+
+  async openAll(bookmarks: Bookmark[]): Promise<void> {
+    if (this.busy() || !bookmarks.length) return;
+    this.busy.set(true);
+    this.error.set('');
+    let failures = 0;
+    try {
+      for (const bookmark of bookmarks) {
+        try { await this.api.tabs.create({ url: bookmark.url }); }
+        catch { failures++; }
+      }
+    } finally { this.busy.set(false); }
+    if (failures) this.error.set(`${failures} of ${bookmarks.length} selected bookmarks could not be opened.`);
+  }
+
+  async bulkChange(bookmarks: Bookmark[], change: { kind: 'move'; parentId: string } | { kind: 'add' | 'remove'; tag: Tag }): Promise<void> {
+    if (this.busy() || !bookmarks.length) return;
+    this.busy.set(true);
+    this.error.set('');
+    let failures = 0;
+    let changed = 0;
+    try {
+      for (const bookmark of bookmarks) {
+        if (change.kind === 'move' && bookmark.parentId === change.parentId) continue;
+        const title = change.kind === 'add' ? addTitleTag(bookmark.title, change.tag)
+          : change.kind === 'remove' ? removeTitleTag(bookmark.title, change.tag.key) : bookmark.title;
+        if (change.kind !== 'move' && title === bookmark.title) continue;
+        try {
+          if (change.kind === 'move') await this.api.bookmarks.move(bookmark.id, { parentId: change.parentId });
+          else await this.api.bookmarks.update(bookmark.id, { title });
+          changed++;
+        } catch { failures++; }
+      }
+      if (changed) await this.refresh();
+      if (failures) this.error.set(`${failures} of ${bookmarks.length} selected bookmarks could not be changed. Review the results and try again.`);
+    } finally { this.busy.set(false); }
   }
 
   async save(draft: BookmarkDraft): Promise<boolean> {

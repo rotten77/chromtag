@@ -3,6 +3,69 @@ import { expect, it, vi } from 'vitest';
 import { App } from './app';
 import { CHROME } from './chrome-api';
 
+it('selects filtered IDs beyond the virtual viewport, inverts matches, and drops hidden IDs on filter changes', async () => {
+  const nodes = Array.from({ length: 80 }, (_, i) => ({ id: String(i), title: `Page ${i} ${i % 2 ? '#money' : '#work'}`, url: `https://example.org/${i}` }));
+  const getTree = vi.fn().mockResolvedValue(nodes);
+  TestBed.configureTestingModule({ providers: [{ provide: CHROME, useValue: { bookmarks: { getTree }, tabs: {} } }] });
+  const fixture = TestBed.createComponent(App);
+  await fixture.whenStable();
+  const app = fixture.componentInstance;
+  fixture.detectChanges();
+  const root: HTMLElement = fixture.nativeElement;
+  const actions = root.querySelector<HTMLButtonElement>('.bulk-trigger')!;
+  expect(actions.disabled).toBe(false);
+  actions.click(); await fixture.whenStable();
+  const choices = () => Array.from(root.querySelectorAll<HTMLButtonElement>('.bulk-choices button'));
+  expect(choices().map(button => [button.textContent?.trim(), button.disabled])).toEqual([
+    ['Select all', false], ['Deselect all', true], ['Invert selection', true],
+    ['Open selected', true], ['Move to folder', true], ['Add tag', true], ['Remove tag', true],
+  ]);
+  expect(root.querySelector('.bulk-controls .selection-count')?.textContent).toContain('0 selected');
+  choices()[0].click(); await fixture.whenStable();
+  expect(app.selected().size).toBe(80);
+  app.deselectAll(); await fixture.whenStable();
+  const first = root.querySelector<HTMLInputElement>('article .bookmark-check')!;
+  first.click(); await fixture.whenStable();
+  expect(app.selected()).toEqual(new Set(['0']));
+  actions.click(); await fixture.whenStable();
+  expect(choices().every(button => !button.disabled)).toBe(true);
+  app.toggleTag('work'); await fixture.whenStable();
+  app.selectAll(); await fixture.whenStable();
+  expect(app.selected().size).toBe(40);
+  expect(app.selected().has('78')).toBe(true);
+  app.invertSelection(); await fixture.whenStable();
+  expect(app.selected().size).toBe(0);
+  app.selectAll(); app.deselectAll(); await fixture.whenStable();
+  expect(app.selected().size).toBe(0);
+  expect(app.filters().tags).toEqual(new Set(['work']));
+  app.selectAll(); app.toggleTag('money'); await fixture.whenStable();
+  expect(app.selected().size).toBe(0);
+  expect(getTree).toHaveBeenCalledTimes(1);
+});
+
+it('bulk actions expose only selected tags, validate new tags, and pass selected rows to the store', async () => {
+  const update = vi.fn().mockResolvedValue({});
+  const getTree = vi.fn().mockResolvedValue([
+    { id: '1', title: 'First #money', url: 'https://a.example' },
+    { id: '2', title: 'Second #work', url: 'https://b.example' },
+  ]);
+  TestBed.configureTestingModule({ providers: [{ provide: CHROME, useValue: { bookmarks: { getTree, update }, tabs: {} } }] });
+  const fixture = TestBed.createComponent(App);
+  await fixture.whenStable();
+  const app = fixture.componentInstance;
+  app.setSelection('1', true);
+  expect(app.selectedTags().map(tag => tag.key)).toEqual(['money']);
+  app.showBulkDialog('add'); await fixture.whenStable();
+  app.addNewTag('invalid tag'); await fixture.whenStable();
+  expect(app.bulkError()).toContain('no spaces');
+  expect(update).not.toHaveBeenCalled();
+  await app.applyBulk({ kind: 'add', tag: { key: '中文', label: '中文' } });
+  expect(update).toHaveBeenCalledWith('1', { title: 'First #money #中文' });
+  expect(update).not.toHaveBeenCalledWith('2', expect.anything());
+  expect(app.selected().size).toBe(0);
+  expect(app.bulkDialog()).toBeNull();
+});
+
 it('renders user text literally and loads only once on popup creation', async () => {
   const getTree = vi.fn().mockResolvedValue([{ id: '1', title: '<img src=x onerror=alert(1)> #C++', url: 'https://example.org/<script>' }]);
   const update = vi.fn().mockResolvedValue({});

@@ -2,6 +2,8 @@
 
 Updated: 2026-11-22
 
+US-14 is implemented on `feature/us-14-bulk-edit` as the 2.8 development build and awaits Jan's verification (M-34). Jan chose to deselect checked bookmarks excluded by new filters; he also requested **Deselect all**, **Open selected**, and the standard arrow cursor on disabled buttons. Checked IDs survive virtual scrolling; Actions is available with matches before any selection, with only Select all enabled then. The selected count sits beside Actions. The menu supports selection, separate-tab opening, folder moves, and tag changes on checked titles only. Selection is popup-only; mutation failures are reported. `npm run check`, `npm test`, and `git diff --check` passed after the Actions refinement; report: `.local/test-results/2026-11-22T16-04-49.806Z-31224.html`. Check M-34, including OS/locale rendering of the text trigger, keyboard access, and native Bookmark Manager results. US-15 remains planned. Other ready-for-verification work remains unchanged; no release is scheduled.
+
 T-20 is implemented on `fix/t-20-bookmark-load-error` as the 2.7 development build and awaits Jan's verification (M-33). A failed read shows the load error without an empty-library message; retry, a genuinely empty tree, and preservation of the previous snapshot are covered by tests. `npm run check` and `npm test` passed; report: `.local/test-results/2026-11-22T14-51-00.364Z-62372.html`. T-17–T-19 remain ready for verification. No release is scheduled.
 
 T-19 is implemented on `fix/t-19-color-contrast` as the 2.6 development build and awaits Jan's verification (M-32). Jan approved light folder green `#2E7D32` and limiting selectable shades to readable text contrast. Defaults, picker choices, stored-color fallback, row badges, and hover/selection states were updated. `npm run check` and `npm test` passed; report: `.local/test-results/2026-11-22T12-49-26.267Z-35796.html`. T-17 and T-18 also remain ready for verification; T-20 is planned. No release is scheduled.
@@ -85,9 +87,9 @@ Jan verified T-09 and T-11 on 2026-11-20. T-09 provides `.memory/test-cases.md` 
 
 T-16 (Not started) tracks support and rating links for the README and Options dialog. The support provider and URL are undecided.
 
-## Planned bulk edit
+## Bulk edit
 
-E-26 includes two planned stories from issue #4: US-14 adds or removes tags in checked bookmark titles; US-15 renames a tag across all matching titles. Both are not started. Selection after filter changes (US-14) and placement of the rename control (US-15) remain open.
+E-26 includes two stories from issue #4: US-14 is ready for verification with filter-excluded bookmarks deselected, and US-15 remains planned for renaming a tag across all matching titles. Placement of the rename control (US-15) remains open.
 
 ## Next step
 

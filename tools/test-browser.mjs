@@ -285,12 +285,29 @@ try {
   const elapsed = performance.now() - started;
   const liveRows = await page.locator('article.bookmark').count();
   assert(liveRows > 0 && liveRows <= 24, `10,001 records must have bounded live rows, saw ${liveRows}`);
+  const actions = page.getByRole('button', { name: 'Bulk actions' });
+  assert.equal(await actions.isDisabled(), false);
+  await actions.click();
+  assert.equal(await page.getByRole('button', { name: 'Select all', exact: true }).isEnabled(), true);
+  for (const label of ['Deselect all', 'Invert selection', 'Open selected', 'Move to folder', 'Add tag', 'Remove tag']) {
+    assert.equal(await page.getByRole('button', { name: label, exact: true }).isDisabled(), true, `${label} requires selection`);
+  }
+  assert.equal(await page.getByRole('button', { name: 'Open selected', exact: true }).evaluate(button => getComputedStyle(button).cursor), 'default');
+  await page.getByRole('button', { name: 'Select all', exact: true }).click();
+  await page.getByText('10001 selected', { exact: true }).waitFor();
+  assert(await page.locator('article.bookmark').count() <= 24, 'Selecting all does not render every row');
+  await actions.click();
+  await page.getByRole('button', { name: 'Deselect all', exact: true }).click();
+  await page.getByText('0 selected', { exact: true }).waitFor();
+  assert.equal(await actions.isDisabled(), false);
+  await page.getByRole('checkbox', { name: 'Select Scale bookmark 0', exact: true }).check();
   const tagOnLaterPage = await findFilter(page, '#C++');
   const pageRange = page.locator('.cloud-paging [role="status"]');
   const rangeBefore = await pageRange.innerText();
   const boundsBefore = await tagOnLaterPage.boundingBox();
   await tagOnLaterPage.click();
   await page.getByText('1 of 10001 bookmarks', { exact: true }).waitFor();
+  await page.getByText('0 selected', { exact: true }).waitFor();
   assert.equal(await pageRange.innerText(), rangeBefore, 'Selecting a tag keeps the current filter page');
   assert.deepEqual(await tagOnLaterPage.boundingBox(), boundsBefore, 'Selected chip keeps its position');
   await tagOnLaterPage.click();

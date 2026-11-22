@@ -269,18 +269,18 @@ T-13 counts all URL-bearing tree nodes, including unsupported `javascript:` book
 
 Hide selected folder or tag choices from the filter selector without hiding their bookmarks from results. This can keep special-purpose folders such as `Quick access` out of the selector when users normally open them from Chrome's bookmark menu. The exclusion scope, configuration UI, tag behavior, persistence, interaction with active filters, and treatment of descendant folders require clarification before acceptance criteria are defined. Do not implement until Jan resolves these choices.
 
-### US-14 — Bulk edit bookmarks (planned)
+### US-14 — Bulk edit bookmarks (unreleased)
 
-[Issue #4](https://github.com/rotten77/chromtag/issues/4) asks to replace `#money` with `#finance`, or remove `#money` from every matching bookmark without deleting the bookmarks. A user can target all matches by filtering on `#money`, checking one row, then choosing **Select all**.
+[Issue #4](https://github.com/rotten77/chromtag/issues/4) asks to replace `#money` with `#finance`, or remove `#money` from every matching bookmark without deleting the bookmarks. A user can target all matches by filtering on `#money`, then choosing **Select all** from **Actions** without checking a row first.
 
 - **US-14-AC1:** Place a checkbox to the left of each bookmark title, aligned on the same line. Checking it selects the bookmark, not its link. Track selection by bookmark ID so scrolling a virtualized row out of view does not change which bookmark is selected.
-- **US-14-AC2:** Place a compact bulk-actions dropdown immediately before `.result-count`. Disable it when no bookmarks are checked. Use a keyboard-accessible trigger with an accessible name; if using a character as its icon, use a broadly supported text character (e.g. ASCII `*`), not an image or icon font. Verify rendering across Windows, macOS, Linux, and different locales.
-- **US-14-AC3:** **Select all** checks every bookmark matching the current folder, tag, and search filters. **Invert selection** toggles each match. Both act on the entire filtered result set, including rows outside the viewport, not on unrelated bookmarks.
-- **US-14-AC4:** **Open all** opens each selected bookmark in a separate tab. **Move to folder** lets the user choose a destination folder and moves the selected bookmarks there.
+- **US-14-AC2:** Place a compact **Actions** dropdown before `.result-count`, with the selected count beside the trigger, separated from the result count and search. Keep the trigger enabled when matching bookmarks exist, including when none are checked; disable it during loading, mutations, or when there are no matches. With no selection, enable **Select all** and disable every other action. Use a keyboard-accessible trigger with an accessible name; if using a character as its icon, use a broadly supported text character (e.g. ASCII `*`), not an image or icon font. Verify rendering across Windows, macOS, Linux, and different locales.
+- **US-14-AC3:** **Select all** checks every bookmark matching the current folder, tag, and search filters. **Deselect all** clears all checked bookmarks without changing filters. **Invert selection** toggles each match. Selection actions cover the entire filtered result set, including rows outside the viewport, not unrelated bookmarks.
+- **US-14-AC4:** **Open selected** opens each selected bookmark in a separate tab. **Move to folder** lets the user choose a destination folder and moves the selected bookmarks there.
 - **US-14-AC5:** **Add tag** shows the existing tag cloud and a **New tag** input. Apply the chosen tag to selected bookmark titles that lack it, using the existing hashtag identity and parsing rules. Preserve other title text and tags.
 - **US-14-AC6:** **Remove tag** offers only tags present on at least one selected bookmark. Disable the action if none have tags. Remove all matching hashtag occurrences from the selected titles, leaving other text, bookmarks, and unselected titles intact.
 
-US-14 tag actions only add or remove hashtags in checked bookmark titles; they do not rename a tag library-wide. Before implementation, confirm how selection behaves when filters change and a checked bookmark no longer matches.
+US-14 tag actions only add or remove hashtags in checked bookmark titles; they do not rename a tag library-wide. Jan chose to deselect checked bookmarks when they no longer match after a filter or snapshot change. Selection remains transient in the popup. Bulk mutations run sequentially and refresh once after successful changes; partial failures are reported. The actions dropdown permits **Select all** before any row is checked; the remaining actions require a selection.
 
 ### US-15 — Rename a tag across bookmarks (planned)
 

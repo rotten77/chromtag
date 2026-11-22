@@ -1,5 +1,10 @@
 # Changelog
 
+## 2.8 (unreleased)
+
+- Use **Actions** beside the selected count to select all matches without first checking a row. Once bookmarks are selected, deselect all, invert selection, open selected pages in separate tabs, move checked bookmarks to a folder, or add or remove title tags. Selection clears for bookmarks excluded by changed filters. Partial bulk failures show an error; changes remain in Chrome bookmarks.
+- Disabled buttons now use the standard arrow cursor instead of a wait cursor.
+
 ## 2.7 (unreleased)
 
 - A failed bookmark read now shows an error without saying the library is empty. Refresh retries the read; a successful empty read still says “No bookmarks yet.”
