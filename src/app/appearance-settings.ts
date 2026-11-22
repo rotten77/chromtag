@@ -4,6 +4,7 @@ import { shadeNames } from './material-colors';
 import { CHROME } from './chrome-api';
 import { Theme, ThemeMode, watchTheme } from './appearance';
 import { OrderedWrites } from './ordered-writes';
+import { hasGoodContrast } from './color-contrast';
 
 const ranges = {
   width: { label: 'Popup width', min: 380, max: 800, step: 1, initial: 540, unit: 'px' },
@@ -13,7 +14,7 @@ const ranges = {
 };
 type Dimension = keyof typeof ranges;
 const colors = {
-  light: { text: '#222B38', tag: '#1976D2', folder: '#388E3C', highlight: '#212121', selection: '#D32F2F' },
+  light: { text: '#222B38', tag: '#1976D2', folder: '#2E7D32', highlight: '#212121', selection: '#D32F2F' },
   dark: { text: '#FAFAFA', tag: '#90CAF9', folder: '#A5D6A7', highlight: '#424242', selection: '#D32F2F' },
 };
 type Role = keyof typeof colors.light;
@@ -33,7 +34,7 @@ export function appearanceFrom(value: unknown): Appearance {
   }
   for (const theme of themes) for (const role of roles) {
     const c = record(raw[theme])[role];
-    result[theme][role] = typeof c === 'string' && shadeNames.has(c) ? c : colors[theme][role];
+    result[theme][role] = typeof c === 'string' && shadeNames.has(c) && hasGoodContrast(theme, role, c) ? c : colors[theme][role];
   }
   return result;
 }
@@ -53,7 +54,7 @@ export function appearanceFrom(value: unknown): Appearance {
     @for (theme of themes; track theme) {
       <details><summary>{{theme === 'light' ? 'Light' : 'Dark'}} colors</summary>
       @for (role of roles; track role) {
-        <app-material-picker [role]="role" [label]="theme + ' ' + role" [value]="settings()[theme][role]" (choose)="setColor(theme,role,$event)" />
+        <app-material-picker [role]="role" [theme]="theme" [label]="theme + ' ' + role" [value]="settings()[theme][role]" (choose)="setColor(theme,role,$event)" />
       }
       <button type="button" class="reset-colors" (click)="resetColors(theme)">Reset {{theme}} colors to defaults</button>
       </details>

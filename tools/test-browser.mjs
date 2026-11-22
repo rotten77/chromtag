@@ -85,7 +85,7 @@ async function checkBookmarkWidth(page) {
     const fontRatio = parseFloat(getComputedStyle(url).fontSize) / parseFloat(getComputedStyle(title).fontSize);
     const labelRatio = parseFloat(getComputedStyle(labels).fontSize) / parseFloat(getComputedStyle(title).fontSize);
     const badges = [...labels.querySelectorAll('.tag, .folder')].map(badge => ({
-      kind: badge.className, fontSize: parseFloat(getComputedStyle(badge).fontSize), background: getComputedStyle(badge).backgroundColor,
+      kind: badge.className, fontSize: parseFloat(getComputedStyle(badge).fontSize), background: getComputedStyle(badge).backgroundColor, color: getComputedStyle(badge).color,
     }));
     const bounds = node => ({ left: node.getBoundingClientRect().left, right: node.getBoundingClientRect().right });
     return { fontRatio, labelRatio, badges, urlFontSize: parseFloat(getComputedStyle(url).fontSize), width: element.clientWidth, scrollWidth: element.scrollWidth, viewport: bounds(element), row: bounds(row), edit: bounds(edit), title: bounds(title), titleTruncated: title.scrollWidth > title.clientWidth, urlTruncated: url.scrollWidth > url.clientWidth };
@@ -97,6 +97,7 @@ async function checkBookmarkWidth(page) {
   for (const badge of layout.badges) {
     assert(Math.abs(badge.fontSize - layout.urlFontSize) < .001, `${badge.kind} badge matches the URL font size`);
     assert.equal(badge.background, 'rgb(158, 158, 158)', `${badge.kind} badge uses #9E9E9E`);
+    assert.equal(badge.color, 'rgb(33, 33, 33)', `${badge.kind} badge uses readable dark text`);
   }
   assert(Math.abs(layout.row.right - layout.row.left - layout.width) <= 1, 'Article fills all available viewport width');
   assert(layout.edit.left >= layout.row.left && layout.edit.right <= layout.viewport.left + layout.width + 1, 'Edit stays inside the visible row');
@@ -189,7 +190,7 @@ try {
       folderColor: getComputedStyle(lastFolder).backgroundColor, tagColor: getComputedStyle(firstTag).backgroundColor };
   });
   assert(cloudLayout.adjacent && cloudLayout.sameLine, 'Last folder and first tag share a wrapping flow and available line');
-  assert.equal(cloudLayout.folderColor, 'rgb(56, 142, 60)');
+  assert.equal(cloudLayout.folderColor, 'rgb(46, 125, 50)');
   assert.equal(cloudLayout.tagColor, 'rgb(25, 118, 210)');
   assert.equal(await page.getByRole('navigation', { name: 'Filter pages' }).count(), 0, 'Hide pagination when every filter fits');
   const title = page.getByRole('button', { name: '<b>Saved page</b>', exact: true });
@@ -227,6 +228,7 @@ try {
     assert.equal(await choice.evaluate(element => getComputedStyle(element).boxShadow), 'none', 'Selected cloud label has no shadow');
     await choice.hover();
     assert.equal(await choice.evaluate(element => getComputedStyle(element).backgroundColor), 'rgb(33, 33, 33)', 'Hovered cloud label uses #212121');
+    assert.equal(await choice.evaluate(element => getComputedStyle(element).color), 'rgb(255, 255, 255)', 'Hovered cloud label remains readable');
     await choice.click();
     await page.mouse.move(20, 20);
   }
@@ -611,7 +613,8 @@ try {
     return Math.abs(swatch.width / parseFloat(getComputedStyle(button).fontSize) - 1.2) < .05 && target.width >= 24;
   }), 'Swatches scale with font size inside accessible button targets');
   assert.equal(await shades.getByRole('button',{name:'deep purple A700',exact:true}).getAttribute('aria-pressed'),'true');
-  await shades.getByRole('button',{name:'deep purple A100',exact:true}).click();
+  assert.equal(await shades.getByRole('button',{name:'deep purple A100',exact:true}).count(), 0, 'Low-contrast light chip shades cannot be selected');
+  await shades.getByRole('button',{name:'deep purple 700',exact:true}).click();
   await lightPicker.getByRole('button',{name:'Done'}).click();
   await lightPicker.waitFor({state:'hidden'});
   assert(await lightTag.evaluate(el => document.activeElement === el),'Closing the palette restores focus to its property');
@@ -632,7 +635,7 @@ try {
   await page.getByRole('button',{name:'Reset dark colors to defaults'}).click();
   await page.waitForFunction(() => document.documentElement.style.getPropertyValue('--folder-color') === '#A5D6A7');
   const storedAppearance = await page.evaluate(async () => (await chrome.storage.local.get('appearance')).appearance);
-  assert.equal(storedAppearance.dark.tag,'#90CAF9'); assert.equal(storedAppearance.light.tag,'#B388FF');
+  assert.equal(storedAppearance.dark.tag,'#90CAF9'); assert.equal(storedAppearance.light.tag,'#512DA8');
   await context.close();
   context = await launch();
   const restarted = await context.browser().newBrowserCDPSession();

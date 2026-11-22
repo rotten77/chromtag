@@ -60,6 +60,6 @@ E-26 — Bulk bookmark actions:
 E-27 — High-priority audit follow-ups:
   ☐ T-17 Bound filter-cloud rendering and measurement @ready-for-verification
   ☐ T-18 Preserve the latest filter and appearance preferences under rapid changes @ready-for-verification
-  ☐ T-19 Resolve default and selectable color contrast
+  ☐ T-19 Resolve default and selectable color contrast @ready-for-verification
   ☐ T-20 Distinguish bookmark-load failure from an empty library
-  T-17 and T-18 await Jan's verification. Plan remaining fixes separately; see the technical specification for evidence, test scope, and the color decision needed before implementation.
+  T-17–T-19 await Jan's verification. Plan T-20 separately; see the technical specification for evidence and test scope.

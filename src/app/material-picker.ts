@@ -1,5 +1,6 @@
 import { Component, computed, input, linkedSignal, output } from '@angular/core';
 import { families, shadeNames } from './material-colors';
+import { ColorRole, ColorTheme, hasGoodContrast } from './color-contrast';
 
 @Component({ selector: 'app-material-picker', template: `
   <button #trigger type="button" class="property" aria-haspopup="dialog" [attr.aria-expanded]="pickerDialog.open"
@@ -8,13 +9,14 @@ import { families, shadeNames } from './material-colors';
   </button>
   <dialog #pickerDialog [attr.aria-label]="label() + ' color picker'" (close)="trigger.focus()">
     <h3>{{label()}} color</h3>
+    <p class="contrast-hint">Only shades with readable text contrast are available.</p>
     <div role="group" aria-label="Color family" class="swatches">
-      @for (family of families; track family.name) {
-        <button type="button" class="swatch" [attr.aria-label]="family.name" [attr.aria-pressed]="active() === family" (click)="choose.emit(family.shades[family.shades.length - 1].hex)"><i aria-hidden="true" [style.background]="(family.shades[5] ?? family.shades[0]).hex"></i></button>
+      @for (family of availableFamilies(); track family.name) {
+        <button type="button" class="swatch" [attr.aria-label]="family.name" [attr.aria-pressed]="active() === family.name" (click)="choose.emit(family.shades[family.shades.length - 1].hex)"><i aria-hidden="true" [style.background]="family.sample"></i></button>
       }
     </div>
     <fieldset class="shades"><legend>Shades</legend><div class="swatches">
-      @for (shade of active().shades; track shade.hex) {
+      @for (shade of activeShades(); track shade.hex) {
         <button type="button" class="swatch" [attr.aria-pressed]="value() === shade.hex" [attr.aria-label]="shade.name" (click)="choose.emit(shade.hex)"><i aria-hidden="true" [style.background]="shade.hex"></i></button>
       }
       @if (label() === 'light text') { <button type="button" class="swatch" aria-label="Use default text color" [attr.aria-pressed]="value() === '#222B38'" (click)="choose.emit('#222B38')"><i aria-hidden="true" style="background:#222B38"></i></button> }
@@ -27,7 +29,8 @@ import { families, shadeNames } from './material-colors';
     .property i {flex:none}
     dialog {position:fixed;margin:auto;width:min(20rem,calc(100vw - 2rem));max-height:calc(100vh - 2rem);overflow:auto;padding:1rem;border:1px solid var(--border-color);border-radius:.5rem;background:var(--background);color:var(--foreground)}
     dialog::backdrop {background:#26304488}
-    h3 {margin:0 0 .75rem;font-size:1em;text-transform:capitalize}
+    h3 {margin:0 0 .25rem;font-size:1em;text-transform:capitalize}
+    .contrast-hint {margin:0 0 .6rem;color:var(--muted);font-size:.85em}
     .swatches {display:flex;flex-wrap:wrap;gap:4px;margin:.4rem 0}
     .swatch {width:24px;height:24px;display:inline-grid;place-items:center;padding:0;border:0;background:transparent}
     .shades {min-width:0;margin:.75rem 0;padding:.25rem .5rem;border:1px solid var(--border-color);border-radius:.25rem}
@@ -37,9 +40,14 @@ import { families, shadeNames } from './material-colors';
     .actions {display:flex;justify-content:flex-end;margin-top:.75rem}
   ` })
 export class MaterialPicker {
-  readonly families = families;
-  readonly role = input.required<string>(); readonly label = input.required<string>(); readonly value = input.required<string>();
+  readonly role = input.required<ColorRole>(); readonly theme = input.required<ColorTheme>();
+  readonly label = input.required<string>(); readonly value = input.required<string>();
   readonly choose = output<string>();
-  readonly active = linkedSignal(() => families.find(f => f.shades.some(s => s.hex === this.value())) ?? families[0]);
+  readonly availableFamilies = computed(() => families.map(family => {
+    const shades = family.shades.filter(shade => hasGoodContrast(this.theme(), this.role(), shade.hex));
+    return { name: family.name, shades, sample: (shades.find(shade => shade.hex === family.shades[5]?.hex) ?? shades[0])?.hex };
+  }).filter(family => family.shades.length));
+  readonly active = linkedSignal(() => this.availableFamilies().find(family => family.shades.some(shade => shade.hex === this.value()))?.name ?? this.availableFamilies()[0].name);
+  readonly activeShades = computed(() => this.availableFamilies().find(family => family.name === this.active())?.shades ?? []);
   readonly currentName = computed(() => shadeNames.get(this.value()) ?? 'Default text');
 }

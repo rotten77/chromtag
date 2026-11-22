@@ -187,7 +187,7 @@ it('keeps independent palette and layout edits when the first appearance write i
   await fixture.whenStable();
   const settings = fixture.componentInstance;
   settings.setDimension('width', 650);
-  settings.setColor('light', 'tag', '#F44336');
+  settings.setColor('light', 'tag', '#512DA8');
   settings.setColor('dark', 'folder', '#B388FF');
   settings.resetColors('light');
   first.resolve();

@@ -1,7 +1,7 @@
-:root { --base-font-size: 13px; --popup-width: 540px; --popup-height: 580px; --background: #ffffff; --foreground: #222b38; --tag-color: #1976D2; --folder-color: #388E3C; --border-color: #d7dee7; --surface: #f2f5fa; --muted: #596579; --active-color: #D32F2F; --cloud-hover-color: #212121; --focus-color: #215bb4; --danger-color: #a52020; font-size: var(--base-font-size); color-scheme: light; }
+:root { --base-font-size: 13px; --popup-width: 540px; --popup-height: 580px; --background: #ffffff; --foreground: #222b38; --tag-color: #1976D2; --folder-color: #2E7D32; --border-color: #d7dee7; --surface: #f2f5fa; --muted: #596579; --active-color: #D32F2F; --cloud-hover-color: #212121; --focus-color: #215bb4; --danger-color: #a52020; font-size: var(--base-font-size); color-scheme: light; }
 :root[data-theme=dark] { color-scheme:dark; --background:#212121; --surface:#303030; --border-color:#616161; --muted:#CFD8DC; --focus-color:#90CAF9; --danger-color:#FFAB91; }
-:root[data-theme=dark] .cloud :is(.tag,.folder) { color:#212121; }
-:root[data-theme=dark] .cloud :is(.active,button:hover) { color:white; }
+.cloud :is(.active,button:hover) { color:white; }
+:root[data-theme=dark] .cloud :is(.tag,.folder):not(.active):not(:hover) { color:#212121; }
 .workspace { --results-height:2.8rem; flex:1 1 0; min-height:0; display:flex; flex-direction:column; }
 .workspace .results-tools { height:var(--results-height); flex:none; }
 * { box-sizing: border-box; }
@@ -17,7 +17,7 @@ main { overflow: auto; min-height: 0; }
 button.title:hover { color: var(--tag-color); filter: none; }
 .url { color: var(--muted); font-size: calc(var(--title-font-size) * .8); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; margin: .15rem 0 .3rem; }
 .labels { display: flex; flex-wrap: wrap; gap: .2rem; font-size: calc(var(--title-font-size) * .8); }
-.labels .tag, .labels .folder { background: #9E9E9E; }
+.labels .tag, .labels .folder { background: #9E9E9E; color: #212121; }
 .tag, .folder { border: 0; border-radius: .25rem; color: white; padding: .1rem .3rem; overflow-wrap: anywhere; }
 .tag { background: var(--tag-color); }
 .folder { background: var(--folder-color); }

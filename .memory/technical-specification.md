@@ -293,7 +293,7 @@ The location of the rename control is undecided.
 
 These criteria define the current control placement and labels, superseding older descriptions in US-05 and T-05.
 
-- **US-12-AC1:** Place the wrapping cloud above search, with folders before tags. Use folder green `#388E3C` and tag blue `#1976D2`, both with white semibold text. Selecting a visible chip updates results directly and keeps its position and page. Show selection with a red `#D32F2F` background only; retain the existing hover, keyboard focus, and pressed-state behavior.
+- **US-12-AC1:** Place the wrapping cloud above search, with folders before tags. Use folder green `#2E7D32` and tag blue `#1976D2`, both with white semibold text. Selecting a visible chip updates results directly and keeps its position and page. Show selection with a red `#D32F2F` background only; retain the existing hover, keyboard focus, and pressed-state behavior.
 - **US-12-AC2:** Show First, Previous, and Next directly above the choices when paging is needed; hide pagination when all choices fit.
 - **US-12-AC3:** Put Clear filters by the cloud and compact bookmark search beside the result count above the list. Clearing restores unfiltered results in one action. Retain compact bookmark rows and list-only scrolling.
 - **US-12-AC4:** Use one top row for Filters, compact Clear filters, Add bookmark, and Options. Remove the branded header, footer, and explicit close button. Keep Refresh and the popup-only Show folders setting available in Options. Do not change bookmark-click or popup-close preferences.
@@ -391,7 +391,7 @@ Delayed/reordered storage mocks reproduced stale filter and whole-appearance wri
 
 ### T-19 — Resolve default and selectable color contrast
 
-The light folder chip's specified `#388E3C` background with white 13 px text has approximately 4.12:1 contrast, below WCAG AA's 4.5:1 normal-text threshold. The appearance picker also permits colors that can make text or controls unreadable. Check default and selected theme combinations, including text on fixed backgrounds and chip/hover/selection states. **Decision required before implementation:** US-12-AC1 explicitly requires the current green and white label; Jan must decide whether to change a specified color, change label treatment, or accept the contrast limitation. Also agree how to handle low-contrast user-selected shades without silently removing the specified full palette.
+Jan approved replacing the light folder-chip `#388E3C` (4.12:1 against white) with `#2E7D32` (5.13:1), and allowing selection only of shades with good text contrast. The color picker filters the full Material palette by role and theme: text against the theme's fixed background, ordinary chips against white/light or `#212121`/dark labels, and hover/selection chips against white labels in either theme. All normal-size text pairs require at least 4.5:1. Families with no valid shades are omitted; choosing a family still applies its last eligible shade. Stored low-contrast colors fall back to that role's default on reopen. Light and dark palettes remain independent. Row badges retain their specified `#9E9E9E` backgrounds with `#212121` text (6.01:1). Changing selected and hovered cloud chips to white text preserves contrast even when a dark-theme ordinary chip uses dark labels. Automated coverage checks defaults, selectable shades, stored colors, and native Chrome picker behavior; it does not claim comprehensive WCAG conformance.
 
 ### T-20 — Distinguish bookmark-load failure from an empty library
 

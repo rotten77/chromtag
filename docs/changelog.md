@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.6 (unreleased)
+
+- Changed the default light folder green to improve white-label contrast and made bookmark-row badges use dark text. Appearance color pickers now offer only shades with readable text contrast for each theme and color role. Previously saved low-contrast shades fall back to the applicable default.
+
 ## 2.5 (unreleased)
 
 - Rapid changes to filters and Options now save in order. The latest choice is retained when reopening the popup, including after quickly changing appearance colors or toggling Clear filters on popup.
@@ -81,4 +85,4 @@ Version 2.0 used machine-assisted development under human guidance. Jan Zatlouka
 
 - First released version.
 
-Versions 1.0–1.8 reproduce the original project's recorded release history. Versions 2.1–2.5 remain future updates, outside the 2.0 release scope.
+Versions 1.0–1.8 reproduce the original project's recorded release history. Versions 2.1–2.6 remain future updates, outside the 2.0 release scope.
