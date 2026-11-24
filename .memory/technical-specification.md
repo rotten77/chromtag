@@ -265,6 +265,12 @@ T-13 counts all URL-bearing tree nodes, including unsupported `javascript:` book
 
 ## Additional feature acceptance criteria
 
+### US-16 — Focus search when the popup opens (planned)
+
+- **US-16-AC1:** When the popup opens and no blocking dialog is active, place keyboard focus in the search field so the user can type a query immediately.
+- **US-16-AC2:** Preserve any restored query and active filters. Initial focus must not select, replace, or clear the restored query.
+- **US-16-AC3:** Regression-test popup opening with an empty query and with restored filters, including keyboard navigation from the search field.
+
 ### US-13 — Exclude folders or tags from filter choices (planned)
 
 Hide selected folder or tag choices from the filter selector without hiding their bookmarks from results. This can keep special-purpose folders such as `Quick access` out of the selector when users normally open them from Chrome's bookmark menu. The exclusion scope, configuration UI, tag behavior, persistence, interaction with active filters, and treatment of descendant folders require clarification before acceptance criteria are defined. Do not implement until Jan resolves these choices.
