@@ -99,7 +99,7 @@ it('restores click preferences and closes only after a successful open when enab
   const close = vi.spyOn(window, 'close').mockImplementation(() => {});
   try {
     await app.openBookmark('https://example.org');
-    expect(create).toHaveBeenCalledWith({ url: 'https://example.org' });
+    expect(create).toHaveBeenCalledWith({ url: 'https://example.org', active: false });
     expect(close).toHaveBeenCalledTimes(1);
     create.mockRejectedValueOnce(new Error('blocked'));
     await app.openBookmark('https://example.org');

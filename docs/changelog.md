@@ -1,5 +1,10 @@
 # Changelog
 
+## 2.9 (unreleased)
+
+- New-tab bookmark opens now stay in the background. With popup closing disabled, the current tab and popup stay in place.
+- **Open selected** follows the same target and close settings. In current-tab mode, the first selected result replaces the current tab and the rest open in background tabs. Accepted opening batches continue after popup dismissal; browser shutdown or extension reload can interrupt them. Bulk move/tag operations are unchanged.
+
 ## 2.8 (unreleased)
 
 - Use **Actions** beside the selected count to select all matches without first checking a row. Once bookmarks are selected, deselect all, invert selection, open selected pages in separate tabs, move checked bookmarks to a folder, or add or remove title tags. Selection clears for bookmarks excluded by changed filters. Partial bulk failures show an error; changes remain in Chrome bookmarks.

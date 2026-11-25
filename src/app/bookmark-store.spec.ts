@@ -22,7 +22,7 @@ it('coalesces overlapping refreshes to one read and opens URLs with native tabs'
   expect(store.phase()).toBe('idle');
   expect(store.progress()).toBeNull();
   expect(await store.open('https://example.org', 'new')).toBe(true);
-  expect(create).toHaveBeenCalledWith({ url: 'https://example.org' });
+  expect(create).toHaveBeenCalledWith({ url: 'https://example.org', active: false });
 });
 it('navigates the active tab by default and reports missing tabs without opening a new one', async () => {
   const query = vi.fn().mockResolvedValue([{ id: 42 }]);
@@ -113,12 +113,14 @@ it('handles partial save and removal failures honestly, preserving actual snapsh
 });
 
 it('opens all selected bookmarks in separate tabs and reports individual failures', async () => {
-  const create = vi.fn().mockResolvedValueOnce({}).mockRejectedValueOnce(new Error('Blocked'));
-  TestBed.configureTestingModule({ providers: [{ provide: CHROME, useValue: { tabs: { create } } }] });
+  const sendMessage = vi.fn().mockResolvedValue({ failures: 1 });
+  TestBed.configureTestingModule({ providers: [{ provide: CHROME, useValue: {
+    tabs: { query: vi.fn().mockResolvedValue([{ id: 42, windowId: 7 }]) }, runtime: { sendMessage },
+  } }] });
   const store = TestBed.inject(BookmarkStore);
   const bookmarks = ['https://a.example', 'https://b.example'].map((url, i) => ({ id: String(i), url })) as import('./model').Bookmark[];
   await store.openAll(bookmarks);
-  expect(create.mock.calls).toEqual([[{ url: bookmarks[0].url }], [{ url: bookmarks[1].url }]]);
+  expect(sendMessage).toHaveBeenCalledWith({ type: 'open-selected', urls: bookmarks.map(row => row.url), target: 'new', tabId: 42, windowId: 7 });
   expect(store.error()).toContain('1 of 2');
   expect(store.busy()).toBe(false);
 });

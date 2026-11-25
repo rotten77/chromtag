@@ -194,7 +194,8 @@ export class App implements OnDestroy {
   async openAll(): Promise<void> {
     this.menuOpen.set(false);
     if (!this.selected().size) return;
-    await this.store.openAll(this.selectedBookmarks());
+    const opened = await this.store.openAll(this.selectedBookmarks(), this.clickTarget());
+    if (opened && this.closeOnOpen()) window.close();
   }
 
   private async restoreClickPreferences(): Promise<void> {

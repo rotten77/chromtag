@@ -48,7 +48,7 @@ export class BookmarkStore {
 
   async open(url: string, target: 'current' | 'new' = 'current'): Promise<boolean> {
     try {
-      if (target === 'new') await this.api.tabs.create({ url });
+      if (target === 'new') await this.api.tabs.create({ url, active: false });
       else {
         const [tab] = await this.api.tabs.query({ active: true, currentWindow: true });
         if (tab?.id === undefined) throw new Error('No active tab');
@@ -61,18 +61,22 @@ export class BookmarkStore {
     }
   }
 
-  async openAll(bookmarks: Bookmark[]): Promise<void> {
-    if (this.busy() || !bookmarks.length) return;
+  async openAll(bookmarks: Bookmark[], target: 'current' | 'new' = 'new'): Promise<boolean> {
+    if (this.busy() || !bookmarks.length) return false;
     this.busy.set(true);
     this.error.set('');
-    let failures = 0;
     try {
-      for (const bookmark of bookmarks) {
-        try { await this.api.tabs.create({ url: bookmark.url }); }
-        catch { failures++; }
-      }
+      const [tab] = await this.api.tabs.query({ active: true, currentWindow: true });
+      if (tab?.id === undefined || tab.windowId === undefined) throw new Error('No originating tab');
+      const result = await this.api.runtime.sendMessage({ type: 'open-selected',
+        urls: bookmarks.map(bookmark => bookmark.url), target, tabId: tab.id, windowId: tab.windowId });
+      if (!result || !Number.isInteger(result.failures)) throw new Error('No batch result');
+      if (result.failures) this.error.set(`${result.failures} of ${bookmarks.length} selected bookmarks could not be opened.`);
+      return result.failures === 0;
+    } catch {
+      this.error.set('Selected bookmarks could not be opened. Review your tabs before retrying.');
+      return false;
     } finally { this.busy.set(false); }
-    if (failures) this.error.set(`${failures} of ${bookmarks.length} selected bookmarks could not be opened.`);
   }
 
   async bulkChange(bookmarks: Bookmark[], change: { kind: 'move'; parentId: string } | { kind: 'add' | 'remove'; tag: Tag }): Promise<void> {

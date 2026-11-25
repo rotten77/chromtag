@@ -247,8 +247,22 @@ try {
   const opened = context.waitForEvent('page');
   await page.getByRole('button', { name: '<b>Saved page</b>', exact: true }).click();
   const tab = await opened;
-  await tab.waitForURL('https://example.invalid/test');
+  // Chrome may defer loading inactive tabs; activate only after checking background creation.
+  assert.equal(await page.evaluate(() => document.hasFocus()), true);
+  await tab.bringToFront();
+  await tab.waitForURL('https://example.invalid/test', { waitUntil: 'commit' });
   await tab.close();
+  await page.bringToFront();
+  await page.evaluate(async () => {
+    const [origin] = await chrome.tabs.query({ active: true, currentWindow: true });
+    const before = new Set((await chrome.tabs.query({ windowId: origin.windowId })).map(tab => tab.id));
+    const result = await chrome.runtime.sendMessage({ type: 'open-selected', target: 'new',
+      urls: ['https://example.invalid/bulk-a', 'https://example.invalid/bulk-b', 'https://example.invalid/bulk-c'],
+      tabId: origin.id, windowId: origin.windowId });
+    const created = (await chrome.tabs.query({ windowId: origin.windowId })).filter(tab => !before.has(tab.id));
+    if (result.failures || created.length !== 3 || created.some(tab => tab.active)) throw new Error('Native background bulk opening failed');
+    await chrome.tabs.remove(created.map(tab => tab.id));
+  });
   await page.evaluate(async () => {
     await Promise.all(Array.from({ length: 112 }, (_, index) => chrome.bookmarks.create({ title: `Folder ${index} — long Unicode 中文 café` })));
     for (let batch = 0; batch < 40; batch++) {

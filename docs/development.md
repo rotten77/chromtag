@@ -1,6 +1,6 @@
 # Develop Chromtag
 
-Use Node.js `^22.22.3`, `^24.15.0`, or `^26.0.0`. The published extension is version 2.0; the development build is version 2.3.
+Use Node.js `^22.22.3`, `^24.15.0`, or `^26.0.0`. The published extension is version 2.0; the development build is version 2.9. Its scoped `open-selected.js` worker completes accepted tab-opening batches independently of popup lifetime; it does not store a bookmark queue or resume after browser shutdown/reload. Bulk mutations still execute in the popup.
 
 ## Build and load the extension
 

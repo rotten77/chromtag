@@ -1,5 +1,7 @@
 # Criterion mapping
 
+Version 2.9 opening follow-up (US-11-AC1/AC7 and US-14-AC4): store/component regressions assert inactive single-tab creation and worker delegation; `tools/open-selected.test.mjs` covers both worker targets, captured window/tab, partial failure, and disconnected response. Native Chrome integration checks three inactive worker-created tabs. Actual-popup dismissal and full UI combinations remain manual verification in the version 2.9 follow-up in `test-cases.md`; mocked disconnection is not actual popup-lifetime evidence.
+
 Criteria remain authoritative in [the technical specification](../.memory/technical-specification.md). This map names regression evidence without redefining requirements. `npm test` runs the application evidence below; `npm run check` checks mapping completeness and links.
 
 | Criteria | Repository evidence |

@@ -91,7 +91,7 @@ Do not use `localStorage`, a separate bookmark store, an account, or a backend. 
 - Include `storage` for preferences. Session storage requires Chrome 102 or a higher framework floor.
 - T-03 selects Angular 22, TypeScript 6, and Chrome 157 as the conservative application floor. The manifest and `.browserslistrc` agree. Node ranges follow Angular's published compatibility table.
 - Use native `chrome.*` Promise APIs. Use `Intl.Segmenter` with grapheme granularity for the approved search-boundary policy; its Chrome 87 floor is below the selected extension API floor.
-- Add no background service worker without a demonstrated need.
+- Jan approved `open-selected.js`, a background service worker for accepted Open selected batches to continue after popup dismissal. It retains request-local URLs only during execution; no stored bookmark queue or restart/replay guarantee. Bulk mutations remain popup-owned.
 - Keep `manifest.json` and the preserved 16/48/128 px PNG icons in `public/`; copy them into the production output. Keep manifest and package versions consistent. Automated checks do not replace explicit user verification.
 - Set `action.default_popup` to built `index.html`. The loadable extension root is `dist/chromtag/browser/`.
 - Bundle local scripts/styles only. Comply with extension Content Security Policy (CSP), without remote code, inline scripts, or `eval`.
@@ -282,7 +282,7 @@ Hide selected folder or tag choices from the filter selector without hiding thei
 - **US-14-AC1:** Place a checkbox to the left of each bookmark title, aligned on the same line. Checking it selects the bookmark, not its link. Track selection by bookmark ID so scrolling a virtualized row out of view does not change which bookmark is selected.
 - **US-14-AC2:** Place a compact **Actions** dropdown before `.result-count`, with the selected count beside the trigger, separated from the result count and search. Keep the trigger enabled when matching bookmarks exist, including when none are checked; disable it during loading, mutations, or when there are no matches. With no selection, enable **Select all** and disable every other action. Use a keyboard-accessible trigger with an accessible name; if using a character as its icon, use a broadly supported text character (e.g. ASCII `*`), not an image or icon font. Verify rendering across Windows, macOS, Linux, and different locales.
 - **US-14-AC3:** **Select all** checks every bookmark matching the current folder, tag, and search filters. **Deselect all** clears all checked bookmarks without changing filters. **Invert selection** toggles each match. Selection actions cover the entire filtered result set, including rows outside the viewport, not unrelated bookmarks.
-- **US-14-AC4:** **Open selected** opens each selected bookmark in a separate tab. **Move to folder** lets the user choose a destination folder and moves the selected bookmarks there.
+- **US-14-AC4:** **Open selected** respects bookmark-click settings. New-tab mode opens every selected result in background tabs. Current-tab mode opens the first selected result (result order) in the captured originating tab after creating the remaining background tabs in its window. Accepted opening batches continue after popup dismissal via the approved worker. Close explicitly only after complete success when enabled; Chrome can still dismiss during current-tab navigation. **Move to folder** lets the user choose a destination folder and moves the selected bookmarks there.
 - **US-14-AC5:** **Add tag** shows the existing tag cloud and a **New tag** input. Apply the chosen tag to selected bookmark titles that lack it, using the existing hashtag identity and parsing rules. Preserve other title text and tags.
 - **US-14-AC6:** **Remove tag** offers only tags present on at least one selected bookmark. Disable the action if none have tags. Remove all matching hashtag occurrences from the selected titles, leaving other text, bookmarks, and unselected titles intact.
 
@@ -327,7 +327,7 @@ Approved developer-build defaults: System mode; 540 × 580 px popup (width 380�
 
 ### US-11 — Configure bookmark-click behavior (version 2.3)
 
-- **US-11-AC1:** Provide an Open bookmarks in new tab checkbox, unchecked by default (current tab).
+- **US-11-AC1:** Provide an Open bookmarks in new tab checkbox, unchecked by default (current tab). Version 2.9 creates new tabs inactive, preserving focus and the popup when explicit closing is disabled. Both click preferences also apply to Open selected.
 - **US-11-AC2:** Provide a Close popup after opening a bookmark checkbox, checked by default, subject to Chrome lifecycle constraints. Show both checkboxes directly in Options without a visible Bookmark clicks heading.
 - **US-11-AC3:** Save both preferences in `chrome.storage.local`; restore across popup/browser restarts.
 - **US-11-AC4:** Separate preferences from bookmark data and session filters.
@@ -403,6 +403,41 @@ Jan approved replacing the light folder-chip `#388E3C` (4.12:1 against white) wi
 
 A bookmark-read or processing failure sets a load-failure state independent of the shared error text. The popup suppresses “No bookmarks yet” and “No matching bookmarks” while that state is active; it shows the existing load error and retains the previous snapshot when available. A successful refresh replaces the snapshot, clears the failure state, and shows “No bookmarks yet” only for a genuinely empty result. Other action errors do not change the load-failure state. Component and store tests cover failed initial reads, retry, an empty tree, a failed refresh after a successful read, and one tree read per refresh. The existing reading/processing phases and progress reset remain unchanged.
 
+## Test-analysis follow-up scope and acceptance criteria
+
+Use the existing test runners and checks. Execute one scoped item at a time, retain applicable check results, and wait for Jan's verification before starting the next. Choose the branch before feature or bug-fix implementation. No release is scheduled.
+
+### T-21 — Verify and fix bulk popup interruption
+
+- **T-21-AC1:** Reproduce Open selected in the actual action popup with at least three disposable bookmarks; verify exactly one separate tab per selected bookmark and no unrelated tabs.
+- **T-21-AC2:** Bulk batches must finish after the popup is dismissed, as confirmed by Jan. Exercise dismissal during delayed bulk mutations and tab opening; verify completion against native outcomes. Popup dismissal must not cancel the remaining selected actions. This requirement does not imply survival of browser shutdown or guarantee success for rejected Chrome API calls.
+- **T-21-AC3:** Fix reproduced interruption to meet the confirmed policy and retain actual-popup regression evidence. Prefer the smallest supported change; add a background worker only if a demonstrated need requires it. Preserve permission, CSP, and bookmark-storage boundaries. Do not claim popup-owned loops survive dismissal.
+
+### T-22 — Verify native bulk outcomes and failure recovery
+
+- **T-22-AC1:** Extend native Chrome integration to execute move, existing/new-tag addition, and tag removal. Compare IDs, titles, URLs, and parent IDs before and after; preserve unselected bookmarks and unrelated fields. Include selection across virtual pages and filter exclusion.
+- **T-22-AC2:** Retain or extend deterministic coverage for rejected writes, missing bookmark/folder IDs, no-op batches, and successful mutations followed by refresh failure. Compare actual changed IDs with reported results; fix reproduced reporting/recovery discrepancies. Agree any undefined retry behavior before implementing it.
+- **T-22-AC3:** Retain the documented cached-title overwrite risk; conflict detection/merging is not part of this task.
+
+### T-23 — Complete criterion validation and identify tested source
+
+- **T-23-AC1:** Extend the existing mapping completeness check to all applicable implemented criteria, without requiring regression evidence for unimplemented stories. Test that a missing applicable mapping fails validation.
+- **T-23-AC2:** Retain `npm run check` and `npm test` evidence identifying the reviewed source by clean commit or dirty-source fingerprint. Record the Chrome version actually used.
+- **T-23-AC3:** Correct current-version documentation discrepancies identified by the report after checking current files. Preserve historical evidence as historical.
+- **T-23-AC4:** Reuse strict compiler/build and project checks. Do not add lint/format frameworks, remote branch protection, or CI enforcement in this task. Absent protection remains a documented solo-project risk.
+
+### T-24 — Verify immediate-close preferences and update compatibility
+
+- **T-24-AC1:** Test rapid preference/filter changes followed by immediate closure and reopening of the actual popup; retain ordered-write tests and distinguish completed writes from calls never issued.
+- **T-24-AC2:** In a disposable profile, test updating from the retained published 2.0 build to the candidate without clearing data. Check intended defaults, preferences, session expiry, and storage boundaries. If the old artifact is unavailable, report this check as blocked rather than passed.
+- **T-24-AC3:** Fix reproduced discrepancies against agreed persistence behavior, or obtain Jan's agreement to a documented lifetime limitation before claiming readiness.
+
+### T-25 — Verify large dialogs, keyboard access, and platform rendering
+
+- **T-25-AC1:** Exercise single/bulk editors and folder selectors with existing dense-tag/large-tree fixtures, including 380 × 400 at 18 px text and supported layout extremes. Check controls remain reachable and usable.
+- **T-25-AC2:** Verify keyboard navigation, focus return, visible errors, and assistive-technology announcements. Record available Windows/macOS/Linux results; missing environments remain unverified.
+- **T-25-AC3:** Record counts, elapsed times, browser, OS, and hardware context. Agree timing thresholds before treating measurements as pass/fail; add pagination or virtualization only if demonstrated problems justify it. Fix reproduced interaction/layout defects without inventing performance guarantees.
+
 ## Verification procedure
 
 These steps apply after the relevant implementation and tooling exist.
@@ -419,6 +454,9 @@ These steps apply after the relevant implementation and tooling exist.
 10. Check popup reopen and browser restart behavior for the implemented release.
 
 ## Open decisions and evidence gaps
+
+- Known bulk-title concurrency risk: a title changed by Chrome Sync, Bookmark Manager, or another extension after the popup snapshot can be overwritten by a later Chromtag tag action using the cached title. Jan requested documenting this risk rather than adding conflict handling now. The last successful title write wins, including potentially stale unrelated title text. Frequency is unmeasured; no incident is established.
+- Jan confirmed the solo project currently has no branch protection. Merging without passing checks is a known workflow risk; local checks and explicit Jan verification remain the controls. New remote enforcement is not authorized.
 
 - Real-profile performance and timing targets. T-01 records the legacy synthetic baseline; T-04/T-05 use 10,001 supported browser records and deep unit fixtures. Tests check at most 24 live rows in exercised layouts; this is not a timing guarantee.
 - T-13 uses all URL-bearing nodes for progress, an 8 ms chunk budget for large snapshots, and a 10,000-node threshold for guidance. The 10,001-bookmark synthetic test is evidence, not a support guarantee.

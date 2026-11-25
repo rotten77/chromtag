@@ -11,7 +11,7 @@ const manifest = JSON.parse(await readFile('public/manifest.json', 'utf8'));
 const escape = value => String(value).replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('"', '&quot;');
 const runs = [];
 const commands = [
-  ['Manifest regression tests', ['--test', 'tools/validate-manifest.test.mjs']],
+  ['Manifest regression tests', ['--test', 'tools/validate-manifest.test.mjs', 'tools/open-selected.test.mjs']],
   ['Angular unit and component tests', ['node_modules/@angular/cli/bin/ng.js', 'test', '--watch=false']],
   ['Production build', ['node_modules/@angular/cli/bin/ng.js', 'build', '--configuration', 'production']],
   ['Finalize release package', ['tools/finalize-package.mjs']],

@@ -4,6 +4,10 @@ Maintain this file with each new feature or changed behavior. These cases cover 
 
 Run affected cases during each feature/epic verification. Use the full set when preparing a release. Passing automated tests does not replace Jan's explicit verification.
 
+## Background opening — version 2.9 follow-up to M-29/M-34
+
+Test both target settings and both close settings in the actual action popup. Open one bookmark, then select three results and use Open selected. New-tab mode must leave all created tabs inactive; with explicit closing disabled the popup stays open. Current-tab bulk mode must navigate the first checked result in result order in the original tab and open the remainder in background tabs. Chrome may dismiss the popup during navigation. Dismiss during a long opening batch and verify every selected URL is attempted exactly once. Check errors for rejected tabs and that unrelated tabs are unchanged. Accepted opening work survives popup dismissal, not browser shutdown/reload. Bulk move/tag dismissal remains a separate known limitation.
+
 ## Setup
 
 **Caution:** Editing or deleting bookmarks changes native Chrome data. Use a dedicated test profile with disposable bookmarks.

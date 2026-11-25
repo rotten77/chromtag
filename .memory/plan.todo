@@ -66,3 +66,14 @@ E-27 — High-priority audit follow-ups:
   ☐ T-19 Resolve default and selectable color contrast @ready-for-verification
   ☐ T-20 Distinguish bookmark-load failure from an empty library @ready-for-verification
   T-17–T-20 await Jan's verification. See the technical specification for evidence and test scope.
+
+E-26 follow-up — Bulk reliability:
+  ☐ T-21 Verify and fix bulk popup interruption
+  Opening portion implemented in 2.9 with Jan's authorization on the current branch; manual dismissal verification pending. Bulk move/tag interruption remains not implemented. Batches must finish after popup dismissal.
+  ☐ T-22 Verify native bulk outcomes and failure recovery
+
+Test-analysis follow-up — Simple quality controls:
+  ☐ T-23 Complete criterion validation and identify tested source
+  ☐ T-24 Verify immediate-close preferences and update compatibility
+  ☐ T-25 Verify large dialogs, keyboard access, and platform rendering
+  Technical scope and acceptance criteria: `.memory/technical-specification.md`, T-21–T-25. Concurrent-title overwrites and absent branch protection remain documented risks, not implementation tasks. No new lint/format framework, CI enforcement, or release is scheduled.

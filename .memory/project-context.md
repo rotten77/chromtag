@@ -4,7 +4,8 @@
 
 Chromtag is a Chrome bookmark browser/editor. Hashtags in native bookmark titles provide tag organization.
 
-- Jan Zatloukal — developer; provides requirements and verifies implemented stories.
+- Jan Zatloukal — sole developer; provides requirements and verifies implemented stories. Jan confirmed there is currently no branch protection. This leaves a known risk of merging without checks; local checks and explicit verification remain the existing controls.
+- Prioritize simplicity when proposing tooling and quality controls.
 - AI agents follow `AGENTS.md`, maintain documentation, and implement at most 1 story before user verification.
 - The completed E-20 batch used Jan's explicit whole-epic authorization with sequential task commits/logs. Jan explicitly verified E-20 on 2026-11-12. The exception does not extend into E-21; future work follows the normal stopping rule unless Jan directs otherwise.
 - Jan moved T-08 ahead of T-13 on 2026-11-12 and asked the agent to remove automatic session-ending, logging, and commit requirements. Keep status/context current; write dated logs and commit only on request. User verification remains separate.
@@ -34,7 +35,7 @@ Do not duplicate target acceptance criteria in the plan or user documentation. S
 - Bookmarks/indexes remain in transient popup memory. Show folders defaults on and persists independently in local extension storage.
 - Version 2.1 remembers query and selected tags/folder in `chrome.storage.session` by default. Only the Clear filters on popup and Show folders preferences use `chrome.storage.local`.
 - Versions 2.2/2.3 use `chrome.storage.local` only for appearance/layout and bookmark-click preferences.
-- Retain MV3. Audit metadata/APIs and permissions; add no service worker without demonstrated need.
+- Retain MV3. Audit metadata/APIs and permissions; add no service worker without demonstrated need. Jan approved a narrowly scoped worker for Open selected to finish after popup dismissal; bulk mutations remain popup-owned.
 - T-02 permission policy: use `bookmarks` and `activeTab`, adding `storage` only with preference releases. US-06 must report unavailable required tab metadata without creating an incomplete bookmark; do not restore broad `tabs` access.
 - Use a root Angular CLI workspace, standalone components, TypeScript, native Chrome APIs, and safe bindings.
 - Prioritize large-library responsiveness: 1 snapshot per load/refresh, model filtering, and virtualized rows with overscan.

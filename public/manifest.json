@@ -3,7 +3,8 @@
   "name": "ChromTag - tag your bookmarks",
   "short_name": "ChromTag",
   "description": "Tag your bookmarks with #hashtag!",
-  "version": "2.8",
+  "version": "2.9",
+  "background": { "service_worker": "open-selected.js" },
   "minimum_chrome_version": "157",
   "icons": {
     "16": "icon.png",

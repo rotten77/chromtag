@@ -45,7 +45,11 @@ export async function validateManifest(directory, { built = false } = {}) {
   const expectedPermissions = ['bookmarks', 'activeTab', ...(preferenceRelease ? ['storage'] : [])];
   assert.deepEqual([...manifest.permissions].sort(), expectedPermissions.sort(),
     'Unexpected permission set for this release');
-  for (const key of ['background', 'content_scripts', 'host_permissions', 'optional_host_permissions',
+  if (manifest.background) {
+    assert.deepEqual(manifest.background, { service_worker: 'open-selected.js' }, 'Unneeded manifest capability: only the bulk opening worker is allowed');
+    await localAsset(root, manifest.background.service_worker);
+  }
+  for (const key of ['content_scripts', 'host_permissions', 'optional_host_permissions',
     'optional_permissions', 'web_accessible_resources', 'sandbox']) {
     assert(!(key in manifest), `Unneeded manifest capability: ${key}`);
   }
