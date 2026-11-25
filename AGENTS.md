@@ -64,7 +64,8 @@ If a required file is still a placeholder, do not infer its contents. Ask the us
 
 - Update `.memory/project-status.md` with completed work, verification state, remaining issues, and next steps. Update `.memory/project-context.md` when durable project information changes.
 - Preserve unrelated work. Do not mark an incomplete task as completed.
-- Write a dated log or create a commit only when the user asks. Do not log, commit, or end a session automatically after tests pass.
+- When Jan says "end session", update `.memory/project-status.md` and create or update `.memory/log/YYYY-MM-DD.md` with the session summary, checks and their results, verification state, remaining issues, and next steps. Use the session date and preserve existing entries if the dated file already exists. Complete these updates before any separately requested commit or push.
+- Otherwise, write a dated log only when the user asks. Commit and push only when explicitly requested; "end session" alone does not authorize either. Do not log, commit, push, or end a session automatically after tests pass.
 
 ## Local files and secrets
 

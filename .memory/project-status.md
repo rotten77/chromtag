@@ -2,6 +2,8 @@
 
 Updated: 2026-11-25
 
+Jan approved an explicit end-session rule: "end session" requests updating project status and creating/updating the dated session log before any separately requested commit/push. Existing same-day entries must be preserved. Commit/push remain separately authorized actions; passing tests alone triggers none of these. Updated AGENTS.md and durable context. This documentation change is not committed.
+
 Session handoff: Jan requested ending the session, committing remaining changes and pushing the current feature branch, without merging. Final `npm run check` and `git diff --check` passed; the latest full runtime regression report remains `.local/test-results/2026-11-25T19-54-11.259Z-84112.html`. The current build remains 2.14; future batch version proposals occur only before merging into master under the new workflow. Filter-height changes and US-16 remain awaiting Jan's verification; no publication scheduled. Earlier “no commit requested” notes below describe the state at the time of implementation.
 
 Jan clarified the version workflow: do not bump or ask version questions per branch feature/fix. During preparation to merge a batch into `master`, suggest a suitable version and ask Jan to approve it before merging. Updated AGENTS.md and durable context; new changelog entries use Unreleased until that approval. Existing version numbers and historical entries have not been changed or consolidated. This instruction update does not authorize a merge or commit.
