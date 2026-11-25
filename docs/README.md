@@ -6,7 +6,7 @@ Chrome 157 or later is required. See [development setup](development.md) and [re
 
 ## Browse bookmarks
 
-Open the Chromtag extension action to display the popup. Each row shows the bookmark title, URL, immediate folder, and parsed tags. In the published 2.0 build, select a title to open it in a new tab. In the 2.3 development build, bookmark clicks open in the current tab by default.
+Open the Chromtag extension action to display the popup. In development version 2.12, Search receives focus immediately without selecting or clearing restored text or filters. Each row shows the bookmark title, URL, immediate folder, and parsed tags. In the published 2.0 build, select a title to open it in a new tab. In the 2.3 development build, bookmark clicks open in the current tab by default.
 
 Nested folders are supported. The list excludes `javascript:` bookmarks. Long titles and URLs truncate; tooltips expose the full text. Only the bookmark list scrolls in the main popup.
 

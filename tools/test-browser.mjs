@@ -159,6 +159,9 @@ try {
   });
   assert.equal(await page.locator('.popup-content header, .popup-content footer, [aria-label="Close popup"]').count(), 0);
   assert(await page.locator('.filter-heading').getByRole('button', { name: 'Add bookmark' }).isVisible());
+  assert(await page.getByRole('searchbox', { name: 'Search bookmarks' }).evaluate(input => document.activeElement === input));
+  await page.keyboard.press('Tab');
+  assert(await page.getByRole('searchbox', { name: 'Search bookmarks' }).evaluate(input => document.activeElement !== input), 'Tab leaves initially focused search');
   const options = page.getByRole('button', { name: 'Options', exact: true });
   const showFolders = page.getByRole('checkbox', { name: 'Show folders', exact: true });
   assert.equal(await showFolders.isVisible(), false);
@@ -181,6 +184,7 @@ try {
   await checkRowSpacing(page);
   assert.equal(await page.locator('label.search').count(), 0);
   assert.equal(await page.getByRole('searchbox', { name: 'Search bookmarks' }).getAttribute('placeholder'), 'Search bookmarks…');
+
   assert(await page.locator('.filter-cloud').evaluate(cloud => cloud.getBoundingClientRect().bottom <= document.querySelector('.search-field').getBoundingClientRect().top), 'Cloud precedes secondary search');
   const cloudLayout = await page.locator('.filter-cloud').evaluate(cloud => {
     const folders = cloud.querySelectorAll(':scope > .folder');
@@ -539,11 +543,13 @@ try {
   // Chrome's toolbar popup is a CDP target outside Playwright's normal tab list.
   const { sessionId } = await session.send('Target.attachToTarget', { targetId: actionTarget.targetId, flatten: false });
   const popupResult = await targetCommand(session, sessionId, 'Runtime.evaluate', {
-    expression: `new Promise(done => { const check = () => document.querySelector('.filter-heading') ? done({title: document.title, text: document.body.innerText, width: document.body.offsetWidth, height: document.body.offsetHeight}) : setTimeout(check, 10); check(); })`,
+    expression: `new Promise(done => { const check = () => document.querySelector('.filter-heading') ? done({title: document.title, text: document.body.innerText, width: document.body.offsetWidth, height: document.body.offsetHeight, searchFocused: document.activeElement === document.querySelector('input[type="search"]'), selectionCollapsed: document.activeElement.selectionStart === document.activeElement.selectionEnd}) : setTimeout(check, 10); check(); })`,
     awaitPromise: true, returnByValue: true,
   });
   assert.equal(popupResult.result.value.title, 'Chromtag');
   assert(popupResult.result.value.text.includes('Add bookmark'));
+  assert.equal(popupResult.result.value.searchFocused, true, 'Actual popup initially focuses Search');
+  assert.equal(popupResult.result.value.selectionCollapsed, true, 'Initial focus does not select restored text');
   assert.equal(popupResult.result.value.width, 540);
   assert.equal(popupResult.result.value.height, 580);
   const lifetimeBookmark = await page.evaluate(() => chrome.bookmarks.create({ title: 'Lifetime start', url: 'https://example.invalid/lifetime' }));

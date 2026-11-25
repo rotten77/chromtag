@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.12 (unreleased)
+
+- Search receives focus when the popup opens, so you can type immediately. Restored query text and filters remain unchanged; existing text is not selected.
+
 ## 2.11 (unreleased)
 
 - New **Switch to opened tab** option lets new-tab opens activate the destination. It is off by default and available only in new-tab mode. For **Open selected**, it activates the first selected result after opening the others in background tabs. Chrome can close the popup when focus switches, even with explicit closing disabled.

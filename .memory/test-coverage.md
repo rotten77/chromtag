@@ -9,6 +9,7 @@ Version 2.9 opening follow-up (US-11-AC1/AC7 and US-14-AC4): store/component reg
 Criteria remain authoritative in [the technical specification](../.memory/technical-specification.md). This map names regression evidence without redefining requirements. `npm test` runs the application evidence below; `npm run check` checks mapping completeness and links.
 
 | Criteria | Repository evidence |
+| US-16-AC1, US-16-AC2, US-16-AC3 | `src/app/app.spec.ts` checks initial focus, collapsed selection and restored query/tag/folder preservation for empty/nonempty queries. `tools/test-browser.mjs` checks actual action-popup focus/selection and Tab navigation from initial Search. Manual case M-35 covers typing, restored filters, keyboard return and dialog focus. |
 |---|---|
 | US-14-AC1, US-14-AC2, US-14-AC3 | [Component tests](../src/app/app.spec.ts) cover checked IDs, virtual-row selection, filter changes, select/invert/deselect, action availability; [Chrome integration](../tools/test-browser.mjs) covers visible actions and native selection. Manual case M-34 covers keyboard and OS rendering. |
 | US-14-AC4, US-14-AC5, US-14-AC6 | [Model tests](../src/app/model.spec.ts) cover normalized title hashtag changes; [store tests](../src/app/bookmark-store.spec.ts) cover tab opens, moves, sequential updates, partial failures and one refresh; [component tests](../src/app/app.spec.ts) cover dialog validation and checked-only changes. Manual case M-34 checks native outcomes. |

@@ -12,6 +12,10 @@ Test both target settings and both close settings in the actual action popup. Op
 
 Check that the option defaults off, is disabled in current-tab mode, and restores across popup/browser restarts. With new-tab mode enabled, test both switch values and both close values for single and selected opens. Switching must activate the new single tab or first selected result only; remaining selected results stay in background tabs. Switching off retains background behavior. Current-tab mode must ignore the saved switch value. Chrome can dismiss the popup on activation regardless of explicit close. Recheck keyboard access and Options at minimum popup size.
 
+## M-35 — Initial search focus (US-16, version 2.12)
+
+Open the actual popup with empty filters and type without clicking Search. Reopen with a saved query/tag/folder: confirm Search has focus, the text is not selected, and all filters remain unchanged. Type another character and confirm it does not replace the saved query. Use Tab and Shift+Tab from Search to reach adjacent controls. Open and close dialogs; initial-focus behavior must not steal focus from them or override normal focus return.
+
 ## Setup
 
 **Caution:** Editing or deleting bookmarks changes native Chrome data. Use a dedicated test profile with disposable bookmarks.

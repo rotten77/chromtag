@@ -265,7 +265,9 @@ T-13 counts all URL-bearing tree nodes, including unsupported `javascript:` book
 
 ## Additional feature acceptance criteria
 
-### US-16 — Focus search when the popup opens (planned)
+### US-16 — Focus search when the popup opens (2.12, unreleased)
+
+Use a one-shot Angular after-render callback to focus Search without scrolling or selecting text. Skip when a blocking dialog exists. Filter restoration remains unchanged; do not refocus after subsequent renders or dialog closure.
 
 - **US-16-AC1:** When the popup opens and no blocking dialog is active, place keyboard focus in the search field so the user can type a query immediately.
 - **US-16-AC2:** Preserve any restored query and active filters. Initial focus must not select, replace, or clear the restored query.

@@ -3,6 +3,31 @@ import { expect, it, vi } from 'vitest';
 import { App } from './app';
 import { CHROME } from './chrome-api';
 
+it('does not focus Search over a blocking dialog on initial render', async () => {
+  TestBed.configureTestingModule({ providers: [{ provide: CHROME, useValue: {
+    bookmarks: { getTree: vi.fn().mockResolvedValue([]) }, tabs: {},
+  } }] });
+  const fixture = TestBed.createComponent(App);
+  fixture.componentInstance.bulkDialog.set('add');
+  await fixture.whenStable();
+  expect(document.activeElement).not.toBe(fixture.nativeElement.querySelector('input[type="search"]'));
+});
+
+for (const query of ['', 'Saved query']) it(`initially focuses search without selecting restored text: ${query}`, async () => {
+  const area = { get: vi.fn().mockResolvedValue({ sessionFilters: { query, tags: ['work'], folderId: 'folder' } }), set: vi.fn().mockResolvedValue(undefined), remove: vi.fn().mockResolvedValue(undefined) };
+  TestBed.configureTestingModule({ providers: [{ provide: CHROME, useValue: {
+    bookmarks: { getTree: vi.fn().mockResolvedValue([]) }, storage: { session: area, local: { ...area, get: vi.fn().mockResolvedValue({}) } }, tabs: {},
+  } }] });
+  const fixture = TestBed.createComponent(App);
+  await fixture.whenStable();
+  const input = fixture.nativeElement.querySelector('input[type="search"]') as HTMLInputElement;
+  expect(document.activeElement).toBe(input);
+  expect(input.value).toBe(query);
+  expect(input.selectionStart).toBe(input.selectionEnd);
+  expect(fixture.componentInstance.filters().tags).toEqual(new Set(['work']));
+  expect(fixture.componentInstance.filters().folderId).toBe('folder');
+});
+
 it('selects filtered IDs beyond the virtual viewport, inverts matches, and drops hidden IDs on filter changes', async () => {
   const nodes = Array.from({ length: 80 }, (_, i) => ({ id: String(i), title: `Page ${i} ${i % 2 ? '#money' : '#work'}`, url: `https://example.org/${i}` }));
   const getTree = vi.fn().mockResolvedValue(nodes);

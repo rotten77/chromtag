@@ -1,4 +1,4 @@
-import { afterNextRender, ChangeDetectionStrategy, Component, computed, effect, inject, Injector, OnDestroy, signal, viewChild } from '@angular/core';
+import { afterNextRender, ChangeDetectionStrategy, Component, computed, effect, ElementRef, inject, Injector, OnDestroy, signal, viewChild } from '@angular/core';
 import { BookmarkStore } from './bookmark-store';
 import { BookmarkList } from './bookmark-list';
 import { Bookmark, filterBookmarks, Filters, newTag, Tag } from './model';
@@ -106,6 +106,7 @@ export class App implements OnDestroy {
   readonly filters = signal<Filters>({ query: '', tags: new Set(), folderId: null });
   readonly filtered = computed(() => filterBookmarks(this.store.model(), this.filters()));
   readonly list = viewChild(BookmarkList);
+  private readonly searchInput = viewChild<ElementRef<HTMLInputElement>>('search');
   readonly selected = signal<ReadonlySet<string>>(new Set());
   readonly selectedBookmarks = computed(() => this.filtered().filter(bookmark => this.selected().has(bookmark.id)));
   readonly selectedTags = computed(() => {
@@ -146,6 +147,13 @@ export class App implements OnDestroy {
       if (next.size !== current.size) this.selected.set(next);
     }, { allowSignalWrites: true });
     void this.store.refresh(); void this.restoreSession(); void this.restoreClickPreferences();
+    afterNextRender(() => {
+      if (this.editing() || this.bulkDialog() || document.querySelector('[role="dialog"], dialog[open]')) return;
+      const search = this.searchInput()?.nativeElement;
+      if (!search) return;
+      search.focus({ preventScroll: true });
+      search.setSelectionRange(search.value.length, search.value.length);
+    });
   }
 
   setSelection(id: string, checked: boolean): void {
