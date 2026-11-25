@@ -16,6 +16,14 @@ Check that the option defaults off, is disabled in current-tab mode, and restore
 
 Open the actual popup with empty filters and type without clicking Search. Reopen with a saved query/tag/folder: confirm Search has focus, the text is not selected, and all filters remain unchanged. Type another character and confirm it does not replace the saved query. Use Tab and Shift+Tab from Search to reach adjacent controls. Open and close dialogs; initial-focus behavior must not steal focus from them or override normal focus return.
 
+## Filter space growth regression — version 2.13
+
+With enough folders/tags for several pages, decrease Filter space to 20%, then increase it to 60%. The cloud must expand and show more choices. Repeat without reopening; verify page navigation, selection and bookmark-list space still work. Small clouds must continue to yield unused space to bookmarks.
+
+## Maximum filter height — version 2.14
+
+At 580 px popup height, verify that a 60% limit allows up to 348 px including paging, not 60% of remaining content. Use a dense cloud: it should fill the limit to within one row, including when more than 32 choices fit. A sparse cloud may be shorter. Check 20%, 35%, 60%, repeated shrink/grow, persistence and small clouds. At 380 × 400 with 18 px text, verify the safety limit leaves bookmark space and paging remains usable.
+
 ## Setup
 
 **Caution:** Editing or deleting bookmarks changes native Chrome data. Use a dedicated test profile with disposable bookmarks.

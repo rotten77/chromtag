@@ -1,6 +1,6 @@
 # Develop Chromtag
 
-Use Node.js `^22.22.3`, `^24.15.0`, or `^26.0.0`. The published extension is version 2.0; the development build is version 2.12. Its scoped `open-selected.js` worker completes accepted tab-opening batches independently of popup lifetime; it does not store a bookmark queue or resume after browser shutdown/reload. The same worker now executes precomputed bulk title/move operations sequentially. Popup dismissal does not cancel accepted operations; results are returned only to the initiating popup, with no persistent job history. Title computation retains the documented snapshot-overwrite risk.
+Use Node.js `^22.22.3`, `^24.15.0`, or `^26.0.0`. The published extension is version 2.0; the development build is version 2.14. Its scoped `open-selected.js` worker completes accepted tab-opening batches independently of popup lifetime; it does not store a bookmark queue or resume after browser shutdown/reload. The same worker now executes precomputed bulk title/move operations sequentially. Popup dismissal does not cancel accepted operations; results are returned only to the initiating popup, with no persistent job history. Title computation retains the documented snapshot-overwrite risk.
 
 ## Build and load the extension
 

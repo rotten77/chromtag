@@ -44,6 +44,7 @@ E-28 — Popup search focus:
 
 E-22 — Appearance:
   ☐ US-10 Configure appearance @ready-for-verification
+  Version 2.14 uses full-popup maximum filter height including paging; saved percentages use the new meaning. Approved 512-choice probe replaces 32-choice cap so dense pages fill that height. Verification pending.
 
 E-23 — Bookmark clicks:
   ☐ US-11 Configure bookmark-click behavior @ready-for-verification
@@ -63,6 +64,7 @@ E-26 — Bulk bookmark actions:
 
 E-27 — High-priority audit follow-ups:
   ☐ T-17 Bound filter-cloud rendering and measurement @ready-for-verification
+  Version 2.13 fixes Filter space growth after shrinking; regression passes, Jan's verification pending.
   ☐ T-18 Preserve the latest filter and appearance preferences under rapid changes @ready-for-verification
   ☐ T-19 Resolve default and selectable color contrast @ready-for-verification
   ☐ T-20 Distinguish bookmark-load failure from an empty library @ready-for-verification

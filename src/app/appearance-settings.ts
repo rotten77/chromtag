@@ -10,7 +10,7 @@ const ranges = {
   width: { label: 'Popup width', min: 380, max: 800, step: 1, initial: 540, unit: 'px' },
   height: { label: 'Popup height', min: 400, max: 600, step: 1, initial: 580, unit: 'px' },
   font: { label: 'Font size', min: 12, max: 18, step: 1, initial: 13, unit: 'px' },
-  split: { label: 'Filter space', min: 20, max: 60, step: 5, initial: 35, unit: '%' },
+  split: { label: 'Maximum filter height (% of popup)', min: 20, max: 60, step: 5, initial: 35, unit: '%' },
 };
 type Dimension = keyof typeof ranges;
 const colors = {

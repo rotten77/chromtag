@@ -317,7 +317,7 @@ These criteria define the current control placement and labels, superseding olde
 
 ### US-10 — Configure appearance (version 2.2)
 
-- **US-10-AC1:** Let users set the base font size. Use adjacent numeric inputs in one Popup size: width × height row for popup width and height within supported Chrome popup limits. Provide a ratio slider for the vertical space shared by the combined folder/tag cloud and bookmark list, excluding fixed controls. Moving the slider toward filters gives the cloud more space; moving it toward bookmarks leaves more room for results. Preserve usable space for both and keep overflow filters reachable through pagination.
+- **US-10-AC1:** Let users set the base font size. Use adjacent numeric inputs in one Popup size: width × height row for popup width and height within supported Chrome popup limits. Provide **Maximum filter height (% of popup)**, a maximum for the combined folder/tag cloud including paging controls, based on full popup height. From 2.14, retain the stored `split` number but interpret it as this full-popup percentage. Clamp to remaining workspace minus result controls and 4rem of bookmark space. Moving the slider toward filters gives the cloud more space; moving it toward bookmarks leaves more room for results. Preserve usable space for both and keep overflow filters reachable through pagination.
 - **US-10-AC2:** Offer Light, Dark, and System modes. System follows Chrome’s `prefers-color-scheme` signal on open and when the system setting changes while the popup is open. Explicit Light and Dark modes ignore system changes. Let users select foreground, tag, folder, filter highlight (hover), and selection colors independently for each theme using visual family and shade swatches covering the full [Material palette](https://www.materialpalette.com/colors), including accent shades, without requiring hex codes. List each theme's color properties with its current swatch in Options; open a separate accessible modal for family and shade choices when a property is selected. Selecting a family applies its last shade; show its shades inside a visually distinct frame. Keep swatch visuals proportional to the font size while retaining keyboard-accessible button targets. Closing the modal returns focus to its property. Fix the light background at white (`#FFFFFF`) and the dark background at `#212121`; do not provide background-color editing.
 - **US-10-AC3:** Switching themes applies that theme's colors and fixed background; editing or resetting one theme’s palette to defaults does not change the other palette or any layout settings. Separate configuration rows with thin dividers.
 - **US-10-AC4:** Save font size, popup dimensions, split ratio, chosen mode, and both palettes in `chrome.storage.local`. Restore them across restarts; for System mode, resolve the current theme rather than saving the last resolved theme.
@@ -325,7 +325,7 @@ These criteria define the current control placement and labels, superseding olde
 - **US-10-AC6:** Set version `2.2`. Update README and product documentation.
 - **US-10-AC7:** Test font size, popup dimensions, ratio slider endpoints and resizing, pagination and list usability, independent palettes and fixed backgrounds, live System changes versus explicit modes, and restoration after restart.
 
-Approved developer-build defaults: System mode; 540 × 580 px popup (width 380–800, height 400–600); 13 px font (12–18); 35% maximum filter share (20–60%, step 5). Small clouds yield unused space to bookmarks. Preserve the current light colors; dark defaults are #FAFAFA text, #90CAF9 tags, and #A5D6A7 folders on #212121.
+Approved developer-build defaults: System mode; 540 × 580 px popup (width 380–800, height 400–600); 13 px font (12–18); 35% maximum filter height relative to the full popup (20–60%, step 5). Small clouds yield unused space to bookmarks. Preserve the current light colors; dark defaults are #FAFAFA text, #90CAF9 tags, and #A5D6A7 folders on #212121.
 
 ### US-11 — Configure bookmark-click behavior (version 2.3)
 
@@ -393,7 +393,9 @@ These tasks record findings from the read-only audit of the 2.3 developer build.
 
 ### T-17 — Bound filter-cloud rendering and measurement
 
-The cloud now probes at most 32 buttons per page, retains only fitted choices, and renders no buttons from other pages. Next/Previous/First keep every choice reachable; input changes reset paging, while selection leaves the page in place. Resize remeasures. Native Chrome regression covers 2,000 distinct tags, 246 mixed folder/tag choices, keyboard paging, and supported layout changes. This is a DOM bound, not a timing guarantee.
+Version 2.13 observes root layout-property changes independently of cloud ResizeObserver events. A larger maximum can leave a previously trimmed cloud unchanged in size; explicit layout invalidation restores the bounded probe so increasing Filter space can grow again. Ignore unrelated root style changes; disconnect both observers on destruction.
+
+From 2.14, Jan approved increasing the probe cap from 32 to 512 choices so dense short-label clouds can fill the configured maximum height. Only the fitted page remains after measurement. The cloud now probes at most 512 buttons per page, retains only fitted choices, and renders no buttons from other pages. Next/Previous/First keep every choice reachable; input changes reset paging, while selection leaves the page in place. Resize remeasures. Native Chrome regression covers 2,000 distinct tags, 246 mixed folder/tag choices, keyboard paging, and supported layout changes. This is a DOM bound, not a timing guarantee.
 
 ### T-18 — Preserve the latest preferences under rapid changes
 

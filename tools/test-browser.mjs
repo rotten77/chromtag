@@ -359,6 +359,38 @@ try {
   await page.locator('cdk-virtual-scroll-viewport').evaluate(element => { element.scrollTop = element.scrollHeight; element.dispatchEvent(new Event('scroll')); });
   await page.getByRole('button', { name: 'Scale bookmark 9999', exact: true }).waitFor();
   assert(await page.locator('article.bookmark').count() <= 24);
+  if (await page.getByRole('button', { name: 'First filters', exact: true }).isEnabled()) await page.getByRole('button', { name: 'First filters', exact: true }).click();
+  await options.click();
+  const setShare = async value => {
+    await page.getByRole('slider', { name: 'Maximum filter height (% of popup)', exact: true }).evaluate((input, value) => {
+      input.value = String(value); input.dispatchEvent(new Event('input', { bubbles: true }));
+    }, value);
+    await page.waitForFunction(value => document.documentElement.style.getPropertyValue('--filter-share') === String(value / 100), value);
+    await page.evaluate(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))));
+    await page.waitForFunction(() => document.querySelector('#filter-cloud').getAttribute('aria-busy') === 'false');
+  };
+  await setShare(20);
+  assert(await page.locator('app-filter-cloud').evaluate(el => {
+    const popupHeight = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--popup-height'));
+    return el.getBoundingClientRect().height <= popupHeight * .2 + 1;
+  }), 'Maximum filter height is bounded by 20% of full popup, including paging');
+  const smallCloud = await page.locator('#filter-cloud').evaluate(el => el.getBoundingClientRect().height);
+  await setShare(60);
+  await page.waitForFunction(height => document.querySelector('#filter-cloud').getBoundingClientRect().height > height + 10, smallCloud);
+  assert(await page.locator('app-filter-cloud').evaluate(el => {
+    const height = el.getBoundingClientRect().height;
+    const popup = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--popup-height'));
+    const row = el.querySelector('button.tag, button.folder').getBoundingClientRect().height;
+    return height >= popup * .6 - row - 12 && height <= popup * .6 + 1;
+  }), 'Dense cloud uses the full-popup 60% allowance within one row');
+  assert(await page.locator('#filter-cloud button').count() <= 512, 'Growth retains bounded cloud rendering');
+  await setShare(20);
+  await setShare(60);
+  await page.waitForFunction(height => document.querySelector('#filter-cloud').getBoundingClientRect().height > height + 10, smallCloud);
+  await setShare(35);
+  await page.getByRole('button', { name: 'Done', exact: true }).click();
+  // Avoid changing unrelated preference-boundary assertions later in this scenario.
+  await page.evaluate(async () => { await chrome.storage.local.remove('appearance'); });
   const search = page.getByRole('searchbox', { name: 'Search bookmarks' });
   const filterStart = performance.now();
   await search.fill('Scale bookmark 9999');
@@ -426,7 +458,7 @@ try {
     sections: cloud.querySelectorAll('section').length,
   }));
   assert(fullCloud.tags >= 0 && fullCloud.tags < 130, 'Only the current filter page is rendered');
-  assert(await page.locator('.filter-cloud > button').count() <= 32, 'The cloud keeps a bounded rendered window');
+  assert(await page.locator('.filter-cloud > button').count() <= 512, 'The cloud keeps a bounded rendered window');
   assert.equal(fullCloud.sections, 0);
   assert.equal(fullCloud.overflow, 'hidden');
   assert(fullCloud.scrollHeight <= fullCloud.height + 1, 'The cloud does not scroll or retain hidden pages');
@@ -444,7 +476,7 @@ try {
   const reached = new Set();
   do {
     const live = await page.locator('.filter-cloud > button').count();
-    assert(live <= 32, `Each page has bounded live buttons (saw ${live})`);
+    assert(live <= 512, `Each page has bounded live buttons (saw ${live})`);
     for (const label of await page.locator('.filter-cloud > button').allTextContents()) reached.add(label);
     const more = page.getByRole('button', { name: 'Next filters', exact: true });
     if (!await more.isEnabled()) break;
@@ -457,7 +489,7 @@ try {
   await page.keyboard.press('Enter');
   await page.waitForFunction(text => document.querySelector('.cloud-paging span')?.textContent !== text, lastRange);
   await page.locator('.filter-cloud[aria-busy="false"]').waitFor();
-  assert(await page.locator('.filter-cloud > button').count() <= 32, 'Keyboard paging keeps a bounded page');
+  assert(await page.locator('.filter-cloud > button').count() <= 512, 'Keyboard paging keeps a bounded page');
   await filterPage(page, 'First filters');
   const firstPage = await page.evaluate(() => {
     const cloud = document.querySelector('.filter-cloud');
@@ -639,17 +671,17 @@ try {
   await widthField.fill('380'); await widthField.press('Tab');
   await heightField.fill('400'); await heightField.press('Tab');
   await page.getByRole('slider', {name:'Font size'}).press('End');
-  const ratio = page.getByRole('slider', {name:'Filter space'});
+  const ratio = page.getByRole('slider', {name:'Maximum filter height (% of popup)' });
   await ratio.press('Home');
   const cloudHeight = () => page.locator('app-filter-cloud').evaluate(el => el.clientHeight);
   await page.waitForFunction(() => document.documentElement.style.getPropertyValue('--filter-share') === '0.2');
   await page.locator('.filter-cloud[aria-busy="false"]').waitFor();
-  assert(await page.locator('.filter-cloud > button').count() <= 32, 'Small layout keeps cloud buttons bounded');
+  assert(await page.locator('.filter-cloud > button').count() <= 512, 'Small layout keeps cloud buttons bounded');
   const small = await cloudHeight();
   await ratio.press('End');
   await page.waitForFunction(() => document.documentElement.style.getPropertyValue('--filter-share') === '0.6');
   await page.locator('.filter-cloud[aria-busy="false"]').waitFor();
-  assert(await page.locator('.filter-cloud > button').count() <= 32, 'Resized layout keeps cloud buttons bounded');
+  assert(await page.locator('.filter-cloud > button').count() <= 512, 'Resized layout keeps cloud buttons bounded');
   assert(await cloudHeight() > small, `Cloud height must increase from ${small} (now ${await cloudHeight()})`);
   assert(await page.locator('cdk-virtual-scroll-viewport').evaluate(el => el.clientHeight > 0));
   const theme = page.getByLabel('Theme', {exact:true});
@@ -742,10 +774,10 @@ try {
   await dense.reload();
   await dense.getByText('12001 of 12001 bookmarks', {exact:true}).waitFor();
   await dense.locator('.filter-cloud[aria-busy="false"]').waitFor();
-  assert(await dense.locator('.filter-cloud > button').count() <= 32, '2,000 distinct tags do not render an unbounded cloud');
+  assert(await dense.locator('.filter-cloud > button').count() <= 512, '2,000 distinct tags do not render an unbounded cloud');
   await (await findFilter(dense, '#unique1999')).click();
   await dense.getByText('1 of 12001 bookmarks', {exact:true}).waitFor();
-  assert(await dense.locator('.filter-cloud > button').count() <= 32, 'Paging to the final distinct tag stays bounded');
+  assert(await dense.locator('.filter-cloud > button').count() <= 512, 'Paging to the final distinct tag stays bounded');
   console.log('PASS: 2,000 distinct tags retain bounded cloud buttons and a reachable last choice.');
 } finally {
   await context.close();

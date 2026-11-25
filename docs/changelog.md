@@ -1,5 +1,13 @@
 # Changelog
 
+## 2.14 (unreleased)
+
+- Renamed **Filter space** to **Maximum filter height (% of popup)**. Its percentage now uses the full popup height, including paging within the limit. Small clouds remain compact; a safety limit preserves bookmark space. Existing saved percentages use the new meaning. Larger filter areas can now display more than 32 choices per page, instead of stopping short of the height limit.
+
+## 2.13 (unreleased)
+
+- Increasing **Filter space** now expands the filter cloud again after shrinking it, without reopening the popup.
+
 ## 2.12 (unreleased)
 
 - Search receives focus when the popup opens, so you can type immediately. Restored query text and filters remain unchanged; existing text is not selected.

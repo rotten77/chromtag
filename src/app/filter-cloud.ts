@@ -1,8 +1,9 @@
 import { afterRenderEffect, AfterViewInit, ChangeDetectionStrategy, Component, computed, effect, ElementRef, input, OnDestroy, output, signal, viewChild, viewChildren } from '@angular/core';
 import { Folder, Tag } from './model';
 
-// The probe holds at most 32 choices; only fitted buttons remain after measurement.
-const MEASURE_BATCH = 32;
+// Bounded probe large enough for short labels at maximum popup width/height.
+// Only fitted buttons remain after measurement; never render the entire library.
+const MEASURE_BATCH = 512;
 
 interface FilterChoice { key: string; id: string; label: string; kind: 'folder' | 'tag' }
 
@@ -26,7 +27,7 @@ interface FilterChoice { key: string; id: string; label: string; kind: 'folder' 
       }
     </div>
   `,
-  styles: `:host { display: flex; flex-direction: column; flex-shrink: 0; min-width: 0; max-height: calc((100% - var(--results-height)) * var(--filter-share, .35)); } .filter-cloud { min-height: 0; flex-shrink: 1; overflow: hidden; align-content: flex-start; } .filter-cloud > button { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; } .cloud-paging { display: flex; align-items: center; gap: .3rem; padding: .4rem .65rem 0; font-size: .85em; flex-shrink: 0; } .cloud-paging button { padding: .15em .35em; } .cloud-paging button:disabled { cursor: default; } .cloud-paging span { margin-left: auto; white-space: nowrap; }`,
+  styles: `:host { display: flex; flex-direction: column; flex-shrink: 0; min-width: 0; max-height: min(calc(var(--popup-height, 580px) * var(--filter-share, .35)), calc(100% - var(--results-height) - 4rem)); } .filter-cloud { min-height: 0; flex-shrink: 1; overflow: hidden; align-content: flex-start; } .filter-cloud > button { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; } .cloud-paging { display: flex; align-items: center; gap: .3rem; padding: .4rem .65rem 0; font-size: .85em; flex-shrink: 0; } .cloud-paging button { padding: .15em .35em; } .cloud-paging button:disabled { cursor: default; } .cloud-paging span { margin-left: auto; white-space: nowrap; }`,
 })
 export class FilterCloud implements AfterViewInit, OnDestroy {
   readonly folders = input.required<Folder[]>();
@@ -53,6 +54,7 @@ export class FilterCloud implements AfterViewInit, OnDestroy {
   private readonly buttons = viewChildren<ElementRef<HTMLButtonElement>>('choiceButton');
   private readonly sizeVersion = signal(0);
   private observer?: ResizeObserver;
+  private layoutObserver?: MutationObserver;
   constructor() {
     effect(() => {
       this.choices();
@@ -90,6 +92,19 @@ export class FilterCloud implements AfterViewInit, OnDestroy {
     } });
   }
   ngAfterViewInit(): void {
+    // A larger max-height need not resize a cloud trimmed to its last fitted page.
+    // Observe layout settings as well as actual size, so growth restores a bounded probe.
+    if (typeof MutationObserver !== 'undefined') {
+      const root = document.documentElement;
+      const signature = () => ['--filter-share', '--popup-width', '--popup-height', '--base-font-size']
+        .map(key => root.style.getPropertyValue(key)).join('|');
+      let previous = signature();
+      this.layoutObserver = new MutationObserver(() => {
+        const next = signature();
+        if (next !== previous) { previous = next; this.invalidate(); }
+      });
+      this.layoutObserver.observe(root, { attributes: true, attributeFilter: ['style'] });
+    }
     if (typeof ResizeObserver !== 'undefined') {
       this.observer = new ResizeObserver(() => this.invalidate());
       this.observer.observe(this.cloud().nativeElement);
@@ -116,5 +131,5 @@ export class FilterCloud implements AfterViewInit, OnDestroy {
     this.measureCount.set(MEASURE_BATCH);
     this.sizeVersion.update(value => value + 1);
   }
-  ngOnDestroy(): void { this.observer?.disconnect(); }
+  ngOnDestroy(): void { this.observer?.disconnect(); this.layoutObserver?.disconnect(); }
 }

@@ -1,5 +1,9 @@
 # Criterion mapping
 
+US-10 version 2.14: native slider regressions wait for the applied CSS share, check the full-popup 20% maximum including paging, actual dense-cloud utilization of 60% within one row, repeated growth after shrinking and the 512-choice probe bound. Existing minimum-popup/maximum-font regression checks remaining list space. Full-popup percentage examples and compact-cloud behavior are in manual verification.
+
+US-10 / T-17 version 2.13 regression: `tools/test-browser.mjs` changes the actual Filter space slider from 20% to 60% repeatedly, checks cloud growth after shrink, and retains bounded rendering (originally 32; approved 512-choice probe in 2.14, then fitted-page trimming). Manual growth regression in `test-cases.md` covers paging/selection and small-cloud behavior.
+
 US-11 version 2.11 follow-up: store tests assert active single-tab creation; component tests cover restoring/retaining the activation preference and default-off storage. Ordered preference tests cover the extended stored shape. Worker regression and native integration verify activating only the first selected result after background tab creation. Full actual-popup setting combinations remain manual verification in `test-cases.md`.
 
 T-21 bulk mutation continuation (2.10): `tools/bulk-change.test.mjs` covers sequential title/move writes, rejection, field preservation, invalid requests and disconnected response; store/component tests cover selected-only prepared operations and no-op filtering. `tools/test-browser.mjs` checks native move/title outcomes and destroys the actual action popup during a 200-write title batch, then verifies its final native title. Full UI move/add/remove dismissal combinations remain manual verification.

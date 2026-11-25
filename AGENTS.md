@@ -37,7 +37,7 @@ If a required file is still a placeholder, do not infer its contents. Ask the us
 ## Implementation limits and user verification
 
 - Implement no more than one user story at a time.
-- For every new feature, increase the `version` field in `public/manifest.json` (not `manifest_version`). Keep `package.json` and the root package version in `package-lock.json` in sync. Run `npm run check` before marking the feature ready for verification.
+- Do not increase version numbers per feature or fix on a working branch. When preparing to merge a batch into `master`, suggest an appropriate target version based on the batch and ask Jan to approve that version before the merge. Do not ask about version increases during individual feature/fix work. Once approved, change `version` in `public/manifest.json` (not `manifest_version`) and keep `package.json` and the root package version in `package-lock.json` in sync. Version approval does not independently authorize a merge, commit, or push. Run `npm run check` before marking a feature ready for verification.
 - If a request covers multiple stories, implement at most one story, report which story was completed, and wait for the user’s verification before starting another.
 - If it is unclear which story the user wants implemented, ask before choosing.
 - After implementing a story and passing applicable tests and checks, mark it ready for verification. Summarize what changed and how the user can verify it, then wait for the user to confirm verification before beginning another story.
@@ -47,7 +47,7 @@ If a required file is still a placeholder, do not infer its contents. Ask the us
 
 ## Documentation and memory upkeep
 
-- For every new feature or other user-visible change, update `docs/changelog.md` in the same change without waiting for a separate request. Describe the user-visible effect under the matching version, marked unreleased until publication is confirmed.
+- For every new feature or other user-visible change, update `docs/changelog.md` in the same change without waiting for a separate request. Describe the user-visible effect under the matching approved version, marked unreleased until publication is confirmed. During branch work, use an unversioned Unreleased section for new changes; assign these entries to the proposed version after Jan approves it during merge preparation.
 
 - Keep `README.md`, relevant files in `docs/`, and relevant files in `.memory/` up to date as the project changes.
 - Check whether documentation needs updating as part of every change that affects project behavior, setup, usage, architecture, requirements, or workflows.
