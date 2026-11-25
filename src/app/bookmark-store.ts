@@ -46,9 +46,9 @@ export class BookmarkStore {
     return this.pending;
   }
 
-  async open(url: string, target: 'current' | 'new' = 'current'): Promise<boolean> {
+  async open(url: string, target: 'current' | 'new' = 'current', activate = false): Promise<boolean> {
     try {
-      if (target === 'new') await this.api.tabs.create({ url, active: false });
+      if (target === 'new') await this.api.tabs.create({ url, active: activate });
       else {
         const [tab] = await this.api.tabs.query({ active: true, currentWindow: true });
         if (tab?.id === undefined) throw new Error('No active tab');
@@ -61,7 +61,7 @@ export class BookmarkStore {
     }
   }
 
-  async openAll(bookmarks: Bookmark[], target: 'current' | 'new' = 'new'): Promise<boolean> {
+  async openAll(bookmarks: Bookmark[], target: 'current' | 'new' = 'new', activate = false): Promise<boolean> {
     if (this.busy() || !bookmarks.length) return false;
     this.busy.set(true);
     this.error.set('');
@@ -69,7 +69,7 @@ export class BookmarkStore {
       const [tab] = await this.api.tabs.query({ active: true, currentWindow: true });
       if (tab?.id === undefined || tab.windowId === undefined) throw new Error('No originating tab');
       const result = await this.api.runtime.sendMessage({ type: 'open-selected',
-        urls: bookmarks.map(bookmark => bookmark.url), target, tabId: tab.id, windowId: tab.windowId });
+        urls: bookmarks.map(bookmark => bookmark.url), target, activate, tabId: tab.id, windowId: tab.windowId });
       if (!result || !Number.isInteger(result.failures)) throw new Error('No batch result');
       if (result.failures) this.error.set(`${result.failures} of ${bookmarks.length} selected bookmarks could not be opened.`);
       return result.failures === 0;
@@ -83,22 +83,24 @@ export class BookmarkStore {
     if (this.busy() || !bookmarks.length) return;
     this.busy.set(true);
     this.error.set('');
-    let failures = 0;
-    let changed = 0;
     try {
+      const operations: ({ kind: 'move'; id: string; parentId: string } | { kind: 'title'; id: string; title: string })[] = [];
       for (const bookmark of bookmarks) {
         if (change.kind === 'move' && bookmark.parentId === change.parentId) continue;
         const title = change.kind === 'add' ? addTitleTag(bookmark.title, change.tag)
           : change.kind === 'remove' ? removeTitleTag(bookmark.title, change.tag.key) : bookmark.title;
         if (change.kind !== 'move' && title === bookmark.title) continue;
-        try {
-          if (change.kind === 'move') await this.api.bookmarks.move(bookmark.id, { parentId: change.parentId });
-          else await this.api.bookmarks.update(bookmark.id, { title });
-          changed++;
-        } catch { failures++; }
+        operations.push(change.kind === 'move' ? { kind: 'move', id: bookmark.id, parentId: change.parentId }
+          : { kind: 'title', id: bookmark.id, title });
       }
-      if (changed) await this.refresh();
-      if (failures) this.error.set(`${failures} of ${bookmarks.length} selected bookmarks could not be changed. Review the results and try again.`);
+      if (!operations.length) return;
+      const result = await this.api.runtime.sendMessage({ type: 'bulk-change', operations });
+      if (!result || !Number.isInteger(result.changed) || !Number.isInteger(result.failures)) throw new Error('No batch result');
+      if (result.changed) await this.refresh();
+      if (result.failures) this.error.set(`${result.failures} of ${bookmarks.length} selected bookmarks could not be changed. Review the results and try again.`);
+    } catch {
+      await this.refresh();
+      this.error.set('Bulk result unavailable. Some bookmarks may have changed. Review the results before retrying.');
     } finally { this.busy.set(false); }
   }
 

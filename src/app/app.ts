@@ -27,6 +27,7 @@ import { A11yModule } from '@angular/cdk/a11y';
         <label><input type="checkbox" #clearOnOpen [checked]="!rememberFilters()" [disabled]="!settingsReady()" (change)="setRemember(!clearOnOpen.checked)"> Clear filters on popup</label>
         <div class="click-settings-section"><fieldset class="click-settings" aria-label="Bookmark opening preferences" [disabled]="!clickSettingsReady()">
           <label><input type="checkbox" [checked]="clickTarget() === 'new'" (change)="setClickPreferences({target: $any($event.target).checked ? 'new' : 'current'})"> Open bookmarks in new tab</label>
+          <label><input type="checkbox" [checked]="switchToOpenedTab()" [disabled]="clickTarget() !== 'new'" (change)="setClickPreferences({activate: $any($event.target).checked})"> Switch to opened tab</label>
           <label><input type="checkbox" [checked]="closeOnOpen()" (change)="setClickPreferences({close: $any($event.target).checked})"> Close popup after opening a bookmark</label>
         </fieldset></div>
         <app-appearance />
@@ -129,6 +130,7 @@ export class App implements OnDestroy {
   private filtersTouched = false;
   readonly clickTarget = signal<'current' | 'new'>('current');
   readonly closeOnOpen = signal(true);
+  readonly switchToOpenedTab = signal(false);
   readonly clickSettingsReady = signal(false);
   private clickSettingsTouched = false;
   private readonly clickWrites = new OrderedWrites();
@@ -194,7 +196,7 @@ export class App implements OnDestroy {
   async openAll(): Promise<void> {
     this.menuOpen.set(false);
     if (!this.selected().size) return;
-    const opened = await this.store.openAll(this.selectedBookmarks(), this.clickTarget());
+    const opened = await this.store.openAll(this.selectedBookmarks(), this.clickTarget(), this.switchToOpenedTab());
     if (opened && this.closeOnOpen()) window.close();
   }
 
@@ -205,23 +207,25 @@ export class App implements OnDestroy {
       if (!this.clickSettingsTouched && saved && typeof saved === 'object') {
         const preferences = saved as Record<string, unknown>;
         this.clickTarget.set(preferences['target'] === 'new' ? 'new' : 'current');
+        this.switchToOpenedTab.set(preferences['activate'] === true);
         this.closeOnOpen.set(typeof preferences['close'] === 'boolean' ? preferences['close'] : true);
       }
       this.clickSettingsReady.set(true);
     } catch { this.storageError.set('Bookmark-click settings could not be loaded.'); }
   }
 
-  setClickPreferences(patch: { target?: 'current' | 'new'; close?: boolean }): void {
+  setClickPreferences(patch: { target?: 'current' | 'new'; close?: boolean; activate?: boolean }): void {
     this.clickSettingsTouched = true;
     if (patch.target) this.clickTarget.set(patch.target);
     if (patch.close !== undefined) this.closeOnOpen.set(patch.close);
-    const value = {target: this.clickTarget(), close: this.closeOnOpen()};
+    if (patch.activate !== undefined) this.switchToOpenedTab.set(patch.activate);
+    const value = {target: this.clickTarget(), close: this.closeOnOpen(), activate: this.switchToOpenedTab()};
     void this.clickWrites.enqueue(() => this.storage.local.set({bookmarkClicks: value}))
       .catch(() => this.storageError.set('Bookmark-click settings could not be saved.'));
   }
 
   async openBookmark(url: string): Promise<void> {
-    const opened = await this.store.open(url, this.clickTarget());
+    const opened = await this.store.open(url, this.clickTarget(), this.switchToOpenedTab());
     if (opened && this.closeOnOpen()) window.close();
   }
 

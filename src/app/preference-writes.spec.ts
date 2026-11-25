@@ -218,7 +218,7 @@ it('orders fast click-target changes and restores the last choice', async () => 
   fixture.componentInstance.setClickPreferences({ close: false });
   first.resolve();
   await fixture.whenStable();
-  expect(stored).toEqual({ target: 'new', close: false });
+  expect(stored).toEqual({ target: 'new', close: false, activate: false });
   fixture.destroy();
   const reopened = TestBed.createComponent(App);
   await reopened.whenStable();

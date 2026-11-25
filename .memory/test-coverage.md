@@ -1,5 +1,9 @@
 # Criterion mapping
 
+US-11 version 2.11 follow-up: store tests assert active single-tab creation; component tests cover restoring/retaining the activation preference and default-off storage. Ordered preference tests cover the extended stored shape. Worker regression and native integration verify activating only the first selected result after background tab creation. Full actual-popup setting combinations remain manual verification in `test-cases.md`.
+
+T-21 bulk mutation continuation (2.10): `tools/bulk-change.test.mjs` covers sequential title/move writes, rejection, field preservation, invalid requests and disconnected response; store/component tests cover selected-only prepared operations and no-op filtering. `tools/test-browser.mjs` checks native move/title outcomes and destroys the actual action popup during a 200-write title batch, then verifies its final native title. Full UI move/add/remove dismissal combinations remain manual verification.
+
 Version 2.9 opening follow-up (US-11-AC1/AC7 and US-14-AC4): store/component regressions assert inactive single-tab creation and worker delegation; `tools/open-selected.test.mjs` covers both worker targets, captured window/tab, partial failure, and disconnected response. Native Chrome integration checks three inactive worker-created tabs. Actual-popup dismissal and full UI combinations remain manual verification in the version 2.9 follow-up in `test-cases.md`; mocked disconnection is not actual popup-lifetime evidence.
 
 Criteria remain authoritative in [the technical specification](../.memory/technical-specification.md). This map names regression evidence without redefining requirements. `npm test` runs the application evidence below; `npm run check` checks mapping completeness and links.

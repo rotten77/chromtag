@@ -262,6 +262,12 @@ try {
     const created = (await chrome.tabs.query({ windowId: origin.windowId })).filter(tab => !before.has(tab.id));
     if (result.failures || created.length !== 3 || created.some(tab => tab.active)) throw new Error('Native background bulk opening failed');
     await chrome.tabs.remove(created.map(tab => tab.id));
+    const switched = await chrome.runtime.sendMessage({ type: 'open-selected', target: 'new', activate: true,
+      urls: ['https://example.invalid/switch-first', 'https://example.invalid/switch-second'], tabId: origin.id, windowId: origin.windowId });
+    const switchedTabs = (await chrome.tabs.query({ windowId: origin.windowId })).filter(tab => !before.has(tab.id));
+    if (switched.failures || switchedTabs.length !== 2 || !switchedTabs[0].active || switchedTabs[1].active) throw new Error('Native first-selected activation failed');
+    await chrome.tabs.update(origin.id, { active: true });
+    await chrome.tabs.remove(switchedTabs.map(tab => tab.id));
   });
   await page.evaluate(async () => {
     await Promise.all(Array.from({ length: 112 }, (_, index) => chrome.bookmarks.create({ title: `Folder ${index} — long Unicode 中文 café` })));
@@ -270,6 +276,22 @@ try {
         const number = batch * 250 + index;
         return chrome.bookmarks.create({ title: `Scale bookmark ${number}${number === 5000 ? ' Long title <script> 中文 café '.repeat(20) : ''} #scale #tag${number % 128}`, url: `https://example.invalid/scale/${number}${number === 5000 ? '/long'.repeat(200) : ''}` });
       }));
+    }
+  });
+  await page.evaluate(async () => {
+    const a = await chrome.bookmarks.create({ title: 'Batch original', url: 'https://example.invalid/mutation-a' });
+    const b = await chrome.bookmarks.create({ title: 'Unselected', url: 'https://example.invalid/mutation-b' });
+    const folder = await chrome.bookmarks.create({ title: 'Bulk destination' });
+    try {
+      const result = await chrome.runtime.sendMessage({ type: 'bulk-change', operations: [
+        { kind: 'title', id: a.id, title: 'Batch original #中文' },
+        { kind: 'move', id: a.id, parentId: folder.id },
+      ] });
+      const [changed] = await chrome.bookmarks.get(a.id);
+      const [untouched] = await chrome.bookmarks.get(b.id);
+      if (result.changed !== 2 || result.failures || changed.title !== 'Batch original #中文' || changed.url !== a.url || changed.parentId !== folder.id || untouched.title !== b.title || untouched.parentId !== b.parentId) throw new Error('Native bulk mutation mismatch');
+    } finally {
+      await chrome.bookmarks.remove(a.id); await chrome.bookmarks.remove(b.id); await chrome.bookmarks.remove(folder.id);
     }
   });
   const started = performance.now();
@@ -524,8 +546,16 @@ try {
   assert(popupResult.result.value.text.includes('Add bookmark'));
   assert.equal(popupResult.result.value.width, 540);
   assert.equal(popupResult.result.value.height, 580);
-  await session.send('Target.detachFromTarget', { sessionId });
-  console.log('PASS: native extension action rendered its registered 540 × 580 popup.');
+  const lifetimeBookmark = await page.evaluate(() => chrome.bookmarks.create({ title: 'Lifetime start', url: 'https://example.invalid/lifetime' }));
+  await targetCommand(session, sessionId, 'Runtime.evaluate', {
+    expression: `void chrome.runtime.sendMessage({type:'bulk-change',operations:Array.from({length:200},(_,i)=>({kind:'title',id:${JSON.stringify(lifetimeBookmark.id)},title:'Lifetime '+i}))}).catch(()=>{})`,
+  });
+  // Wait for native evidence that the worker accepted the batch, then destroy the actual popup.
+  await page.waitForFunction(async id => (await chrome.bookmarks.get(id))[0].title !== 'Lifetime start', lifetimeBookmark.id);
+  await session.send('Target.closeTarget', { targetId: actionTarget.targetId });
+  await page.waitForFunction(async id => (await chrome.bookmarks.get(id))[0].title === 'Lifetime 199', lifetimeBookmark.id);
+  await page.evaluate(id => chrome.bookmarks.remove(id), lifetimeBookmark.id);
+  console.log('PASS: native extension action rendered its registered 540 × 580 popup; accepted bulk writes finished after popup destruction.');
   await activePage.bringToFront();
   await page.getByRole('button', { name: 'Add bookmark', exact: true }).click();
   await dialog.waitFor();
@@ -586,7 +616,7 @@ try {
   await clearOnOpen.uncheck();
   await page.keyboard.press('Escape');
   await search.fill('example.invalid/scale/5000');
-  assert.deepEqual(await page.evaluate(() => chrome.storage.local.get(null)), { rememberFilters: true, showFolders: false, bookmarkClicks: { target: 'new', close: false } });
+  assert.deepEqual(await page.evaluate(() => chrome.storage.local.get(null)), { rememberFilters: true, showFolders: false, bookmarkClicks: { target: 'new', close: false, activate: false } });
   assert.equal(await page.evaluate(async () => (await chrome.storage.session.get('sessionFilters')).sessionFilters.query), 'example.invalid/scale/5000');
   await options.click();
   assert(await optionsDialog.getByRole('group', { name: 'Appearance', exact: true }).getByRole('spinbutton', { name: 'Popup width' }).isVisible(), 'Appearance controls are visible as soon as Options opens');
@@ -681,7 +711,7 @@ try {
   await fresh.waitForFunction(() => !document.querySelector('input[aria-controls="filter-cloud"]').disabled);
   assert.equal(await fresh.getByRole('checkbox', { name: 'Show folders', exact: true }).isChecked(), false);
   assert.equal(await fresh.locator('.filter-cloud .folder').count(), 0);
-  assert.deepEqual(await fresh.evaluate(() => chrome.storage.local.get(null)), { rememberFilters: true, showFolders: false, bookmarkClicks: { target: 'new', close: false }, appearance:storedAppearance });
+  assert.deepEqual(await fresh.evaluate(() => chrome.storage.local.get(null)), { rememberFilters: true, showFolders: false, bookmarkClicks: { target: 'new', close: false, activate: false }, appearance:storedAppearance });
   assert.deepEqual(await fresh.locator('body').evaluate(el => [el.offsetWidth,el.offsetHeight,getComputedStyle(el).fontSize,document.documentElement.dataset.theme]),[380,400,'18px','dark']);
   await fresh.getByRole('checkbox', { name: 'Open bookmarks in new tab' }).uncheck();
   await fresh.getByRole('button', { name: 'Done' }).click();

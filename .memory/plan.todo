@@ -47,6 +47,7 @@ E-22 — Appearance:
 
 E-23 — Bookmark clicks:
   ☐ US-11 Configure bookmark-click behavior @ready-for-verification
+  Version 2.11 follow-up adds optional switching to the opened tab for single and selected opens; verification pending.
 
 E-24 — UI redesign:
   ✔ US-12 Redesign the popup layout
@@ -68,8 +69,8 @@ E-27 — High-priority audit follow-ups:
   T-17–T-20 await Jan's verification. See the technical specification for evidence and test scope.
 
 E-26 follow-up — Bulk reliability:
-  ☐ T-21 Verify and fix bulk popup interruption
-  Opening portion implemented in 2.9 with Jan's authorization on the current branch; manual dismissal verification pending. Bulk move/tag interruption remains not implemented. Batches must finish after popup dismissal.
+  ☐ T-21 Verify and fix bulk popup interruption @ready-for-verification
+  Opening portion implemented in 2.9; bulk move/tag continuation implemented in 2.10 on the same branch with Jan's approval. Native popup destruction during title writes is covered; Jan's full manual verification remains pending.
   ☐ T-22 Verify native bulk outcomes and failure recovery
 
 Test-analysis follow-up — Simple quality controls:

@@ -4,6 +4,12 @@ import { BookmarkStore } from './bookmark-store';
 import { CHROME } from './chrome-api';
 
 beforeEach(() => TestBed.resetTestingModule());
+it('activates a new single tab only when requested', async () => {
+  const create = vi.fn().mockResolvedValue({ id: 1 });
+  TestBed.configureTestingModule({ providers: [{ provide: CHROME, useValue: { tabs: { create } } }] });
+  expect(await TestBed.inject(BookmarkStore).open('https://example.org', 'new', true)).toBe(true);
+  expect(create).toHaveBeenCalledWith({ url: 'https://example.org', active: true });
+});
 it('coalesces overlapping refreshes to one read and opens URLs with native tabs', async () => {
   let resolve!: (tree: chrome.bookmarks.BookmarkTreeNode[]) => void;
   const getTree = vi.fn(() => new Promise<chrome.bookmarks.BookmarkTreeNode[]>(done => { resolve = done; }));
@@ -120,7 +126,7 @@ it('opens all selected bookmarks in separate tabs and reports individual failure
   const store = TestBed.inject(BookmarkStore);
   const bookmarks = ['https://a.example', 'https://b.example'].map((url, i) => ({ id: String(i), url })) as import('./model').Bookmark[];
   await store.openAll(bookmarks);
-  expect(sendMessage).toHaveBeenCalledWith({ type: 'open-selected', urls: bookmarks.map(row => row.url), target: 'new', tabId: 42, windowId: 7 });
+  expect(sendMessage).toHaveBeenCalledWith({ type: 'open-selected', urls: bookmarks.map(row => row.url), target: 'new', activate: false, tabId: 42, windowId: 7 });
   expect(store.error()).toContain('1 of 2');
   expect(store.busy()).toBe(false);
 });
@@ -129,7 +135,18 @@ it('bulk edits only changed selected titles, moves eligible rows, refreshes once
   const getTree = vi.fn().mockResolvedValue([]);
   const update = vi.fn().mockResolvedValueOnce({}).mockRejectedValueOnce(new Error('Locked'));
   const move = vi.fn().mockResolvedValue({});
-  TestBed.configureTestingModule({ providers: [{ provide: CHROME, useValue: { bookmarks: { getTree, update, move } } }] });
+  const sendMessage = vi.fn(async ({ operations }) => {
+    let changed = 0; let failures = 0;
+    for (const operation of operations) {
+      try {
+        if (operation.kind === 'move') await move(operation.id, { parentId: operation.parentId });
+        else await update(operation.id, { title: operation.title });
+        changed++;
+      } catch { failures++; }
+    }
+    return { changed, failures };
+  });
+  TestBed.configureTestingModule({ providers: [{ provide: CHROME, useValue: { bookmarks: { getTree }, runtime: { sendMessage } } }] });
   const store = TestBed.inject(BookmarkStore);
   const rows = [
     { id: '1', title: 'First #money #money', parentId: 'old' },

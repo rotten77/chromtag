@@ -49,7 +49,8 @@ it('bulk actions expose only selected tags, validate new tags, and pass selected
     { id: '1', title: 'First #money', url: 'https://a.example' },
     { id: '2', title: 'Second #work', url: 'https://b.example' },
   ]);
-  TestBed.configureTestingModule({ providers: [{ provide: CHROME, useValue: { bookmarks: { getTree, update }, tabs: {} } }] });
+  const sendMessage = vi.fn().mockResolvedValue({ changed: 1, failures: 0 });
+  TestBed.configureTestingModule({ providers: [{ provide: CHROME, useValue: { bookmarks: { getTree }, tabs: {}, runtime: { sendMessage } } }] });
   const fixture = TestBed.createComponent(App);
   await fixture.whenStable();
   const app = fixture.componentInstance;
@@ -60,8 +61,8 @@ it('bulk actions expose only selected tags, validate new tags, and pass selected
   expect(app.bulkError()).toContain('no spaces');
   expect(update).not.toHaveBeenCalled();
   await app.applyBulk({ kind: 'add', tag: { key: '中文', label: '中文' } });
-  expect(update).toHaveBeenCalledWith('1', { title: 'First #money #中文' });
-  expect(update).not.toHaveBeenCalledWith('2', expect.anything());
+  expect(sendMessage).toHaveBeenCalledWith({ type: 'bulk-change', operations: [{ kind: 'title', id: '1', title: 'First #money #中文' }] });
+  expect(update).not.toHaveBeenCalled();
   expect(app.selected().size).toBe(0);
   expect(app.bulkDialog()).toBeNull();
 });
@@ -86,6 +87,19 @@ it('renders user text literally and loads only once on popup creation', async ()
   } finally { close.mockRestore(); }
 });
 
+it('restores activation preference and keeps it disabled but remembered in current-tab mode', async () => {
+  const local = { get: vi.fn().mockResolvedValue({ bookmarkClicks: { target: 'new', close: false, activate: true } }), set: vi.fn().mockResolvedValue(undefined) };
+  TestBed.configureTestingModule({ providers: [{ provide: CHROME, useValue: { bookmarks: { getTree: vi.fn().mockResolvedValue([]) }, storage: { local }, tabs: {} } }] });
+  const fixture = TestBed.createComponent(App);
+  await fixture.whenStable();
+  const app = fixture.componentInstance;
+  expect(app.switchToOpenedTab()).toBe(true);
+  app.setClickPreferences({ target: 'current' });
+  await fixture.whenStable();
+  expect(app.switchToOpenedTab()).toBe(true);
+  expect(local.set).toHaveBeenCalledWith({ bookmarkClicks: { target: 'current', close: false, activate: true } });
+});
+
 it('restores click preferences and closes only after a successful open when enabled', async () => {
   const getTree = vi.fn().mockResolvedValue([]);
   const create = vi.fn().mockResolvedValue({});
@@ -107,7 +121,7 @@ it('restores click preferences and closes only after a successful open when enab
     app.setClickPreferences({ close: false });
     await app.openBookmark('https://example.org');
     expect(close).toHaveBeenCalledTimes(1);
-    expect(local.set).toHaveBeenCalledWith({ bookmarkClicks: { target: 'new', close: false } });
+    expect(local.set).toHaveBeenCalledWith({ bookmarkClicks: { target: 'new', close: false, activate: false } });
   } finally { close.mockRestore(); }
 });
 

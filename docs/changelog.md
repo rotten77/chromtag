@@ -1,5 +1,13 @@
 # Changelog
 
+## 2.11 (unreleased)
+
+- New **Switch to opened tab** option lets new-tab opens activate the destination. It is off by default and available only in new-tab mode. For **Open selected**, it activates the first selected result after opening the others in background tabs. Chrome can close the popup when focus switches, even with explicit closing disabled.
+
+## 2.10 (unreleased)
+
+- Accepted bulk moves and tag changes now continue if the popup closes. Reopen to reload the native results. Individual failures do not stop remaining changes. Browser shutdown or extension reload can still interrupt a batch; no automatic replay is performed.
+
 ## 2.9 (unreleased)
 
 - New-tab bookmark opens now stay in the background. With popup closing disabled, the current tab and popup stay in place.

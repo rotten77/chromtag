@@ -3,6 +3,23 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { runInNewContext } from 'node:vm';
 
+test('activation selects the first created tab only after all background tabs exist', async () => {
+  let listener, finish;
+  const done = new Promise(resolve => { finish = resolve; });
+  const calls = [];
+  runInNewContext(readFileSync('public/open-selected.js', 'utf8'), { chrome: {
+    runtime: { id: 'self', onMessage: { addListener(fn) { listener = fn; } } },
+    tabs: {
+      async create(options) { calls.push(['create', options.active]); return { id: calls.length + 10 }; },
+      async update(id, options) { calls.push(['activate', id, options.active]); },
+    },
+  } });
+  listener({ type: 'open-selected', urls: ['https://a.example', 'https://b.example'], target: 'new', activate: true, windowId: 8 }, { id: 'self' }, finish);
+  const result = await done;
+  assert.equal(result.failures, 0);
+  assert.deepEqual(calls, [['create', false], ['create', false], ['activate', 11, true]]);
+});
+
 for (const target of ['new', 'current']) test(`worker completes ${target} batch with disconnected popup and rejected tab`, async () => {
   let listener;
   const calls = [];

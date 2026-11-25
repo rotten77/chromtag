@@ -46,7 +46,7 @@ export async function validateManifest(directory, { built = false } = {}) {
   assert.deepEqual([...manifest.permissions].sort(), expectedPermissions.sort(),
     'Unexpected permission set for this release');
   if (manifest.background) {
-    assert.deepEqual(manifest.background, { service_worker: 'open-selected.js' }, 'Unneeded manifest capability: only the bulk opening worker is allowed');
+    assert.deepEqual(manifest.background, { service_worker: 'open-selected.js' }, 'Unneeded manifest capability: only the approved bulk action worker is allowed');
     await localAsset(root, manifest.background.service_worker);
   }
   for (const key of ['content_scripts', 'host_permissions', 'optional_host_permissions',

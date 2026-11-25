@@ -91,7 +91,7 @@ Do not use `localStorage`, a separate bookmark store, an account, or a backend. 
 - Include `storage` for preferences. Session storage requires Chrome 102 or a higher framework floor.
 - T-03 selects Angular 22, TypeScript 6, and Chrome 157 as the conservative application floor. The manifest and `.browserslistrc` agree. Node ranges follow Angular's published compatibility table.
 - Use native `chrome.*` Promise APIs. Use `Intl.Segmenter` with grapheme granularity for the approved search-boundary policy; its Chrome 87 floor is below the selected extension API floor.
-- Jan approved `open-selected.js`, a background service worker for accepted Open selected batches to continue after popup dismissal. It retains request-local URLs only during execution; no stored bookmark queue or restart/replay guarantee. Bulk mutations remain popup-owned.
+- Jan approved `open-selected.js`, a background service worker for accepted Open selected batches to continue after popup dismissal. In 2.10 Jan approved bulk mutations in the same worker. It retains request-local URLs/prepared title/move operations only during execution; no stored bookmark queue or restart/replay guarantee. Popup dismissal does not cancel accepted work; reopening reads native results. Failure summaries are transient and not recovered on reopening.
 - Keep `manifest.json` and the preserved 16/48/128 px PNG icons in `public/`; copy them into the production output. Keep manifest and package versions consistent. Automated checks do not replace explicit user verification.
 - Set `action.default_popup` to built `index.html`. The loadable extension root is `dist/chromtag/browser/`.
 - Bundle local scripts/styles only. Comply with extension Content Security Policy (CSP), without remote code, inline scripts, or `eval`.
@@ -286,7 +286,7 @@ Hide selected folder or tag choices from the filter selector without hiding thei
 - **US-14-AC5:** **Add tag** shows the existing tag cloud and a **New tag** input. Apply the chosen tag to selected bookmark titles that lack it, using the existing hashtag identity and parsing rules. Preserve other title text and tags.
 - **US-14-AC6:** **Remove tag** offers only tags present on at least one selected bookmark. Disable the action if none have tags. Remove all matching hashtag occurrences from the selected titles, leaving other text, bookmarks, and unselected titles intact.
 
-US-14 tag actions only add or remove hashtags in checked bookmark titles; they do not rename a tag library-wide. Jan chose to deselect checked bookmarks when they no longer match after a filter or snapshot change. Selection remains transient in the popup. Bulk mutations run sequentially and refresh once after successful changes; partial failures are reported. The actions dropdown permits **Select all** before any row is checked; the remaining actions require a selection.
+US-14 tag actions only add or remove hashtags in checked bookmark titles; they do not rename a tag library-wide. Jan chose to deselect checked bookmarks when they no longer match after a filter or snapshot change. Selection remains transient in the popup. Bulk mutations are prepared with the existing title helpers in the popup, omitting no-ops, then executed sequentially by the worker. Refresh once after successful changes while the initiating popup survives; partial failures are reported there. Missing batch responses trigger a refresh and an uncertain-outcome warning, not automatic retries. Snapshot-title conflict risk remains unchanged. The actions dropdown permits **Select all** before any row is checked; the remaining actions require a selection.
 
 ### US-15 — Rename a tag across bookmarks (planned)
 
@@ -326,6 +326,8 @@ These criteria define the current control placement and labels, superseding olde
 Approved developer-build defaults: System mode; 540 × 580 px popup (width 380–800, height 400–600); 13 px font (12–18); 35% maximum filter share (20–60%, step 5). Small clouds yield unused space to bookmarks. Preserve the current light colors; dark defaults are #FAFAFA text, #90CAF9 tags, and #A5D6A7 folders on #212121.
 
 ### US-11 — Configure bookmark-click behavior (version 2.3)
+
+Version 2.11 follow-up: **Switch to opened tab** defaults off, persists as boolean `activate` in `bookmarkClicks`, and is disabled in current-tab mode without discarding its saved value. Missing/invalid values resolve to false. Single new-tab opens use this flag; Open selected creates inactive tabs first and then activates the first selected result when enabled. Current-tab mode ignores the flag. Chrome may close the popup on activation regardless of explicit closing. Existing target/close settings and storage boundaries are unchanged.
 
 - **US-11-AC1:** Provide an Open bookmarks in new tab checkbox, unchecked by default (current tab). Version 2.9 creates new tabs inactive, preserving focus and the popup when explicit closing is disabled. Both click preferences also apply to Open selected.
 - **US-11-AC2:** Provide a Close popup after opening a bookmark checkbox, checked by default, subject to Chrome lifecycle constraints. Show both checkboxes directly in Options without a visible Bookmark clicks heading.

@@ -35,7 +35,7 @@ Do not duplicate target acceptance criteria in the plan or user documentation. S
 - Bookmarks/indexes remain in transient popup memory. Show folders defaults on and persists independently in local extension storage.
 - Version 2.1 remembers query and selected tags/folder in `chrome.storage.session` by default. Only the Clear filters on popup and Show folders preferences use `chrome.storage.local`.
 - Versions 2.2/2.3 use `chrome.storage.local` only for appearance/layout and bookmark-click preferences.
-- Retain MV3. Audit metadata/APIs and permissions; add no service worker without demonstrated need. Jan approved a narrowly scoped worker for Open selected to finish after popup dismissal; bulk mutations remain popup-owned.
+- Retain MV3. Audit metadata/APIs and permissions; add no service worker without demonstrated need. Jan approved a narrowly scoped worker for Open selected to finish after popup dismissal; Jan also approved extending that worker to bulk title/move operations in 2.10. Prepared operations stay request-local, with no stored bookmark queue or automatic replay.
 - T-02 permission policy: use `bookmarks` and `activeTab`, adding `storage` only with preference releases. US-06 must report unavailable required tab metadata without creating an incomplete bookmark; do not restore broad `tabs` access.
 - Use a root Angular CLI workspace, standalone components, TypeScript, native Chrome APIs, and safe bindings.
 - Prioritize large-library responsiveness: 1 snapshot per load/refresh, model filtering, and virtualized rows with overscan.
@@ -44,6 +44,7 @@ Do not duplicate target acceptance criteria in the plan or user documentation. S
 - T-01 records user-approved hashtag, phrase-search, and folder-ID/descendant semantics in the technical specification. Use those rules when implementing the affected stories.
 - US-10 implements adjustable font size, popup width and height, and a ratio slider dividing available height between filters and bookmarks. Light, Dark, and system-following modes use independent light and dark foreground/tag/folder palettes. Backgrounds are fixed at white/light and #212121/dark; no background editor.
 - T-13 loading and hashtag-processing feedback counts all URL-bearing tree nodes, including excluded `javascript:` bookmarks, after Chrome returns the tree. Large-library messaging cites synthetic evidence, not a guaranteed bookmark limit. Jan verified T-13 with an imported 50,000-bookmark synthetic collection on 2026-11-12.
+- Version 2.11 adds Switch to opened tab, default off, available in new-tab mode. It activates the single destination or first selected result after background batch creation. Chrome can dismiss the popup on activation regardless of explicit closing.
 - Version 2.3 defaults bookmark clicks to the current tab and closes the popup on success. The user may select a new tab or disable explicit closing; Chrome can still close the action popup during current-tab navigation.
 
 ## Repository conventions
