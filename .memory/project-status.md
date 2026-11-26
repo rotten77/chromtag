@@ -2,6 +2,8 @@
 
 Updated: 2026-11-25
 
+Added `.memory/ideas.todo` as the inbox for incoming ideas, with **New ideas** and **Processed ideas** sections, and documented the `process ideas` command in `AGENTS.md`. The command plans clarified ideas into `.memory/plan.todo` and `.memory/technical-specification.md`, asks Jan about unclear points first, and moves each idea to Processed ideas with its outcome. Planning only: the command does not authorize implementation, commits, or pushes. No application or documentation behavior changed; this workflow update is not committed.
+
 Jan approved an explicit end-session rule: "end session" requests updating project status and creating/updating the dated session log before any separately requested commit/push. Existing same-day entries must be preserved. Commit/push remain separately authorized actions; passing tests alone triggers none of these. Updated AGENTS.md and durable context. This documentation change is not committed.
 
 Session handoff: Jan requested ending the session, committing remaining changes and pushing the current feature branch, without merging. Final `npm run check` and `git diff --check` passed; the latest full runtime regression report remains `.local/test-results/2026-11-25T19-54-11.259Z-84112.html`. The current build remains 2.14; future batch version proposals occur only before merging into master under the new workflow. Filter-height changes and US-16 remain awaiting Jan's verification; no publication scheduled. Earlier “no commit requested” notes below describe the state at the time of implementation.

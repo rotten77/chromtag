@@ -17,6 +17,7 @@ Chromtag is a Chrome bookmark browser/editor. Hashtags in native bookmark titles
 
 - `AGENTS.md`: repository workflow and agent instructions.
 - `.memory/plan.todo`: sole planning document for epics, stories, supporting tasks, and statuses. Details and acceptance criteria belong in `.memory/technical-specification.md`.
+- `.memory/ideas.todo`: inbox for incoming ideas, with **New ideas** and **Processed ideas** sections. It is not a plan; ideas are planned only on Jan's `process ideas` command, which is defined in `AGENTS.md`.
 - `.memory/technical-specification.md`: target architecture, acceptance criteria, decisions, and open choices.
 - `.memory/technical-specification.md` is the sole specification; the duplicate `docs/SPEC.md` is removed.
 - `.memory/legacy-baseline.md` and `.memory/legacy-analysis.md`: supplied historical 1.8 behavior and root-cause analysis.

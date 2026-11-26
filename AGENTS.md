@@ -17,6 +17,8 @@ Before making changes:
 4. Read `.memory/plan.todo` and the relevant sections of `.memory/technical-specification.md`.
 5. Inspect the repository and relevant documentation so the work is based on the current state, not only on memory files.
 
+Do not read or process `.memory/ideas.todo` at the start of a session. It is processed only on the explicit command below.
+
 If a required file is still a placeholder, do not infer its contents. Ask the user for missing project information when it is needed to proceed.
 
 ## Planning and user stories
@@ -25,6 +27,23 @@ If a required file is still a placeholder, do not infer its contents. Ask the us
 - Acceptance criteria belong in `.memory/technical-specification.md`. Associate them with the relevant epic or user story, using matching IDs or names.
 - Keep the plan and technical specification consistent. The plan may refer to acceptance criteria in the specification but should not duplicate their full text.
 - Do not invent requirements, stories, acceptance criteria, or technical decisions.
+
+## Incoming ideas
+
+- `.memory/ideas.todo` is the inbox for ideas that are not yet planned. It is not a planning document; do not treat its entries as approved requirements or as a backlog.
+- The file has two sections: **New ideas** (unprocessed) and **Processed ideas** (planned or rejected, with date and outcome). Do not delete processed entries.
+- Jan adds ideas at any time. Do not add, change, or process them unless he asks.
+
+### Command: `process ideas`
+
+When Jan writes `process ideas` (or `process .memory/ideas.todo`), do the following without implementing anything:
+
+1. Read `.memory/ideas.todo`, `.memory/plan.todo`, and the relevant parts of `.memory/technical-specification.md`.
+2. For each entry in **New ideas**, decide whether it is specific enough to plan. Ask Jan about anything unclear, ambiguous, or dependent on a decision that belongs to him. Do not invent requirements, acceptance criteria, or technical decisions, and do not guess his intent to keep processing.
+3. Ask the questions first, in one message, grouped by idea. Then wait for his answers. If an answer is still missing, leave that idea in **New ideas** with an indented `Open question:` line and continue with the ideas that are clear.
+4. Plan the clarified ideas: add epics, stories, or tasks with IDs to `.memory/plan.todo`, add acceptance criteria with matching IDs to `.memory/technical-specification.md`, and update `docs/` or `.memory/` files that the idea affects. Keep the plan and specification consistent.
+5. Move each planned idea to **Processed ideas** as `✔ YYYY-MM-DD — <idea>` with an indented `Outcome:` line that lists the plan/specification IDs. Move a rejected idea there with the reason instead.
+6. Report what was planned, what was rejected, which ideas still have open questions, and which documents changed. Planning does not authorize implementation, commits, merges, or pushes.
 
 ## Branch workflow
 
@@ -56,6 +75,7 @@ If a required file is still a placeholder, do not infer its contents. Ask the us
 - Keep `.memory/project-status.md` for current state, blockers, and next steps.
 - Keep `.memory/technical-specification.md` for technical design and acceptance criteria.
 - Keep `.memory/plan.todo` for epics, user stories, supporting tasks, and statuses.
+- Keep `.memory/ideas.todo` for unprocessed and processed ideas. It records the outcome of each idea but does not duplicate plan or specification content.
 - Keep the root `README.md` focused on the extension description, Chrome Web Store installation, privacy and security, and documentation links. Distinguish read-only browsing from user-requested bookmark changes.
 - Use `docs/README.md` as the GitHub documentation index and extension guide; do not maintain a duplicate `docs/index.md`. Keep build, unpacked installation, and test instructions in `docs/development.md`.
 - For store work that Jan requests, use `.memory/distribution.md` for packaging, listing, permission, privacy, asset, and review preparation; use `docs/changelog.md` for release history. Do not create a duplicate root `CHROMEWEBSTORE.md` automatically or schedule a release without Jan's instruction. Verify store claims and permission justifications against the current manifest and code. Jan controls store submission and publication.

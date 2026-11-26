@@ -1,0 +1,20 @@
+Chromtag incoming ideas:
+  Inbox for ideas that are not yet planned. This file is not a plan; `.memory/plan.todo` remains the only planning document.
+  Jan writes ideas here at any time. They are processed only on the `process ideas` command described in `AGENTS.md`.
+  One idea per line. Add context, questions, or constraints indented below the idea.
+
+New ideas:
+  ☐ Disable tags and folders (filters) that don't match the current selection.
+    Context: When user clicks #tagA, only filters matching #tagA should remain enabled, others should be disabled.
+    Question: Should this apply to both tags and folders, or only to one of them?
+    Constraint: The UI should clearly indicate which filters are disabled to avoid confusion. Just change color - same as labels in the bookmarks list.
+  ☐ Version numbering
+    Context: Each release of the software should have a unique version number.
+    Question: Should we follow semantic versioning (MAJOR.MINOR.PATCH) or a different scheme?
+      MAJOR - only on request by the developers
+      MINOR - for new features and improvements - currently before merging into main
+      PATCH - for bug fixes and minor changes
+    Constraint: The version number should be easily visible to the user, e.g., in the settings or about page.
+
+Processed ideas:
+
